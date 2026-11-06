@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/raiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/margen_pantalla"
+        android:paddingTop="16dp"
+        android:paddingEnd="@dimen/margen_pantalla"
+        android:paddingBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Reco.Texto.CuerpoMedio"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/paso_3_de_3"
+                android:textColor="@color/texto_secundario"
+                android:textSize="13sp" />
+
+            <TextView
+                style="@style/Reco.Texto.Boton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tu_perfil"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <com.fcc.reco.ui.comun.BarraPasos
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:pasosActual="3"
+            app:pasosTotal="3" />
+
+        <com.fcc.reco.ui.comun.ChipInsignia
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            app:insigniaTexto="@string/verificado_ok"
+            app:insigniaTipo="verificado_verde" />
+
+        <TextView
+            style="@style/Reco.Texto.Titulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/modo_titulo" />
+
+        <TextView
+            style="@style/Reco.Texto.Secundario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/modo_desc" />
+
+        <!-- Comprar -->
+        <FrameLayout
+            android:id="@+id/tarjeta_comprar"
+            android:layout_width="match_parent"
+            android:layout_height="236dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_tarjeta_azul"
+            android:clickable="true"
+            android:elevation="@dimen/elevacion_suave"
+            android:focusable="true"
+            android:foreground="@drawable/fg_ripple_tarjeta">
+
+            <FrameLayout
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_margin="20dp"
+                android:background="@drawable/bg_icono_translucido">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_carrito"
+                    app:tint="@color/white" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="top|end"
+                android:layout_margin="20dp"
+                android:background="@drawable/bg_boton_circular">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_flecha_der" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    style="@style/Reco.Texto.Titulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/modo_comprar"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+
+                <TextView
+                    style="@style/Reco.Texto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:lineSpacingMultiplier="1.1"
+                    android:text="@string/modo_comprar_desc"
+                    android:textColor="#D9FFFFFF" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <!-- Vender -->
+        <FrameLayout
+            android:id="@+id/tarjeta_vender"
+            android:layout_width="match_parent"
+            android:layout_height="236dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_tarjeta_negra"
+            android:clickable="true"
+            android:elevation="@dimen/elevacion_suave"
+            android:focusable="true"
+            android:foreground="@drawable/fg_ripple_tarjeta">
+
+            <FrameLayout
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_margin="20dp"
+                android:background="@drawable/bg_icono_translucido">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_etiqueta"
+                    app:tint="@color/white" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="top|end"
+                android:layout_margin="20dp"
+                android:background="@drawable/bg_boton_circular">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_flecha_der" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <com.fcc.reco.ui.comun.ChipInsignia
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:insigniaTexto="@string/modo_vender_chip"
+                    app:insigniaTipo="neutro" />
+
+                <TextView
+                    style="@style/Reco.Texto.Titulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/modo_vender"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+
+                <TextView
+                    style="@style/Reco.Texto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:lineSpacingMultiplier="1.1"
+                    android:text="@string/modo_vender_desc"
+                    android:textColor="#D9FFFFFF" />
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
+</ScrollView>

@@ -48,7 +48,7 @@ Este archivo resume todas las decisiones tomadas hasta el 6 de noviembre de 2026
 - Supabase hace la parte del login con `linkIdentity` y el proveedor de la universidad, Microsoft o Google.
 - La app valida el dominio del correo contra la tabla `universidades`. El primer dominio es `alumno.buap.mx`.
 - La app nunca ve la contraseña institucional.
-- **Plan B**, si la universidad no permite apps externas: una página web de verificación propia y simulada, con el mismo ida y vuelta por deep link.
+- **Plan B**, si la universidad no permite apps externas: una página web de verificación propia y simulada, con el mismo ida y vuelta por deep link. *(Estado actual: el portal simulado es una Activity dentro de la app, `PortalSimuladoActivity`, que regresa por `reco://verificado?correo=...`; se cambia por Chrome Custom Tab al conectar el login real.)*
 - Al verificarse, el perfil queda ligado a su universidad y gana la insignia "Estudiante verificado". Sin verificación no se puede comprar ni vender.
 
 ## Flujos

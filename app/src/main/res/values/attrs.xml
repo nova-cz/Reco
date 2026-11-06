@@ -15,6 +15,7 @@
             <enum name="secundario" value="1" />
         </attr>
         <attr name="botonIcono" format="reference" />
+        <attr name="botonIconoTinte" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="ChipInsignia">

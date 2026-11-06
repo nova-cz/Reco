@@ -26,4 +26,78 @@
     <!-- Accesibilidad -->
     <string name="mostrar_contrasena">Mostrar contraseña</string>
     <string name="volver">Volver</string>
+
+    <!-- Bienvenida -->
+    <string name="bienvenida_titulo">Electrónica usada entre estudiantes de tu campus</string>
+    <string name="bienvenida_beneficio_1">Solo estudiantes verificados</string>
+    <string name="bienvenida_beneficio_2">Pago protegido hasta la entrega</string>
+    <string name="bienvenida_beneficio_3">Entrega en un punto de tu campus</string>
+    <string name="crear_cuenta">Crear cuenta</string>
+    <string name="ya_tengo_cuenta">Ya tengo cuenta</string>
+
+    <!-- Iniciar sesión / registro -->
+    <string name="login_titulo">Hola de nuevo</string>
+    <string name="login_subtitulo">Inicia sesión para comprar y vender en tu campus.</string>
+    <string name="registro_titulo">Crea tu cuenta</string>
+    <string name="registro_subtitulo">Es gratis y solo toma un minuto.</string>
+    <string name="campo_correo">Correo</string>
+    <string name="campo_correo_hint">tucorreo@ejemplo.com</string>
+    <string name="campo_contrasena">Contraseña</string>
+    <string name="campo_contrasena_hint">Mínimo 6 caracteres</string>
+    <string name="olvidaste_contrasena">¿Olvidaste tu contraseña?</string>
+    <string name="iniciar_sesion">Iniciar sesión</string>
+    <string name="entrando">Un momento…</string>
+    <string name="separador_o">o</string>
+    <string name="continuar_google">Continuar con Google</string>
+    <string name="sin_cuenta">¿No tienes cuenta? Crear cuenta</string>
+    <string name="con_cuenta">¿Ya tienes cuenta? Iniciar sesión</string>
+    <string name="error_correo">Escribe un correo válido</string>
+    <string name="error_contrasena">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="proximamente">Próximamente</string>
+
+    <!-- Verificación -->
+    <string name="verificacion">Verificación</string>
+    <string name="paso_2_de_3">Paso 2 de 3</string>
+    <string name="paso_3_de_3">Paso 3 de 3</string>
+    <string name="tu_perfil">Tu perfil</string>
+    <string name="verifica_titulo">Verifica que eres estudiante</string>
+    <string name="verifica_desc">Inicia sesión con tu cuenta institucional y regresa aquí ya verificado.</string>
+    <string name="verifica_paso_1">Se abre la página de tu universidad</string>
+    <string name="verifica_paso_2">Inicias sesión con tu correo institucional</string>
+    <string name="verifica_paso_3">Regresas a Reco con tu insignia</string>
+    <string name="universidad_buap">BUAP · alumno.buap.mx</string>
+    <string name="mas_universidades">Más universidades pronto</string>
+    <string name="privacidad_nota">Nunca vemos tu contraseña, solo tu correo verificado.</string>
+    <string name="iniciar_sesion_institucional">Iniciar sesión institucional</string>
+    <string name="universidad_no_aparece">Mi universidad no aparece</string>
+    <string name="universidad_no_aparece_msg">Pronto agregaremos más universidades.</string>
+    <string name="verificado_ok">Estudiante verificado · BUAP</string>
+    <string name="error_dominio">Usa tu correo institucional (@alumno.buap.mx)</string>
+    <string name="error_enlace">El enlace de verificación no es válido</string>
+
+    <!-- Portal simulado -->
+    <string name="portal_titulo">Portal institucional</string>
+    <string name="portal_universidad">Benemérita Universidad Autónoma de Puebla</string>
+    <string name="portal_nota">Página simulada para el proyecto. Reco nunca guarda tu contraseña.</string>
+    <string name="portal_entrar">Entrar</string>
+
+    <!-- Carrera -->
+    <string name="carrera_titulo">Elige tu carrera</string>
+    <string name="carrera_desc">La usamos para mostrarte equipos de tu carrera.</string>
+
+    <!-- Elegir modo -->
+    <string name="modo_titulo">¿Qué quieres hacer hoy?</string>
+    <string name="modo_desc">Puedes cambiarlo cuando quieras desde tu perfil.</string>
+    <string name="modo_comprar">Quiero comprar</string>
+    <string name="modo_comprar_desc">Explora equipos de estudiantes verificados de tu campus.</string>
+    <string name="modo_vender">Quiero vender mis cosas</string>
+    <string name="modo_vender_desc">Publica tu equipo, entrégalo en el campus y cobra seguro.</string>
+    <string name="modo_vender_chip">Registro de vendedor · 2 min</string>
+
+    <!-- Marcadores de modo (se reemplazan en la Fase 3) -->
+    <string name="modo_comprador">Modo comprador</string>
+    <string name="modo_vendedor">Modo vendedor</string>
+    <string name="cambiar_a_comprador">Cambiar a modo comprador</string>
+    <string name="cambiar_a_vendedor">Cambiar a modo vendedor</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
 </resources>

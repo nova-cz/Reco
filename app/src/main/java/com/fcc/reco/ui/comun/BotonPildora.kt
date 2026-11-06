@@ -33,6 +33,7 @@ class BotonPildora @JvmOverloads constructor(
         }
 
     private var iconoRes = 0
+    private var iconoConTinte = true
 
     init {
         setTextAppearance(R.style.Reco_Texto_Boton)
@@ -52,6 +53,7 @@ class BotonPildora @JvmOverloads constructor(
         val a = context.obtainStyledAttributes(attrs, R.styleable.BotonPildora, defStyleAttr, 0)
         estilo = Estilo.entries[a.getInt(R.styleable.BotonPildora_botonEstilo, 0)]
         iconoRes = a.getResourceId(R.styleable.BotonPildora_botonIcono, 0)
+        iconoConTinte = a.getBoolean(R.styleable.BotonPildora_botonIconoTinte, true)
         a.recycle()
         aplicarEstilo()
     }
@@ -78,7 +80,7 @@ class BotonPildora @JvmOverloads constructor(
             elevation = 0f
         }
         setTextColor(color)
-        iconoInicio(iconoRes, 20, color)
+        iconoInicio(iconoRes, 20, if (iconoConTinte) color else null)
     }
 
     override fun setEnabled(enabled: Boolean) {

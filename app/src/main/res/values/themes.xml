@@ -28,6 +28,7 @@
         <item name="android:textColorSecondary">@color/texto_secundario</item>
         <item name="android:textColor">@color/tinta</item>
 
+        <item name="bottomSheetDialogTheme">@style/Reco.ThemeOverlay.BottomSheet</item>
         <item name="shapeAppearanceSmallComponent">@style/Reco.Forma.Pildora</item>
         <item name="shapeAppearanceMediumComponent">@style/Reco.Forma.Tarjeta</item>
         <item name="shapeAppearanceLargeComponent">@style/Reco.Forma.Tarjeta</item>

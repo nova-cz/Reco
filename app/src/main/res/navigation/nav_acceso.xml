@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Grafo de acceso. El destino inicial se decide en AccesoActivity según la sesión guardada. -->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/bienvenida">
+
+    <fragment
+        android:id="@+id/bienvenida"
+        android:name="com.fcc.reco.ui.acceso.BienvenidaFragment"
+        tools:layout="@layout/fragment_bienvenida" />
+
+    <fragment
+        android:id="@+id/iniciarSesion"
+        android:name="com.fcc.reco.ui.acceso.IniciarSesionFragment"
+        tools:layout="@layout/fragment_iniciar_sesion">
+        <argument
+            android:name="modoRegistro"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/verificarEstudiante"
+        android:name="com.fcc.reco.ui.acceso.VerificarEstudianteFragment"
+        tools:layout="@layout/fragment_verificar_estudiante" />
+
+    <fragment
+        android:id="@+id/elegirModo"
+        android:name="com.fcc.reco.ui.acceso.ElegirModoFragment"
+        tools:layout="@layout/fragment_elegir_modo" />
+</navigation>

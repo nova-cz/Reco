@@ -12,8 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Reco">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.acceso.AccesoActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.Reco.Splash"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -21,7 +22,28 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- Regreso de la verificación institucional: reco://verificado -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="verificado"
+                    android:scheme="reco" />
+            </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.acceso.PortalSimuladoActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.comprador.CompradorActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.vendedor.VendedorActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

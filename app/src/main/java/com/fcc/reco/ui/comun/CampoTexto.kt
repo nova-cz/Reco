@@ -32,6 +32,7 @@ class CampoTexto @JvmOverloads constructor(
     private val caja = LinearLayout(context)
     private val iconoVista = ImageView(context)
     private val ojoVista = ImageView(context)
+    private val errorVista = TextView(context)
     private var contrasenaVisible = false
     private var esContrasena = false
 
@@ -71,6 +72,15 @@ class CampoTexto @JvmOverloads constructor(
         caja.setPadding(dp(16), 0, dp(8), 0)
         addView(caja, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
 
+        // Mensaje de error (oculto hasta que se use)
+        errorVista.setTextAppearance(R.style.Reco_Texto_Etiqueta)
+        errorVista.setTextColor(ContextCompat.getColor(context, R.color.favorito))
+        errorVista.visibility = View.GONE
+        addView(errorVista, LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+            topMargin = dp(6)
+            marginStart = dp(4)
+        })
+
         // Ícono
         if (iconoRes != 0) {
             iconoVista.setImageResource(iconoRes)
@@ -107,6 +117,13 @@ class CampoTexto @JvmOverloads constructor(
             ojoVista.setOnClickListener { alternarContrasena() }
             caja.addView(ojoVista, LinearLayout.LayoutParams(dp(40), dp(40)))
         }
+    }
+
+    /** Muestra un mensaje de error bajo el campo (borde rojo). Pasa null para quitarlo. */
+    fun ponerError(mensaje: String?) {
+        errorVista.text = mensaje
+        errorVista.visibility = if (mensaje.isNullOrEmpty()) View.GONE else View.VISIBLE
+        caja.setBackgroundResource(if (mensaje.isNullOrEmpty()) R.drawable.bg_campo else R.drawable.bg_campo_error)
     }
 
     private fun alternarContrasena() {

@@ -6,6 +6,8 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
 import android.util.AttributeSet
+import android.util.TypedValue
+import androidx.core.widget.TextViewCompat
 import android.view.Gravity
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -41,7 +43,9 @@ class MosaicoCategoria @JvmOverloads constructor(
         nombre.textSize = 13f
         nombre.setTextColor(Color.WHITE)
         nombre.maxLines = 1
-        addView(nombre, LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, Gravity.BOTTOM or Gravity.START).apply {
+        // El nombre se achica solo si no cabe (p. ej. "Calculadoras" en la Bienvenida).
+        TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(nombre, 9, 13, 1, TypedValue.COMPLEX_UNIT_SP)
+        addView(nombre, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, Gravity.BOTTOM or Gravity.START).apply {
             bottomMargin = dp(12)
             marginStart = dp(12)
             marginEnd = dp(8)
@@ -55,6 +59,13 @@ class MosaicoCategoria @JvmOverloads constructor(
             setColor(Color.WHITE)
         }
         foreground = RippleDrawable(ColorStateList.valueOf(0x33FFFFFF), null, mascara)
+    }
+
+    /** Sin interacción (para la Bienvenida, donde los mosaicos solo decoran). */
+    fun ponerDecorativo() {
+        isClickable = false
+        isFocusable = false
+        foreground = null
     }
 
     fun configurar(categoria: Categoria) {

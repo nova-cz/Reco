@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Marcador temporal de CompradorActivity y VendedorActivity; la Fase 3 los reemplaza. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/raiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_fondo_app"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/margen_pantalla">
+
+    <ImageView
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/logo_camaleon" />
+
+    <TextView
+        android:id="@+id/titulo"
+        style="@style/Reco.Texto.Titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp" />
+
+    <TextView
+        android:id="@+id/detalle"
+        style="@style/Reco.Texto.Secundario"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="center" />
+
+    <com.fcc.reco.ui.comun.BotonPildora
+        android:id="@+id/boton_cambiar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp" />
+
+    <com.fcc.reco.ui.comun.BotonPildora
+        android:id="@+id/boton_salir"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/cerrar_sesion"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:botonEstilo="secundario" />
+</LinearLayout>

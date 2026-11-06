@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/raiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_fondo_app"
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/margen_pantalla">
+
+        <ImageView
+            android:id="@+id/boton_cerrar"
+            style="@style/Reco.BotonCircular"
+            android:layout_gravity="start"
+            android:contentDescription="@string/volver"
+            android:src="@drawable/ic_cerrar" />
+
+        <ImageView
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_icono_azul"
+            android:importantForAccessibility="no"
+            android:padding="20dp"
+            android:src="@drawable/ic_birrete"
+            app:tint="@color/white" />
+
+        <TextView
+            style="@style/Reco.Texto.Titulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/portal_titulo"
+            android:textSize="24sp" />
+
+        <TextView
+            style="@style/Reco.Texto.Secundario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:text="@string/portal_universidad" />
+
+        <com.fcc.reco.ui.comun.CampoTexto
+            android:id="@+id/campo_correo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:campoEtiqueta="@string/campo_correo"
+            app:campoHint="matricula@alumno.buap.mx"
+            app:campoIcono="@drawable/ic_correo"
+            app:campoTipo="correo" />
+
+        <com.fcc.reco.ui.comun.CampoTexto
+            android:id="@+id/campo_contrasena"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            app:campoEtiqueta="@string/campo_contrasena"
+            app:campoHint="••••••••"
+            app:campoIcono="@drawable/ic_candado"
+            app:campoTipo="contrasena" />
+
+        <com.fcc.reco.ui.comun.BotonPildora
+            android:id="@+id/boton_entrar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/portal_entrar" />
+
+        <TextView
+            style="@style/Reco.Texto.Secundario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/portal_nota"
+            android:textSize="13sp" />
+    </LinearLayout>
+</ScrollView>

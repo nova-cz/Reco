@@ -10,6 +10,22 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <!-- Hoja inferior blanca con esquinas superiores redondeadas -->
+    <style name="Reco.ThemeOverlay.BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Reco.BottomSheet</item>
+    </style>
+    <style name="Reco.BottomSheet" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="backgroundTint">@color/superficie</item>
+        <item name="shapeAppearance">@style/Reco.Forma.HojaSuperior</item>
+    </style>
+    <style name="Reco.Forma.HojaSuperior" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">28dp</item>
+        <item name="cornerSizeTopRight">28dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
     <!-- Tipografía (Inter) -->
     <style name="Reco.Texto" parent="">
         <item name="android:fontFamily">@font/inter_regular</item>

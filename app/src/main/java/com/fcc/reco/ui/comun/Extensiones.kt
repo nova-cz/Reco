@@ -23,7 +23,7 @@ fun View.dp(valor: Int): Int = context.dp(valor)
 fun View.dpF(valor: Float): Float = context.dpF(valor)
 
 /** Pone un ícono (con tamaño y color) al inicio del texto. Pasa 0 para quitarlo. */
-fun TextView.iconoInicio(@DrawableRes recurso: Int, tamanoDp: Int, color: Int) {
+fun TextView.iconoInicio(@DrawableRes recurso: Int, tamanoDp: Int, color: Int?) {
     if (recurso == 0) {
         setCompoundDrawablesRelative(null, null, null, null)
         return
@@ -32,7 +32,7 @@ fun TextView.iconoInicio(@DrawableRes recurso: Int, tamanoDp: Int, color: Int) {
     val tamano = context.dp(tamanoDp)
     icono.setBounds(0, 0, tamano, tamano)
     setCompoundDrawablesRelative(icono, null, null, null)
-    TextViewCompat.setCompoundDrawableTintList(this, ColorStateList.valueOf(color))
+    TextViewCompat.setCompoundDrawableTintList(this, color?.let { ColorStateList.valueOf(it) })
 }
 
 /**
