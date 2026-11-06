@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Cascarón del modo vendedor: las pantallas reales llegan en una fase posterior. -->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/panel">
+
+    <fragment
+        android:id="@+id/panel"
+        android:name="com.fcc.reco.ui.comun.PlaceholderFragment"
+        tools:layout="@layout/fragment_placeholder">
+        <argument
+            android:name="titulo"
+            android:defaultValue="Panel"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/anuncios"
+        android:name="com.fcc.reco.ui.comun.PlaceholderFragment"
+        tools:layout="@layout/fragment_placeholder">
+        <argument
+            android:name="titulo"
+            android:defaultValue="Anuncios"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ventas"
+        android:name="com.fcc.reco.ui.comun.PlaceholderFragment"
+        tools:layout="@layout/fragment_placeholder">
+        <argument
+            android:name="titulo"
+            android:defaultValue="Ventas"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/perfilVendedor"
+        android:name="com.fcc.reco.ui.comun.PerfilBasicoFragment"
+        tools:layout="@layout/fragment_perfil_basico" />
+</navigation>

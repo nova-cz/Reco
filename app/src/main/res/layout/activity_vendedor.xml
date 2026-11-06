@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/raiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Fondo que desenfoca la barra glass (hermano de la barra, no ancestro). -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_fondo_app"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_vendedor" />
+
+    <com.fcc.reco.ui.comun.BarraInferiorFlotante
+        android:id="@+id/barra"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/barra_alto"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/barra_margen"
+        android:layout_marginEnd="@dimen/barra_margen"
+        android:layout_marginBottom="@dimen/barra_margen" />
+</FrameLayout>

@@ -100,4 +100,40 @@
     <string name="cambiar_a_comprador">Cambiar a modo comprador</string>
     <string name="cambiar_a_vendedor">Cambiar a modo vendedor</string>
     <string name="cerrar_sesion">Cerrar sesión</string>
+
+    <!-- Inicio / Resultados / Detalle -->
+    <string name="hola_usuario">Hola, %1$s</string>
+    <string name="verificado_universidad">Estudiante verificado · %1$s</string>
+    <string name="notificaciones">Notificaciones</string>
+    <string name="buscar_hint">Laptops, iPads, calculadoras…</string>
+    <string name="buscar_en">Buscar en %1$s</string>
+    <string name="limpiar_filtros">Limpiar filtros</string>
+    <string name="marcas">Marcas</string>
+    <string name="ver_todo">Ver todo</string>
+    <string name="en_tu_campus">En tu campus</string>
+    <string name="resultados_titulo">Resultados</string>
+    <string name="resultados_conteo">%1$d resultados en CU</string>
+    <string name="resultado_conteo_uno">1 resultado en CU</string>
+    <string name="para_tu_carrera">Para tu carrera: %1$s</string>
+    <string name="sin_resultados">No encontramos equipos con esos filtros.</string>
+    <string name="filtro_grado_ab">Grado A o B</string>
+    <string name="filtro_precio_10000">Hasta $10,000</string>
+    <string name="filtro_certificado">Certificado</string>
+    <string name="certificado">Certificado</string>
+    <string name="detalle">Detalle</string>
+    <string name="compartir">Compartir</string>
+    <string name="descripcion">Descripción</string>
+    <string name="precio">Precio</string>
+    <string name="pago_protegido">Pago protegido</string>
+    <string name="agregar_carrito">Agregar al carrito</string>
+    <string name="ir_al_carrito">Ir al carrito</string>
+    <string name="imei_nota">Solo mostramos los últimos 4 dígitos</string>
+    <string name="imei_valor">IMEI ···· %1$s</string>
+    <string name="entrega_en">Entrega en</string>
+    <string name="grado_etiqueta">Grado %1$s · %2$s</string>
+    <string name="grado_corto">Grado %1$s</string>
+    <string name="bateria_valor">Batería %1$d%%</string>
+    <string name="reputacion_ventas">%1$s · %2$d ventas</string>
+    <string name="carrera_facultad">%1$s · %2$s</string>
+    <string name="categoria_marca">%1$s · %2$s</string>
 </resources>

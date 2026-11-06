@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Foto simulada: gris claro con degradado suave, como en el Figma. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient
+        android:angle="315"
+        android:startColor="#F1F1F4"
+        android:endColor="#D3D3D8" />
+    <corners android:radius="18dp" />
+</shape>

@@ -9,30 +9,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navOptions
 import com.fcc.reco.R
 import com.fcc.reco.data.model.ModoUsuario
+import com.fcc.reco.data.local.SesionLocal
 import com.fcc.reco.ui.comprador.CompradorActivity
+import com.fcc.reco.ui.comun.irA
 import com.fcc.reco.ui.vendedor.VendedorActivity
 import kotlinx.coroutines.launch
-
-/** Navega con las animaciones de acceso; opcionalmente limpia la pila hasta [popHasta]. */
-fun NavController.irA(
-    destino: Int,
-    argumentos: android.os.Bundle? = null,
-    popHasta: Int? = null,
-    inclusivo: Boolean = false
-) {
-    navigate(destino, argumentos, navOptions {
-        anim {
-            enter = R.anim.nav_entra
-            exit = R.anim.nav_sale
-            popEnter = R.anim.nav_pop_entra
-            popExit = R.anim.nav_pop_sale
-        }
-        if (popHasta != null) popUpTo(popHasta) { this.inclusive = inclusivo }
-    })
-}
 
 fun NavController.irAIniciarSesion(esRegistro: Boolean) =
     irA(R.id.iniciarSesion, android.os.Bundle().apply { putBoolean("modoRegistro", esRegistro) })
@@ -65,4 +48,11 @@ fun Fragment.recolectarEventosAcceso(viewModel: AccesoViewModel) {
             }
         }
     }
+}
+
+/** Borra la sesión simulada y vuelve a la Bienvenida. */
+fun Activity.cerrarSesionYSalir() {
+    SesionLocal(this).borrar()
+    startActivity(Intent(this, AccesoActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
+    finish()
 }

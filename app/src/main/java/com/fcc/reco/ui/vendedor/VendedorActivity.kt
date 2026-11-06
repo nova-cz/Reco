@@ -1,40 +1,42 @@
 package com.fcc.reco.ui.vendedor
 
-import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.NavHostFragment
 import com.fcc.reco.R
-import com.fcc.reco.data.local.SesionLocal
-import com.fcc.reco.data.model.ModoUsuario
-import com.fcc.reco.data.repository.PerfilRepositorySimulado
-import com.fcc.reco.databinding.ActivityModoPlaceholderBinding
-import com.fcc.reco.ui.acceso.AccesoActivity
-import com.fcc.reco.ui.acceso.abrirModoYTerminar
-import com.fcc.reco.ui.comun.ajustarPorBarrasDelSistema
+import com.fcc.reco.databinding.ActivityVendedorBinding
+import com.fcc.reco.ui.comun.ItemBarra
 import com.fcc.reco.ui.comun.edgeToEdgeClaro
+import com.fcc.reco.ui.comun.sumarMargenInferiorDeBarras
 
-/** Marcador temporal: la Fase 3 lo reemplaza por la navegación real del vendedor. */
+/**
+ * Modo vendedor (cascarón): barra con Panel, Anuncios, "+" naranja, Ventas y Perfil.
+ * Las pantallas reales (Panel, Publicar, Anuncios, Ventas) llegan en una fase posterior.
+ */
 class VendedorActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         edgeToEdgeClaro()
-        val b = ActivityModoPlaceholderBinding.inflate(layoutInflater)
+        val b = ActivityVendedorBinding.inflate(layoutInflater)
         setContentView(b.root)
-        b.raiz.ajustarPorBarrasDelSistema()
 
-        val local = SesionLocal(this)
-        val sesion = local.leer()
-        b.titulo.setText(R.string.modo_vendedor)
-        b.detalle.text = listOfNotNull(sesion?.nombre, sesion?.carrera, sesion?.universidad).joinToString("\n")
-        b.botonCambiar.setText(R.string.cambiar_a_comprador)
-        b.botonCambiar.setOnClickListener {
-            PerfilRepositorySimulado(local).cambiarModo(ModoUsuario.COMPRADOR)
-            abrirModoYTerminar(ModoUsuario.COMPRADOR)
-        }
-        b.botonSalir.setOnClickListener {
-            local.borrar()
-            startActivity(Intent(this, AccesoActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
-            finish()
+        val nav = (supportFragmentManager.findFragmentById(R.id.nav_host) as NavHostFragment).navController
+        b.barra.configurar(
+            listOf(
+                ItemBarra(R.id.panel, R.drawable.ic_panel, R.string.tab_panel),
+                ItemBarra(R.id.anuncios, R.drawable.ic_anuncios, R.string.tab_anuncios),
+                ItemBarra(R.id.accionPublicar, R.drawable.ic_mas, R.string.tab_publicar, esAccion = true),
+                ItemBarra(R.id.ventas, R.drawable.ic_ventas, R.string.tab_ventas),
+                ItemBarra(R.id.perfilVendedor, R.drawable.ic_perfil, R.string.tab_perfil)
+            )
+        )
+        b.barra.vincularFondo(b.navHost)
+        b.barra.vincular(nav)
+        b.barra.sumarMargenInferiorDeBarras(16)
+        b.barra.alSeleccionar = { item ->
+            if (item.esAccion) Toast.makeText(this, R.string.proximamente, Toast.LENGTH_SHORT).show()
         }
     }
 }

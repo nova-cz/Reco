@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="54dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_buscador"
+        android:elevation="2dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="12dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_buscar"
+            app:tint="@color/texto_secundario" />
+
+        <EditText
+            android:id="@+id/campo_busqueda"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="@string/buscar_hint"
+            android:imeOptions="actionSearch"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="@color/tinta"
+            android:textColorHint="@color/texto_secundario"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/boton_filtros"
+        style="@style/Reco.BotonCircular"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="10dp"
+        android:contentDescription="@string/limpiar_filtros"
+        android:src="@drawable/ic_filtros" />
+</LinearLayout>

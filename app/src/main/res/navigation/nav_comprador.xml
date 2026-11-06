@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/inicio">
+
+    <fragment
+        android:id="@+id/inicio"
+        android:name="com.fcc.reco.ui.comprador.InicioFragment"
+        tools:layout="@layout/fragment_inicio" />
+
+    <fragment
+        android:id="@+id/resultados"
+        android:name="com.fcc.reco.ui.comprador.ResultadosFragment"
+        tools:layout="@layout/fragment_resultados" />
+
+    <fragment
+        android:id="@+id/detalleProducto"
+        android:name="com.fcc.reco.ui.comprador.DetalleProductoFragment"
+        tools:layout="@layout/fragment_detalle_producto" />
+
+    <fragment
+        android:id="@+id/favoritos"
+        android:name="com.fcc.reco.ui.comun.PlaceholderFragment"
+        tools:layout="@layout/fragment_placeholder">
+        <argument
+            android:name="titulo"
+            android:defaultValue="Favoritos"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/carrito"
+        android:name="com.fcc.reco.ui.comun.PlaceholderFragment"
+        tools:layout="@layout/fragment_placeholder">
+        <argument
+            android:name="titulo"
+            android:defaultValue="Carrito"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/compras"
+        android:name="com.fcc.reco.ui.comun.PlaceholderFragment"
+        tools:layout="@layout/fragment_placeholder">
+        <argument
+            android:name="titulo"
+            android:defaultValue="Compras"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/perfil"
+        android:name="com.fcc.reco.ui.comun.PerfilBasicoFragment"
+        tools:layout="@layout/fragment_perfil_basico" />
+</navigation>

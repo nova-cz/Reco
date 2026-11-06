@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/raiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/margen_pantalla"
+        android:paddingTop="12dp"
+        android:paddingEnd="@dimen/margen_pantalla"
+        android:paddingBottom="110dp">
+
+        <!-- Encabezado -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.fcc.reco.ui.comun.AvatarIniciales
+                android:id="@+id/avatar"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/saludo"
+                    style="@style/Reco.Texto.Boton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_verificado"
+                        app:tint="@color/azul" />
+
+                    <TextView
+                        android:id="@+id/verificado"
+                        style="@style/Reco.Texto.Secundario"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/boton_notificaciones"
+                style="@style/Reco.BotonCircular"
+                android:contentDescription="@string/notificaciones"
+                android:src="@drawable/ic_notificaciones" />
+        </LinearLayout>
+
+        <include
+            android:id="@+id/buscador"
+            layout="@layout/layout_buscador"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+        <!-- Categorías -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <com.fcc.reco.ui.comun.MosaicoCategoria
+                android:id="@+id/m1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <com.fcc.reco.ui.comun.MosaicoCategoria
+                android:id="@+id/m2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1" />
+
+            <com.fcc.reco.ui.comun.MosaicoCategoria
+                android:id="@+id/m3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <com.fcc.reco.ui.comun.MosaicoCategoria
+                android:id="@+id/m4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <com.fcc.reco.ui.comun.MosaicoCategoria
+                android:id="@+id/m5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1" />
+
+            <com.fcc.reco.ui.comun.MosaicoCategoria
+                android:id="@+id/m6"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <!-- Destacado -->
+        <LinearLayout
+            android:id="@+id/tarjeta_destacada"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_tarjeta"
+            android:clickable="true"
+            android:elevation="@dimen/elevacion_suave"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="20dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/destacado_titulo"
+                    style="@style/Reco.Texto.Titulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/destacado_specs"
+                    style="@style/Reco.Texto.Secundario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textSize="13sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <com.fcc.reco.ui.comun.ChipInsignia
+                        android:id="@+id/destacado_certificado"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp" />
+
+                    <TextView
+                        android:id="@+id/destacado_precio"
+                        style="@style/Reco.Texto.Boton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:background="@drawable/bg_chip_negro"
+                        android:gravity="center"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:textColor="@color/white"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="112dp"
+                android:layout_height="112dp"
+                android:layout_marginStart="12dp"
+                android:background="@drawable/bg_foto_placeholder">
+
+                <ImageView
+                    android:id="@+id/destacado_icono"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="center"
+                    android:alpha="0.85"
+                    android:importantForAccessibility="no" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <!-- Marcas -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Reco.Texto.Seccion"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/marcas" />
+
+            <TextView
+                android:id="@+id/ver_todo_marcas"
+                style="@style/Reco.Texto.CuerpoMedio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="@string/ver_todo"
+                android:textColor="@color/texto_secundario"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:clipToPadding="false"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/fila_marcas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
+
+        <!-- En tu campus -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Reco.Texto.Seccion"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/en_tu_campus" />
+
+            <TextView
+                android:id="@+id/ver_todo_campus"
+                style="@style/Reco.Texto.CuerpoMedio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="@string/ver_todo"
+                android:textColor="@color/texto_secundario"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/lista_campus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:clipToPadding="false"
+            android:nestedScrollingEnabled="false" />
+    </LinearLayout>
+</ScrollView>

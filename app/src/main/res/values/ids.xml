@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Botón "+" de la barra del vendedor (no es un destino de navegación). -->
+    <item name="accionPublicar" type="id" />
+</resources>

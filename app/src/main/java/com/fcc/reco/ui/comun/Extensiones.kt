@@ -7,6 +7,7 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import android.content.res.ColorStateList
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
@@ -62,4 +63,18 @@ fun ComponentActivity.edgeToEdgeClaro() {
         statusBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
         navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
     )
+}
+
+/** Sube el margen inferior de la vista (p. ej. la barra flotante) para librar la barra de gestos. */
+fun View.sumarMargenInferiorDeBarras(baseDp: Int = 16) {
+    val base = dp(baseDp)
+    ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
+        val abajo = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom
+        (v.layoutParams as? ViewGroup.MarginLayoutParams)?.let {
+            it.bottomMargin = base + abajo
+            v.layoutParams = it
+        }
+        insets
+    }
+    ViewCompat.requestApplyInsets(this)
 }
