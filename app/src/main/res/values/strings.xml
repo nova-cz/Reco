@@ -1,3 +1,29 @@
 <resources>
     <string name="app_name">Reco</string>
+    <string name="slogan">Electrónica entre estudiantes</string>
+
+    <!-- Barra inferior · comprador -->
+    <string name="tab_inicio">Inicio</string>
+    <string name="tab_favoritos">Favoritos</string>
+    <string name="tab_carrito">Carrito</string>
+    <string name="tab_compras">Compras</string>
+    <string name="tab_perfil">Perfil</string>
+
+    <!-- Barra inferior · vendedor -->
+    <string name="tab_panel">Panel</string>
+    <string name="tab_anuncios">Anuncios</string>
+    <string name="tab_publicar">Publicar</string>
+    <string name="tab_ventas">Ventas</string>
+
+    <!-- Categorías -->
+    <string name="cat_laptops">Laptops</string>
+    <string name="cat_celulares">Celulares</string>
+    <string name="cat_tablets">Tablets</string>
+    <string name="cat_audio">Audio</string>
+    <string name="cat_gaming">Gaming</string>
+    <string name="cat_calculadoras">Calculadoras</string>
+
+    <!-- Accesibilidad -->
+    <string name="mostrar_contrasena">Mostrar contraseña</string>
+    <string name="volver">Volver</string>
 </resources>

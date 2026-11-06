@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mosaico de categoría: degradado diagonal (luz arriba-izquierda). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient
+        android:angle="315"
+        android:startColor="@color/cat_tablets_claro"
+        android:endColor="@color/cat_tablets"
+        android:centerColor="@color/cat_tablets"
+        android:centerX="0.55" />
+    <corners android:radius="@dimen/radio_tarjeta" />
+</shape>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Formas -->
+    <style name="Reco.Forma.Tarjeta" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/radio_tarjeta</item>
+    </style>
+    <style name="Reco.Forma.Pildora" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- Tipografía (Inter) -->
+    <style name="Reco.Texto" parent="">
+        <item name="android:fontFamily">@font/inter_regular</item>
+        <item name="android:textColor">@color/tinta</item>
+        <item name="android:textSize">@dimen/texto_cuerpo</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+    <style name="Reco.Texto.Titulo">
+        <item name="android:fontFamily">@font/inter_bold</item>
+        <item name="android:textSize">@dimen/texto_titulo</item>
+        <item name="android:letterSpacing">-0.02</item>
+        <item name="android:lineSpacingMultiplier">1.08</item>
+    </style>
+    <style name="Reco.Texto.Seccion">
+        <item name="android:fontFamily">@font/inter_semibold</item>
+        <item name="android:textSize">@dimen/texto_seccion</item>
+        <item name="android:letterSpacing">-0.01</item>
+    </style>
+    <style name="Reco.Texto.Cuerpo" />
+    <style name="Reco.Texto.CuerpoMedio">
+        <item name="android:fontFamily">@font/inter_medium</item>
+    </style>
+    <style name="Reco.Texto.Secundario">
+        <item name="android:textColor">@color/texto_secundario</item>
+    </style>
+    <style name="Reco.Texto.Etiqueta">
+        <item name="android:fontFamily">@font/inter_medium</item>
+        <item name="android:textSize">@dimen/texto_etiqueta</item>
+    </style>
+    <style name="Reco.Texto.Precio">
+        <item name="android:fontFamily">@font/inter_bold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
+    <style name="Reco.Texto.Boton">
+        <item name="android:fontFamily">@font/inter_semibold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Estilos por defecto para TextView y EditText (fuente Inter) -->
+    <style name="Widget.Reco.TextView" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/inter_regular</item>
+    </style>
+    <style name="Widget.Reco.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:fontFamily">@font/inter_regular</item>
+    </style>
+
+    <!-- Componentes -->
+    <style name="Reco.Boton" parent="Reco.Texto.Boton">
+        <item name="android:minHeight">@dimen/alto_boton</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="Reco.BotonCircular" parent="">
+        <item name="android:layout_width">@dimen/boton_circular</item>
+        <item name="android:layout_height">@dimen/boton_circular</item>
+        <item name="android:background">@drawable/bg_boton_circular</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+</resources>

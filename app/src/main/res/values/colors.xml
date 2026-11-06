@@ -2,4 +2,57 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Base (tomados del Figma) -->
+    <color name="fondo">#F2F2F5</color>
+    <color name="superficie">#FFFFFF</color>
+    <color name="superficie_gris">#EDEDF1</color>
+    <color name="tinta">#111114</color>
+    <color name="texto_secundario">#6E6E76</color>
+    <color name="borde_suave">#E4E4EA</color>
+
+    <!-- Manchas del fondo -->
+    <color name="mancha_azul">#C8D8F5</color>
+    <color name="mancha_durazno">#F4DFD2</color>
+
+    <!-- Botón principal (degradado vertical) -->
+    <color name="boton_negro_inicio">#2E2E35</color>
+    <color name="boton_negro_fin">#101013</color>
+
+    <!-- Colores por categoría (el Figma usa casi negro para Tablets) -->
+    <color name="cat_laptops">#1C1C1E</color>
+    <color name="cat_laptops_claro">#4F4F51</color>
+    <color name="cat_celulares">#2F7BF6</color>
+    <color name="cat_celulares_claro">#5E99F8</color>
+    <color name="cat_tablets">#0F0F12</color>
+    <color name="cat_tablets_claro">#3A3A42</color>
+    <color name="cat_audio">#FF8DB3</color>
+    <color name="cat_audio_claro">#FFA7C5</color>
+    <color name="cat_gaming">#FF7A1A</color>
+    <color name="cat_gaming_claro">#FF984D</color>
+    <color name="cat_calculadoras">#D29A5C</color>
+    <color name="cat_calculadoras_claro">#DCB181</color>
+
+    <!-- Acentos -->
+    <color name="azul">#2F7BF6</color>
+    <color name="azul_fondo">#E8F0FE</color>
+    <color name="naranja">#FF7A1A</color>
+    <color name="rosa">#FF8DB3</color>
+    <color name="caramelo">#D29A5C</color>
+    <color name="favorito">#FF3B30</color>
+    <color name="estrella">#FFB800</color>
+
+    <!-- Verde: solo logo, insignia "Certificado" y chip "Estudiante verificado" -->
+    <color name="verde_reco">#34C27A</color>
+    <color name="verde_insignia">#1FAF68</color>
+    <color name="verde_insignia_fondo">#E3F6EC</color>
+
+    <!-- Glass -->
+    <color name="glass_relleno">#8CFFFFFF</color>
+    <color name="glass_relleno_opaco">#B8FFFFFF</color>
+    <color name="glass_borde">#CCFFFFFF</color>
+    <color name="glass_boton">#B8FFFFFF</color>
+
+    <!-- Ícono adaptativo -->
+    <color name="launcher_fondo">#151517</color>
 </resources>

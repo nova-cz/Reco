@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#33FFFFFF">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="@color/boton_negro_inicio"
+                android:endColor="@color/boton_negro_fin" />
+            <corners android:radius="@dimen/radio_pildora" />
+        </shape>
+    </item>
+</ripple>

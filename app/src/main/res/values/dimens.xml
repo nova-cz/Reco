@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="radio_tarjeta">24dp</dimen>
+    <dimen name="radio_campo">20dp</dimen>
+    <dimen name="radio_pildora">999dp</dimen>
+
+    <dimen name="margen_pantalla">20dp</dimen>
+    <dimen name="espacio_s">8dp</dimen>
+    <dimen name="espacio_m">12dp</dimen>
+    <dimen name="espacio_l">16dp</dimen>
+    <dimen name="espacio_xl">24dp</dimen>
+
+    <dimen name="alto_boton">56dp</dimen>
+    <dimen name="alto_campo">56dp</dimen>
+    <dimen name="alto_chip">36dp</dimen>
+    <dimen name="boton_circular">44dp</dimen>
+
+    <dimen name="barra_alto">64dp</dimen>
+    <dimen name="barra_margen">16dp</dimen>
+    <dimen name="barra_item">48dp</dimen>
+
+    <dimen name="elevacion_suave">6dp</dimen>
+    <dimen name="desenfoque_glass">12dp</dimen>
+
+    <dimen name="texto_titulo">28sp</dimen>
+    <dimen name="texto_seccion">20sp</dimen>
+    <dimen name="texto_cuerpo">15sp</dimen>
+    <dimen name="texto_etiqueta">12sp</dimen>
+</resources>

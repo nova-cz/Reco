@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="GlassView">
+        <!-- Radio de las esquinas -->
+        <attr name="glassRadio" format="dimension" />
+        <!-- Sigma del desenfoque (solo API 31+) -->
+        <attr name="glassDesenfoque" format="dimension" />
+        <!-- Relleno más opaco, para botones pequeños sobre fotos -->
+        <attr name="glassOpaco" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="BotonPildora">
+        <attr name="botonEstilo" format="enum">
+            <enum name="primario" value="0" />
+            <enum name="secundario" value="1" />
+        </attr>
+        <attr name="botonIcono" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="ChipInsignia">
+        <attr name="insigniaTipo" format="enum">
+            <enum name="verificado_azul" value="0" />
+            <enum name="verificado_verde" value="1" />
+            <enum name="certificado" value="2" />
+            <enum name="grado" value="3" />
+            <enum name="neutro" value="4" />
+            <enum name="neutro_gris" value="5" />
+        </attr>
+        <attr name="insigniaTexto" format="string" />
+        <attr name="insigniaIcono" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="ChipFiltro">
+        <attr name="filtroTexto" format="string" />
+        <attr name="filtroActivo" format="boolean" />
+        <attr name="filtroIcono" format="reference" />
+        <attr name="filtroColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="CampoTexto">
+        <attr name="campoIcono" format="reference" />
+        <attr name="campoHint" format="string" />
+        <attr name="campoEtiqueta" format="string" />
+        <attr name="campoTipo" format="enum">
+            <enum name="texto" value="0" />
+            <enum name="correo" value="1" />
+            <enum name="contrasena" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="BarraPasos">
+        <attr name="pasosTotal" format="integer" />
+        <attr name="pasosActual" format="integer" />
+    </declare-styleable>
+</resources>

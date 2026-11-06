@@ -1,9 +1,44 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Reco" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <!-- Tema único, siempre claro (la guía visual de Reco no tiene modo oscuro). -->
+    <style name="Base.Theme.Reco" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/tinta</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/superficie_gris</item>
+        <item name="colorOnPrimaryContainer">@color/tinta</item>
+        <item name="colorSecondary">@color/tinta</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSurface">@color/superficie</item>
+        <item name="colorOnSurface">@color/tinta</item>
+        <item name="colorSurfaceVariant">@color/superficie_gris</item>
+        <item name="colorOnSurfaceVariant">@color/texto_secundario</item>
+        <item name="colorOutline">@color/borde_suave</item>
+        <item name="android:colorBackground">@color/fondo</item>
+
+        <item name="android:windowBackground">@drawable/bg_fondo_app</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
+        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
+
+        <!-- La fuente (Inter) se aplica por estilo; ver Reco.Texto en styles.xml -->
+        <item name="android:textViewStyle">@style/Widget.Reco.TextView</item>
+        <item name="editTextStyle">@style/Widget.Reco.EditText</item>
+        <item name="android:textColorPrimary">@color/tinta</item>
+        <item name="android:textColorSecondary">@color/texto_secundario</item>
+        <item name="android:textColor">@color/tinta</item>
+
+        <item name="shapeAppearanceSmallComponent">@style/Reco.Forma.Pildora</item>
+        <item name="shapeAppearanceMediumComponent">@style/Reco.Forma.Tarjeta</item>
+        <item name="shapeAppearanceLargeComponent">@style/Reco.Forma.Tarjeta</item>
     </style>
 
     <style name="Theme.Reco" parent="Base.Theme.Reco" />
+
+    <!-- Pantalla de arranque con el camaleón -->
+    <style name="Theme.Reco.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/fondo</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_camaleon</item>
+        <item name="postSplashScreenTheme">@style/Theme.Reco</item>
+    </style>
 </resources>

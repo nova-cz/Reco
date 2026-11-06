@@ -210,7 +210,7 @@ RLS:
 | --- | --- |
 | Laptops | `#1C1C1E` |
 | Celulares | `#2F7BF6` |
-| Tablets | `#34C27A` |
+| Tablets | `#0F0F12` (casi negro, según el Figma) |
 | Audio | `#FF8DB3` |
 | Gaming | `#FF7A1A` |
 | Calculadoras | `#D29A5C` |

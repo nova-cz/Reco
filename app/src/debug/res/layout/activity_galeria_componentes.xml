@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Solo debug: muestra todos los componentes de la Fase 1. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/raiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Este ScrollView es el "fondo" que la barra glass desenfoca (hermano, no ancestro). -->
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_fondo_app"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/contenido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/margen_pantalla"
+            android:paddingTop="16dp"
+            android:paddingEnd="@dimen/margen_pantalla"
+            android:paddingBottom="120dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/logo_camaleon" />
+
+                <TextView
+                    style="@style/Reco.Texto.Seccion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Galería de componentes" />
+            </LinearLayout>
+
+            <!-- Tipografía -->
+            <TextView
+                style="@style/Reco.Texto.Titulo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Electrónica usada entre estudiantes de tu campus" />
+
+            <TextView
+                style="@style/Reco.Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Marcas" />
+
+            <TextView
+                style="@style/Reco.Texto.Cuerpo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Cuerpo 15: Solo estudiantes verificados" />
+
+            <TextView
+                style="@style/Reco.Texto.Secundario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Secundario: Inicia sesión para comprar y vender en tu campus." />
+
+            <TextView
+                style="@style/Reco.Texto.Etiqueta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Etiqueta 12 medium" />
+
+            <TextView
+                style="@style/Reco.Texto.Precio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="$9,800" />
+
+            <!-- Botones -->
+            <TextView
+                style="@style/Reco.Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Botones" />
+
+            <com.fcc.reco.ui.comun.BotonPildora
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Crear cuenta" />
+
+            <com.fcc.reco.ui.comun.BotonPildora
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Iniciar sesión institucional"
+                app:botonIcono="@drawable/ic_enlace_externo" />
+
+            <com.fcc.reco.ui.comun.BotonPildora
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Ya tengo cuenta"
+                app:botonEstilo="secundario" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    style="@style/Reco.BotonCircular"
+                    android:contentDescription="@string/volver"
+                    android:src="@drawable/ic_atras" />
+
+                <ImageView
+                    style="@style/Reco.BotonCircular"
+                    android:layout_marginStart="12dp"
+                    android:src="@drawable/ic_notificaciones" />
+
+                <ImageView
+                    style="@style/Reco.BotonCircular"
+                    android:layout_marginStart="12dp"
+                    android:src="@drawable/ic_filtros" />
+
+                <com.fcc.reco.ui.comun.GlassView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="12dp"
+                    app:glassOpaco="true"
+                    app:glassRadio="22dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_favorito_lleno" />
+                </com.fcc.reco.ui.comun.GlassView>
+            </LinearLayout>
+
+            <!-- Insignias -->
+            <TextView
+                style="@style/Reco.Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Insignias" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <com.fcc.reco.ui.comun.ChipInsignia
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:insigniaTexto="Estudiante verificado · BUAP"
+                    app:insigniaTipo="verificado_azul" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <com.fcc.reco.ui.comun.ChipInsignia
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:insigniaTexto="Estudiante verificado · BUAP"
+                    app:insigniaTipo="verificado_verde" />
+
+                <com.fcc.reco.ui.comun.ChipInsignia
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    app:insigniaTexto="Certificado"
+                    app:insigniaTipo="certificado" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <com.fcc.reco.ui.comun.ChipInsignia
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:insigniaTexto="Grado A"
+                    app:insigniaTipo="grado" />
+
+                <com.fcc.reco.ui.comun.ChipInsignia
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    app:insigniaIcono="@drawable/ic_bateria"
+                    app:insigniaTexto="89%"
+                    app:insigniaTipo="neutro_gris" />
+
+                <com.fcc.reco.ui.comun.ChipInsignia
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    app:insigniaTexto="Gris espacial"
+                    app:insigniaTipo="neutro" />
+            </LinearLayout>
+
+            <!-- Filtros -->
+            <TextView
+                style="@style/Reco.Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Chips de filtro" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <com.fcc.reco.ui.comun.ChipFiltro
+                    android:id="@+id/filtro_laptops"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:filtroActivo="true"
+                    app:filtroTexto="Laptops" />
+
+                <com.fcc.reco.ui.comun.ChipFiltro
+                    android:id="@+id/filtro_apple"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    app:filtroActivo="true"
+                    app:filtroTexto="Apple" />
+
+                <com.fcc.reco.ui.comun.ChipFiltro
+                    android:id="@+id/filtro_grado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    app:filtroTexto="Grado A o B" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <com.fcc.reco.ui.comun.ChipFiltro
+                    android:id="@+id/filtro_precio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:filtroTexto="Hasta $10,000" />
+
+                <com.fcc.reco.ui.comun.ChipFiltro
+                    android:id="@+id/filtro_certificado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    app:filtroColor="@color/verde_insignia"
+                    app:filtroIcono="@drawable/ic_escudo_ok"
+                    app:filtroTexto="Certificado" />
+            </LinearLayout>
+
+            <!-- Campos -->
+            <TextView
+                style="@style/Reco.Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Campos" />
+
+            <com.fcc.reco.ui.comun.CampoTexto
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:campoEtiqueta="Correo"
+                app:campoHint="correo@alumno.buap.mx"
+                app:campoIcono="@drawable/ic_correo"
+                app:campoTipo="correo" />
+
+            <com.fcc.reco.ui.comun.CampoTexto
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:campoEtiqueta="Contraseña"
+                app:campoHint="••••••••"
+                app:campoIcono="@drawable/ic_candado"
+                app:campoTipo="contrasena" />
+
+            <!-- Pasos -->
+            <TextView
+                style="@style/Reco.Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Pasos" />
+
+            <TextView
+                style="@style/Reco.Texto.Secundario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Paso 2 de 3" />
+
+            <com.fcc.reco.ui.comun.BarraPasos
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:pasosActual="2"
+                app:pasosTotal="3" />
+
+            <!-- Mosaicos de categoría -->
+            <TextView
+                style="@style/Reco.Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Categorías" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <com.fcc.reco.ui.comun.MosaicoCategoria
+                    android:id="@+id/mosaico_1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <com.fcc.reco.ui.comun.MosaicoCategoria
+                    android:id="@+id/mosaico_2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1" />
+
+                <com.fcc.reco.ui.comun.MosaicoCategoria
+                    android:id="@+id/mosaico_3"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <com.fcc.reco.ui.comun.MosaicoCategoria
+                    android:id="@+id/mosaico_4"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <com.fcc.reco.ui.comun.MosaicoCategoria
+                    android:id="@+id/mosaico_5"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1" />
+
+                <com.fcc.reco.ui.comun.MosaicoCategoria
+                    android:id="@+id/mosaico_6"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <!-- Tarjeta y avatar -->
+            <TextView
+                style="@style/Reco.Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Tarjeta y avatar" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_tarjeta"
+                android:elevation="@dimen/elevacion_suave"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <com.fcc.reco.ui.comun.AvatarIniciales
+                    android:id="@+id/avatar"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Reco.Texto.Boton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Andrea R." />
+
+                    <TextView
+                        style="@style/Reco.Texto.Secundario"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Computación · FCC" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_chevron_der"
+                    app:tint="@color/texto_secundario" />
+            </LinearLayout>
+
+            <!-- Barra inferior -->
+            <TextView
+                style="@style/Reco.Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Barra inferior flotante" />
+
+            <TextView
+                style="@style/Reco.Texto.Secundario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Haz scroll: con API 31+ el glass desenfoca lo que pasa por detrás." />
+
+            <com.fcc.reco.ui.comun.BotonPildora
+                android:id="@+id/boton_cambiar_barra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Cambiar a barra de vendedor"
+                app:botonEstilo="secundario" />
+
+            <!-- Franjas de color para que se note el desenfoque -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:background="@drawable/bg_degradado_celulares" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_degradado_gaming" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_degradado_audio" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_degradado_calculadoras" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <com.fcc.reco.ui.comun.BarraInferiorFlotante
+        android:id="@+id/barra"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/barra_alto"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/barra_margen"
+        android:layout_marginEnd="@dimen/barra_margen"
+        android:layout_marginBottom="@dimen/barra_margen" />
+</FrameLayout>

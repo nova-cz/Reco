@@ -1,20 +1,18 @@
 package com.fcc.reco
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.fcc.reco.ui.comun.ajustarPorBarrasDelSistema
+import com.fcc.reco.ui.comun.edgeToEdgeClaro
 
+/** Marcador temporal. En la Fase 2 pasa a ser AccesoActivity. */
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        edgeToEdgeClaro()
         setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        findViewById<android.view.View>(R.id.main).ajustarPorBarrasDelSistema()
     }
 }

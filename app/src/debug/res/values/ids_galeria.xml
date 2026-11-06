@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="galeria_inicio" type="id" />
+    <item name="galeria_favoritos" type="id" />
+    <item name="galeria_carrito" type="id" />
+    <item name="galeria_compras" type="id" />
+    <item name="galeria_perfil" type="id" />
+    <item name="galeria_panel" type="id" />
+    <item name="galeria_anuncios" type="id" />
+    <item name="galeria_publicar" type="id" />
+    <item name="galeria_ventas" type="id" />
+</resources>
