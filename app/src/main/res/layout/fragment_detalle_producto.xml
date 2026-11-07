@@ -10,6 +10,7 @@
         android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/bg_fondo_app"
         android:clipToPadding="false"
         android:scrollbars="none">
 
@@ -211,13 +212,11 @@
             </LinearLayout>
 
             <!-- Especificaciones -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/lista_specs"
+            <LinearLayout
+            android:id="@+id/lista_specs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:clipToPadding="false"
-                android:nestedScrollingEnabled="false" />
+                android:layout_marginTop="12dp"  android:orientation="vertical" />
 
             <TextView
                 style="@style/Reco.Texto.Seccion"

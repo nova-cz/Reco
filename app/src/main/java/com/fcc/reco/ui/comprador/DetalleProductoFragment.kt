@@ -12,13 +12,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.fcc.reco.R
 import com.fcc.reco.data.model.Producto
 import com.fcc.reco.databinding.FragmentDetalleProductoBinding
 import com.fcc.reco.ui.comun.ChipInsignia
-import com.fcc.reco.ui.comun.EspaciadoGrid
+import com.fcc.reco.ui.comun.CuadriculaProductos
 import com.fcc.reco.ui.comun.ajustarPorBarrasDelSistema
 import com.fcc.reco.ui.comun.comoPrecio
 import com.fcc.reco.ui.comun.dp
@@ -108,9 +107,7 @@ class DetalleProductoFragment : Fragment(R.layout.fragment_detalle_producto) {
         b.vendedorReputacion.text = getString(R.string.reputacion_ventas, v.reputacion.toString(), v.ventas)
 
         // Especificaciones
-        b.listaSpecs.layoutManager = GridLayoutManager(ctx, 2)
-        b.listaSpecs.addItemDecoration(EspaciadoGrid(2, b.root.dp(10)))
-        b.listaSpecs.adapter = EspecificacionAdapter(p.especificaciones)
+        CuadriculaProductos.mostrarEspecificaciones(b.listaSpecs, p.especificaciones)
 
         // IMEI (solo celulares y tablets): únicamente los últimos 4 dígitos.
         if (p.imeiUltimos4 != null) {

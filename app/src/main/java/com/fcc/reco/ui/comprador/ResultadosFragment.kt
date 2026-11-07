@@ -11,17 +11,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import com.fcc.reco.R
 import com.fcc.reco.data.model.Orden
 import com.fcc.reco.databinding.FragmentResultadosBinding
 import com.fcc.reco.ui.comun.ChipFiltro
-import com.fcc.reco.ui.comun.EspaciadoGrid
-import com.fcc.reco.ui.comun.ProductoAdapter
+import com.fcc.reco.ui.comun.CuadriculaProductos
 import com.fcc.reco.ui.comun.ajustarPorBarrasDelSistema
 import com.fcc.reco.ui.comun.dp
 import com.fcc.reco.ui.comun.iconoInicio
 import com.fcc.reco.ui.comun.irA
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class ResultadosFragment : Fragment(R.layout.fragment_resultados) {
@@ -41,23 +40,22 @@ class ResultadosFragment : Fragment(R.layout.fragment_resultados) {
         b.selectorOrden.setOnClickListener { mostrarMenuOrden(it) }
         b.textoCarrera.text = if (viewModel.carreraCorta.isEmpty()) "" else getString(R.string.para_tu_carrera, viewModel.carreraCorta)
 
-        val adaptador = ProductoAdapter(
-            alAbrir = { nav.irA(R.id.detalleProducto, Bundle().apply { putInt("productoId", it.id) }) },
-            alAlternarFavorito = { viewModel.alternarFavorito(it) }
-        )
-        b.lista.layoutManager = GridLayoutManager(requireContext(), 2)
-        b.lista.addItemDecoration(EspaciadoGrid(2, b.root.dp(12)))
-        b.lista.adapter = adaptador
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.estado.collect { pintar(b, it, adaptador) } }
-                launch { viewModel.favoritos.collect { adaptador.favoritos = it } }
+                viewModel.estado.combine(viewModel.favoritos) { estado, favoritos -> estado to favoritos }
+                    .collect { (estado, favoritos) ->
+                        pintar(b, estado)
+                        CuadriculaProductos.mostrar(
+                            b.lista, estado.productos, favoritos,
+                            alAbrir = { nav.irA(R.id.detalleProducto, Bundle().apply { putInt("productoId", it.id) }) },
+                            alAlternarFavorito = { viewModel.alternarFavorito(it) }
+                        )
+                    }
             }
         }
     }
 
-    private fun pintar(b: FragmentResultadosBinding, estado: EstadoResultados, adaptador: ProductoAdapter) {
+    private fun pintar(b: FragmentResultadosBinding, estado: EstadoResultados) {
         val filtros = estado.filtros
         val categoria = filtros.categoria
         b.titulo.text = if (categoria != null) getString(categoria.nombre) else getString(R.string.resultados_titulo)
@@ -80,7 +78,6 @@ class ResultadosFragment : Fragment(R.layout.fragment_resultados) {
         b.selectorOrden.text = filtros.orden.etiqueta
         b.selectorOrden.iconoFin(R.drawable.ic_chevron_abajo)
 
-        adaptador.submitList(estado.productos)
         b.estadoVacio.visibility = if (estado.productos.isEmpty()) View.VISIBLE else View.GONE
     }
 

@@ -12,14 +12,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import com.fcc.reco.R
 import com.fcc.reco.data.model.Categoria
 import com.fcc.reco.data.model.Producto
 import com.fcc.reco.databinding.FragmentInicioBinding
 import com.fcc.reco.ui.comun.ChipInsignia
-import com.fcc.reco.ui.comun.EspaciadoGrid
-import com.fcc.reco.ui.comun.ProductoAdapter
+import com.fcc.reco.ui.comun.CuadriculaProductos
 import com.fcc.reco.ui.comun.ajustarPorBarrasDelSistema
 import com.fcc.reco.ui.comun.comoPrecio
 import com.fcc.reco.ui.comun.dp
@@ -66,24 +64,23 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
         b.verTodoMarcas.setOnClickListener { irAResultados() }
         b.verTodoCampus.setOnClickListener { irAResultados() }
 
-        // En tu campus
-        val adaptador = ProductoAdapter(
-            alAbrir = { nav.irA(R.id.detalleProducto, Bundle().apply { putInt("productoId", it.id) }) },
-            alAlternarFavorito = { viewModel.alternarFavorito(it) }
-        )
-        b.listaCampus.layoutManager = GridLayoutManager(requireContext(), 2)
-        b.listaCampus.addItemDecoration(EspaciadoGrid(2, b.root.dp(12)))
-        b.listaCampus.adapter = adaptador
-
+        // En tu campus: se rearma cuando cambian los datos o los favoritos.
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.estado.collect { pintar(b, it, adaptador) } }
-                launch { viewModel.favoritos.collect { adaptador.favoritos = it } }
+                viewModel.estado.combine(viewModel.favoritos) { estado, favoritos -> estado to favoritos }
+                    .collect { (estado, favoritos) ->
+                        pintar(b, estado)
+                        CuadriculaProductos.mostrar(
+                            b.listaCampus, estado.enTuCampus, favoritos,
+                            alAbrir = { nav.irA(R.id.detalleProducto, Bundle().apply { putInt("productoId", it.id) }) },
+                            alAlternarFavorito = { viewModel.alternarFavorito(it) }
+                        )
+                    }
             }
         }
     }
 
-    private fun pintar(b: FragmentInicioBinding, estado: EstadoInicio, adaptador: ProductoAdapter) {
+    private fun pintar(b: FragmentInicioBinding, estado: EstadoInicio) {
         val ctx = requireContext()
         b.avatar.configurarConNombre(
             estado.nombre,
@@ -112,7 +109,6 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
                 android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, b.root.dp(52)
             ).apply { marginEnd = b.root.dp(10) })
         }
-        adaptador.submitList(estado.enTuCampus)
     }
 
     private fun crearChipMarca(marca: String, resaltada: Boolean): TextView = TextView(requireContext()).apply {
