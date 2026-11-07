@@ -18,7 +18,7 @@ Este archivo resume todas las decisiones tomadas hasta el 6 de noviembre de 2026
 | --- | --- | --- | --- |
 | 1a | 11 y 13 nov | Auditoría de apps similares | Lista, Apéndice A del ERS |
 | 2a | 18 y 20 nov | Mapas mentales, bocetos a mano y en Balsamiq | Mapas listos en Figma; bocetos los hace Miguel |
-| 3a | 23 y 24 nov | Primer avance de la programación | Por empezar |
+| 3a | 23 y 24 nov | Primer avance de la programación | En proceso: acceso, explorar y comprar funcionando con datos simulados |
 | Final | Calendario DAE | ERS completa y app | En proceso |
 
 ## Concepto
@@ -96,6 +96,51 @@ Faltan por diseñar (12): Crear cuenta, Compra confirmada, Mis compras, Detalle 
 Barra inferior flotante con efecto glass:
 - Comprador: Inicio, Favoritos, Carrito, Compras, Perfil.
 - Vendedor: Panel, Anuncios, botón naranja "+" al centro, Ventas, Perfil.
+
+## Estado actual del proyecto (código)
+
+Última actualización: cierre de la sesión de trabajo del 6 de noviembre de 2026. Repo: `github.com/nova-cz/Reco` (rama `main`). Paquete `com.fcc.reco`, minSdk 26, targetSdk 37, AGP 9 con Kotlin integrado.
+
+### Hecho y probado en el emulador
+
+| Fase / flujo | Qué incluye |
+| --- | --- |
+| Fase 1 · Base | Tema siempre claro, colores del Figma, fuente Inter (4 pesos), íconos Lucide como vector drawables, fondo con manchas, ícono adaptativo y pantalla de arranque con el camaleón. Componentes: `GlassView` (blur real con RenderEffect en API 31+), `BarraInferiorFlotante`, `BotonPildora`, `ChipInsignia`, `ChipFiltro`, `CampoTexto`, `BarraPasos`, `AvatarIniciales`, `MosaicoCategoria`. Galería de componentes solo en debug ("Reco · Galería"). |
+| Fase 2 · Acceso | Bienvenida → Iniciar sesión / Crear cuenta (misma pantalla con `modoRegistro`) → Verificar estudiante → hoja para elegir carrera → ¿Qué quieres hacer? Verificación con portal institucional **simulado dentro de la app** (`PortalSimuladoActivity`) que regresa por el deep link `reco://verificado?correo=...` y valida el dominio `alumno.buap.mx`. Recuerda sesión y último modo. |
+| Fase 3 · Explorar | `CompradorActivity` con `nav_comprador` y barra inferior que navega (con contador del carrito). Inicio, Resultados (chips de filtro, búsqueda, orden) y Detalle (galería simulada, vendedor, especificaciones, IMEI con últimos 4 dígitos, barra de precio glass). 30 productos simulados. `VendedorActivity` como cascarón con su barra y el botón "+". |
+| Flujo 3 · Comprar | Carrito (agrupado por vendedor) → Entrega y pago (punto y horario por vendedor + hoja de tarjeta de prueba validada con Luhn, vencimiento y CVC) → Compra confirmada. Un pedido por vendedor con el pago retenido, comisión 13.6 % + $8. Los equipos comprados salen del catálogo. |
+
+Persistencia: carrito, favoritos y pedidos se guardan en JSON internos (`AlmacenJson`, en `filesDir`). La sesión va en SharedPreferences (`SesionLocal`). Pruebas unitarias en `src/test`: `ValidadorAcceso`, `Comision`, `Luhn` y `ValidadorPago`.
+
+### Pendiente (en el orden acordado)
+
+1. **Flujo 2 · Favoritos**: pantalla con los equipos marcados (el repositorio ya existe; hoy la pestaña es un marcador "Próximamente").
+2. **Flujo 4 · Seguimiento**: Mis compras → Detalle de pedido → Confirmar entrega (libera el pago) → Calificar vendedor. Falta ampliar `PedidoRepository` (`marcarEntregado`, `confirmarEntrega`, `abrirReclamo`) y crear `CalificacionRepository`. La pestaña Compras es un marcador.
+3. **Flujo 5 · Volverse vendedor**: Perfil "¿Quieres vender algo?" → Registro de vendedor (Figma `7:219`). Hoy el Perfil es mínimo (`PerfilBasicoFragment`: datos, cambiar de modo, cerrar sesión).
+4. **Flujo 6 · Publicar**: 5 pasos con patrón Builder (Figma `8:134` y `8:257` para los pasos 1 y 2; 3 a 5 sin diseño). Validación con `ValidadorPublicacion` (IMEI de 15 dígitos con Luhn —ya existe `domain/Luhn.kt`—, lista `imei_bloqueados`, IMEI no duplicado, 4 a 8 fotos, precio entre 30 % y 100 % del precio de referencia, máximo 3 anuncios activos del vendedor nuevo). Estados del anuncio, y moderación con botón de debug (aprobar/rechazar). Falta el catálogo de modelos con precio de referencia.
+5. **Flujo 7 · Gestionar ventas**: Panel (Figma `7:307`) → Mis anuncios con estados → Ventas con detalle integrado, "Marcar entregado" y ganancia neta. El anuncio aprobado debe aparecer en el catálogo del comprador y cada compra en Ventas del vendedor (hoy el catálogo es estático en `DatosSimulados`).
+6. **Flujo 8 · Perfil completo** y pulido general (estados vacíos, errores, rotación).
+7. **Supabase (obligatorio para la entrega final)**: `schema.sql`, `seed.sql`, RLS, Auth con correo, fotos en Storage, tablas de perfiles, productos, pedidos (+ `pedido_items`), calificaciones y favoritos. Solo se cambia la implementación de los repositorios, que ya son interfaces; el punto de cambio es `data/Repositorios.kt`. Google Sign-In real (Credential Manager) y verificación institucional con Chrome Custom Tab si alcanza.
+
+### Decisiones tomadas durante la implementación
+
+- **Colores**: se respeta el Figma tal cual. Tablets es casi negro `#0F0F12` (no verde). El verde solo va en el logo, el chip "Estudiante verificado", la insignia "Certificado" y detalles que el Figma pinta de verde (escudo de "Pago protegido", "Gratis en tu campus"); nunca en botones, barras de progreso ni pestañas activas.
+- **Glass**: translúcido con borde de luz como base; con API 31+ y `vincularFondo(vista)` desenfoca esa vista. Regla: el fondo debe ser **hermano** de la barra (no ancestro) y llevar él mismo `bg_fondo_app`; si no, el texto de atrás se ve nítido.
+- **Cuadrículas**: no usar un `RecyclerView` anidado en un `ScrollView` (solo mostraba la primera fila). Se usa `CuadriculaProductos`, que arma filas en un `LinearLayout`.
+- **Navegación**: los argumentos de texto con valor por defecto en los grafos van literales (Navigation no acepta `@string`); los argumentos viajan en `Bundle` con las claves `categoria`, `marca`, `consulta`, `productoId`, `pedidoIds`, `modoRegistro`, `titulo`. El helper `NavController.irA(...)` aplica las animaciones. La barra inferior del comprador se oculta en Detalle, Carrito, Entrega y pago y Compra confirmada, que traen su propia barra.
+- **Verificación**: el Plan B simulado es una Activity propia, no una página web, porque no hay dónde alojarla. Con el login real pasa a Chrome Custom Tab.
+- **Modelo de pedidos**: un pedido por vendedor con varios equipos (`productoIds`), como muestra el Figma del Carrito.
+- **Datos por usuario**: carrito, favoritos y pedidos son por dispositivo y "Cerrar sesión" no los borra; con Supabase serán por usuario.
+- **Botón de filtros** de Inicio y Resultados: solo limpia los filtros (la hoja avanzada está fuera de alcance).
+- **Crear cuenta** reutiliza la pantalla de Iniciar sesión.
+
+### Cómo trabajar en este repo
+
+- Compilar y probar: `./gradlew assembleDebug testDebugUnitTest`. Correr siempre tras cada fase y corregir antes de seguir.
+- Commits en español, a nombre de Miguel Angel Cruz Reyes con la configuración de git existente, **sin** líneas `Co-Authored-By`, "Generated with Claude" ni atribuciones. **No** hacer `git push` salvo que Miguel lo pida. La carpeta `.idea/` no se sube.
+- Al cerrar cada flujo: probar en el emulador (AVD `Pixel_10a`), hacer commit, detenerse y decir qué probar.
+- Antes de construir cada pantalla, consultar su nodo en Figma (archivo `3dFv6cBGuMqbBVZS0wD9YL`). Nodos: Bienvenida `1:16`, Iniciar sesión `1:101`, Verificar `1:152`, ¿Qué quieres hacer? `1:219`, Inicio `2:47`, Resultados `2:243`, Detalle `6:68`, Carrito `6:194`, Entrega y pago `6:319`, Perfil `7:101`, Registro de vendedor `7:219`, Panel `7:307`, Publicar 1 `8:134`, Publicar 2 `8:257`, Marca `16:240`. Las pantallas sin diseño se hacen con el mismo estilo.
+- Los íconos son Lucide convertidos a vector drawable; los mosaicos y botones usan los degradados muestreados del Figma.
 
 ## Alcance final y orden de trabajo (acordado)
 
@@ -243,10 +288,8 @@ RLS:
 
 ## Datos simulados
 
-- Unos 30 productos de prueba en Supabase, con fotos en Storage.
-- Universidad BUAP con dominio `alumno.buap.mx`. Puntos de entrega de ejemplo: Biblioteca Central de CU y Cafetería FCC.
-- Tabla `imei_bloqueados` con algunos IMEI de prueba.
-- Pagos con Stripe en modo de prueba. No hay dinero real.
+- **Hoy** (antes de Supabase): 30 productos en memoria en `DatosSimulados` con un ícono de categoría sobre gris como foto; 5 vendedores de prueba; universidad BUAP con dominio `alumno.buap.mx`; puntos de entrega Biblioteca Central (Ciudad Universitaria, planta baja) y Cafetería FCC (Edificio CCO1); horarios Lun 11:00, Mar 13:00, Mié 16:00 y Jue 12:00. Pagos simulados (tarjeta de prueba 4242 4242 4242 4242, sin dinero real).
+- **Con Supabase**: unos 30 productos de prueba en la base, con fotos en Storage; tabla `imei_bloqueados` con algunos IMEI de prueba; Stripe en modo de prueba solo si se decide usarlo.
 
 ## Fuera de alcance (requisitos futuros)
 
@@ -254,22 +297,23 @@ Chat en tiempo real, ofertas, pasarela de pago real, consulta real de IMEI, mese
 
 ## Pendientes por definir
 
-1. **Proveedor de cuentas de la BUAP**: averiguar si es Microsoft o Google. Eso decide si va el login institucional real o el plan B simulado.
-2. ~~Package name~~ **Resuelto**: el paquete y `applicationId` es `com.fcc.reco`, con minSdk 26 y targetSdk 37.
-3. **Catálogo de modelos** con su precio de referencia, que se usa para validar el precio. Se necesitan unos 30 a 50 modelos.
-4. **Lista de puntos de entrega y horarios** reales de CU.
+1. **Proveedor de cuentas de la BUAP**: averiguar si es Microsoft o Google. Eso decide si va el login institucional real o se queda el plan B simulado.
+2. ~~Package name~~ **Resuelto**: `com.fcc.reco`, minSdk 26, targetSdk 37.
+3. **Catálogo de modelos** con su precio de referencia (30 a 50 modelos), que se usa para validar el precio al publicar.
+4. **Puntos de entrega y horarios reales** de CU (hoy son los dos de ejemplo).
 5. **Costo de la certificación de pago**, por ejemplo $99 MXN.
-6. **Stripe**: confirmar si se hace con PaymentSheet y Edge Function o con el plan B simulado.
-7. **Fotos de los productos simulados**: fotos propias o de prueba.
-8. Diseño de las 12 pantallas restantes.
+6. ~~Stripe~~ **Resuelto por ahora**: pago simulado con pantalla de tarjeta propia (plan B). Stripe PaymentSheet con Edge Function solo si sobra tiempo.
+7. **Fotos de los productos simulados**: fotos propias o de prueba para Storage.
+8. **Diseño de las pantallas sin Figma** que sí están en el alcance: Compra confirmada y Favoritos (ya construida o por construir con el mismo estilo), Mis compras, Detalle de pedido, Publicar 3 a 5, Mis anuncios y Ventas. Quedaron fuera de alcance: Notificaciones, Perfil público del vendedor, hoja de filtros avanzada, Detalle de venta aparte y Crear cuenta aparte.
 
-## Orden sugerido para la 3a entrega (23 y 24 nov)
+## Avance respecto a la 3a entrega (23 y 24 nov)
 
-1. Proyecto base: Gradle, dependencias, tema, colores y tipografía Inter.
-2. Cliente de Supabase, `schema.sql` y `seed.sql`.
-3. Acceso: login con correo y Google, verificación (plan B si hace falta) y elegir modo.
-4. Inicio y Resultados con datos reales de Supabase, más Detalle de producto.
-5. Navegación de comprador y vendedor con las barras inferiores.
+1. ~~Proyecto base: Gradle, dependencias, tema, colores y tipografía Inter~~ (hecho).
+2. Cliente de Supabase, `schema.sql` y `seed.sql`: **pendiente** (va al final; hoy los repositorios son simulados).
+3. ~~Acceso: login con correo y Google, verificación (plan B) y elegir modo~~ (hecho, simulado).
+4. ~~Inicio, Resultados y Detalle de producto~~ (hecho con datos simulados; falta conectarlos a Supabase).
+5. ~~Navegación de comprador y vendedor con las barras inferiores~~ (hecho; el vendedor es un cascarón).
+6. Extra ya hecho: flujo de compra completo (Carrito, Entrega y pago, Compra confirmada).
 
 ## Convenciones
 
@@ -277,3 +321,6 @@ Chat en tiempo real, ofertas, pasarela de pago real, consulta real de IMEI, mese
 - Nombres de clases y métodos en español, como en el ERS.
 - Código completo y listo para pegar cuando se pida un archivo.
 - Ningún secreto en el repositorio. Las llaves de Supabase y Stripe van en `local.properties` o en variables de la Edge Function.
+- Los textos de la interfaz van en `strings.xml` (excepto los valores por defecto de argumentos de navegación).
+- Un ViewModel por pantalla o flujo, con `StateFlow` y eventos de una sola vez por `Channel`; los fragments recolectan con `repeatOnLifecycle(STARTED)`.
+- Los repositorios son interfaces con implementación `...Simulado`; se obtienen desde `Repositorios` (inicializado en `RecoApp`).
