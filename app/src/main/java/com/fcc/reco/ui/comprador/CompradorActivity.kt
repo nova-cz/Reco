@@ -38,9 +38,10 @@ class CompradorActivity : AppCompatActivity() {
         b.barra.vincular(nav)
         b.barra.sumarMargenInferiorDeBarras(16)
 
-        // En el Detalle la barra se reemplaza por la barra de precio.
+        // En estas pantallas la barra inferior se reemplaza por su propia barra (precio, total o pagar).
+        val sinBarra = setOf(R.id.detalleProducto, R.id.carrito, R.id.entregaPago, R.id.compraConfirmada)
         nav.addOnDestinationChangedListener { _, destino, _ ->
-            b.barra.visibility = if (destino.id == R.id.detalleProducto) View.GONE else View.VISIBLE
+            b.barra.visibility = if (destino.id in sinBarra) View.GONE else View.VISIBLE
         }
 
         lifecycleScope.launch {

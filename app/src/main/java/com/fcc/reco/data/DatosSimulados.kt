@@ -4,6 +4,7 @@ import com.fcc.reco.data.model.Categoria
 import com.fcc.reco.data.model.Especificacion
 import com.fcc.reco.data.model.Grado
 import com.fcc.reco.data.model.Producto
+import com.fcc.reco.data.model.PuntoEntrega
 import com.fcc.reco.data.model.Universidad
 import com.fcc.reco.data.model.VendedorResumen
 
@@ -22,6 +23,13 @@ object DatosSimulados {
         "Diseño Gráfico",
         "Otra carrera"
     )
+
+    val puntosEntrega = listOf(
+        PuntoEntrega("Biblioteca Central", "Ciudad Universitaria · planta baja"),
+        PuntoEntrega("Cafetería FCC", "Edificio CCO1")
+    )
+
+    val horariosEntrega = listOf("Lun 11:00", "Mar 13:00", "Mié 16:00", "Jue 12:00")
 
     private val vendedores = listOf(
         VendedorResumen("Andrea R.", "Computación", "FCC", 4.9, 12),

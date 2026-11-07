@@ -46,6 +46,7 @@
             <enum name="texto" value="0" />
             <enum name="correo" value="1" />
             <enum name="contrasena" value="2" />
+            <enum name="numero" value="3" />
         </attr>
     </declare-styleable>
 

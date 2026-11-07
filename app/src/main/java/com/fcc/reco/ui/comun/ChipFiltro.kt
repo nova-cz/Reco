@@ -24,6 +24,13 @@ class ChipFiltro @JvmOverloads constructor(
             aplicar()
         }
 
+    /** Si es falso, al activarse conserva su propio ícono en vez de mostrar la "x". */
+    var cerrarAlActivar = true
+        set(valor) {
+            field = valor
+            aplicar()
+        }
+
     private var iconoRes = 0
     private var colorInactivo = 0
 
@@ -47,11 +54,16 @@ class ChipFiltro @JvmOverloads constructor(
         aplicar()
     }
 
+    fun ponerIcono(@androidx.annotation.DrawableRes recurso: Int) {
+        iconoRes = recurso
+        aplicar()
+    }
+
     private fun aplicar() {
         if (activo) {
             setBackgroundResource(R.drawable.bg_chip_negro)
             setTextColor(Color.WHITE)
-            iconoInicio(R.drawable.ic_cerrar, 14, Color.WHITE)
+            iconoInicio(if (cerrarAlActivar) R.drawable.ic_cerrar else iconoRes, 14, Color.WHITE)
         } else {
             setBackgroundResource(R.drawable.bg_chip_blanco)
             setTextColor(colorInactivo)

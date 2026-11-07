@@ -14,9 +14,13 @@ interface ProductoRepository {
 }
 
 /** Catálogo en memoria. La versión real consulta Supabase (solo anuncios Publicados). */
-class ProductoRepositorySimulado : ProductoRepository {
+class ProductoRepositorySimulado(
+    private val idsVendidos: () -> Set<Int> = { emptySet() }
+) : ProductoRepository {
 
-    private val catalogo = DatosSimulados.productos
+    private val todos = DatosSimulados.productos
+    /** Cada equipo es pieza única: sale del catálogo cuando se paga. */
+    private val catalogo: List<Producto> get() = idsVendidos().let { vendidos -> todos.filter { it.id !in vendidos } }
 
     override fun obtenerPublicados(filtros: FiltrosProducto): List<Producto> {
         val consulta = filtros.consulta.trim().lowercase()
@@ -36,7 +40,7 @@ class ProductoRepositorySimulado : ProductoRepository {
         }
     }
 
-    override fun obtenerPorId(id: Int): Producto? = catalogo.firstOrNull { it.id == id }
+    override fun obtenerPorId(id: Int): Producto? = todos.firstOrNull { it.id == id }
 
     override fun marcas(): List<String> =
         catalogo.groupingBy { it.marca }.eachCount().entries

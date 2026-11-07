@@ -103,6 +103,7 @@ class CampoTexto @JvmOverloads constructor(
                 esContrasena = true
                 editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
+            3 -> editText.inputType = InputType.TYPE_CLASS_NUMBER
             else -> editText.inputType = InputType.TYPE_CLASS_TEXT
         }
         editText.typeface = ResourcesCompat.getFont(context, R.font.inter_regular)

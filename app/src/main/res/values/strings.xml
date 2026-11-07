@@ -136,4 +136,43 @@
     <string name="reputacion_ventas">%1$s · %2$d ventas</string>
     <string name="carrera_facultad">%1$s · %2$s</string>
     <string name="categoria_marca">%1$s · %2$s</string>
+
+    <!-- Carrito / Entrega y pago / Compra confirmada -->
+    <string name="carrito_titulo">Carrito</string>
+    <string name="carrito_vacio">Tu carrito está vacío</string>
+    <string name="carrito_vacio_desc">Agrega equipos de estudiantes de tu campus.</string>
+    <string name="explorar">Explorar</string>
+    <string name="pedido_numero">Pedido %1$d · %2$s · %3$s</string>
+    <string name="subtotal_productos">Subtotal · %1$d productos</string>
+    <string name="subtotal_producto">Subtotal · 1 producto</string>
+    <string name="entrega">Entrega</string>
+    <string name="entrega_gratis">Gratis en tu campus</string>
+    <string name="total">Total</string>
+    <string name="continuar">Continuar</string>
+    <string name="quitar">Quitar</string>
+    <string name="entrega_y_pago">Entrega y pago</string>
+    <string name="pedido_vendedor">Pedido %1$d · %2$s</string>
+    <string name="punto_de_entrega">Punto de entrega</string>
+    <string name="dia_y_horario">Día y horario</string>
+    <string name="tarjeta_terminacion">Tarjeta •••• %1$s</string>
+    <string name="tarjeta_modo_prueba">Pago simulado · modo de prueba</string>
+    <string name="cambiar">Cambiar</string>
+    <string name="retencion_nota">El vendedor recibe el dinero hasta que confirmas que te entregó el equipo.</string>
+    <string name="pagar">Pagar</string>
+    <string name="pagando">Pagando…</string>
+    <string name="tarjeta_titulo">Tarjeta de prueba</string>
+    <string name="tarjeta_desc">No se cobra dinero real. Usa 4242 4242 4242 4242, cualquier fecha futura y 3 dígitos.</string>
+    <string name="tarjeta_numero">Número de tarjeta</string>
+    <string name="tarjeta_vence">Vence (MM/AA)</string>
+    <string name="tarjeta_cvc">CVC</string>
+    <string name="guardar_tarjeta">Guardar tarjeta</string>
+    <string name="error_tarjeta_numero">Número de tarjeta no válido</string>
+    <string name="error_tarjeta_vence">Fecha no válida</string>
+    <string name="error_tarjeta_cvc">3 dígitos</string>
+    <string name="compra_confirmada">¡Compra confirmada!</string>
+    <string name="compra_confirmada_desc">Tu pago queda retenido y el vendedor lo recibe hasta que confirmes la entrega.</string>
+    <string name="ver_mis_compras">Ver mis compras</string>
+    <string name="seguir_explorando">Seguir explorando</string>
+    <string name="pedido_resumen_entrega">%1$s · %2$s</string>
+    <string name="error_pago">No se pudo procesar el pago. Intenta de nuevo.</string>
 </resources>

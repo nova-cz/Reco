@@ -31,13 +31,18 @@
 
     <fragment
         android:id="@+id/carrito"
-        android:name="com.fcc.reco.ui.comun.PlaceholderFragment"
-        tools:layout="@layout/fragment_placeholder">
-        <argument
-            android:name="titulo"
-            android:defaultValue="Carrito"
-            app:argType="string" />
-    </fragment>
+        android:name="com.fcc.reco.ui.comprador.CarritoFragment"
+        tools:layout="@layout/fragment_carrito" />
+
+    <fragment
+        android:id="@+id/entregaPago"
+        android:name="com.fcc.reco.ui.comprador.EntregaPagoFragment"
+        tools:layout="@layout/fragment_entrega_pago" />
+
+    <fragment
+        android:id="@+id/compraConfirmada"
+        android:name="com.fcc.reco.ui.comprador.CompraConfirmadaFragment"
+        tools:layout="@layout/fragment_compra_confirmada" />
 
     <fragment
         android:id="@+id/compras"

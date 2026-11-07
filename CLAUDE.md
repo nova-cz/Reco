@@ -97,6 +97,29 @@ Barra inferior flotante con efecto glass:
 - Comprador: Inicio, Favoritos, Carrito, Compras, Perfil.
 - Vendedor: Panel, Anuncios, botón naranja "+" al centro, Ventas, Perfil.
 
+## Alcance final y orden de trabajo (acordado)
+
+Unas 21 pantallas en 8 flujos. Cada flujo se construye completo, se prueba en el emulador y se commitea antes del siguiente.
+
+1. **Acceso y verificación** (hecho): Bienvenida → Iniciar sesión → Verificar estudiante → ¿Qué quieres hacer?
+2. **Explorar**: Inicio → Resultados → Detalle (hechos) + Favoritos.
+3. **Comprar**: Carrito (agrupado por vendedor) → Entrega y pago (punto y horario por vendedor + pantalla de tarjeta simulada, sin Stripe) → Compra confirmada (dinero retenido).
+4. **Seguimiento**: Mis compras → Detalle de pedido → Confirmar entrega → Calificar vendedor.
+5. **Volverse vendedor**: Perfil "¿Quieres vender algo?" → Registro de vendedor.
+6. **Publicar**: 5 pasos con validación (IMEI con Luhn, fotos, rango de precio) → En revisión → moderación con botón de debug (aprobar/rechazar) → Publicado.
+7. **Gestionar ventas**: Panel → Mis anuncios (estados) → Ventas con detalle integrado, "Marcar entregado" y ganancia neta (13.6% + $8).
+8. **Cuenta**: Perfil completo, cambiar de modo y cerrar sesión.
+
+**Fuera de alcance** (recortado): Notificaciones, Perfil público del vendedor, hoja de filtros avanzada, Detalle de venta como pantalla aparte y Crear cuenta como pantalla aparte (reutiliza Iniciar sesión).
+
+**Orden**: Comprar completo → Vender completo → Perfil y conexión → Supabase.
+
+**Supabase es obligatorio para la entrega final** (Auth con correo; tablas de perfiles, productos, pedidos, calificaciones y favoritos; fotos en Storage; Google Sign-In real si alcanza). Va como última fase: como los repositorios son interfaces, solo se cambia la implementación.
+
+**Datos simulados mientras tanto**: persisten al cerrar la app en archivos JSON internos (`filesDir`, sin Room ni DataStore), para que lo publicado y comprado no se pierda en la demo. Todo está conectado: lo publicado y aprobado aparece en el catálogo del comprador, y cada compra aparece en Ventas del vendedor con su estado.
+
+**Decisión de modelo**: un pedido por vendedor puede incluir varios equipos (`productoIds`), como muestra el Figma del Carrito. En Supabase será `pedidos` + `pedido_items`.
+
 ## Reglas de publicación
 
 1. Solo categorías de electrónica, y el equipo debe encender y funcionar.
