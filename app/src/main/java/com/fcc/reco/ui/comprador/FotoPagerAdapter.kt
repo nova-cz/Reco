@@ -5,9 +5,14 @@ import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.RecyclerView
 import com.fcc.reco.databinding.ItemFotoDetalleBinding
+import com.fcc.reco.ui.comun.mostrarFoto
 
 /** Galería simulada: repite el ícono de la categoría sobre gris, como en el Figma. */
-class FotoPagerAdapter(@DrawableRes private val icono: Int, private val cantidad: Int) :
+class FotoPagerAdapter(
+    @DrawableRes private val icono: Int,
+    private val cantidad: Int,
+    private val fotos: List<String> = emptyList()
+) :
     RecyclerView.Adapter<FotoPagerAdapter.Holder>() {
 
     class Holder(val b: ItemFotoDetalleBinding) : RecyclerView.ViewHolder(b.root)
@@ -15,7 +20,8 @@ class FotoPagerAdapter(@DrawableRes private val icono: Int, private val cantidad
     override fun onCreateViewHolder(padre: ViewGroup, tipo: Int) =
         Holder(ItemFotoDetalleBinding.inflate(LayoutInflater.from(padre.context), padre, false))
 
-    override fun onBindViewHolder(h: Holder, posicion: Int) = h.b.icono.setImageResource(icono)
+    override fun onBindViewHolder(h: Holder, posicion: Int) =
+        h.b.icono.mostrarFoto(listOfNotNull(fotos.getOrNull(posicion)), icono)
 
     override fun getItemCount() = cantidad
 }

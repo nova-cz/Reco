@@ -57,10 +57,11 @@ object CuadriculaProductos {
         }
     }
 
-    private fun <T> armarFilas(
+    fun <T> armarFilas(
         contenedor: LinearLayout,
         elementos: List<T>,
         espacioDp: Int = 12,
+        igualarAlturas: Boolean = true,
         crearVista: (ViewGroup, T) -> View
     ) {
         val ctx = contenedor.context
@@ -69,7 +70,7 @@ object CuadriculaProductos {
             val fila = LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL }
             grupo.forEachIndexed { columna, elemento ->
                 fila.addView(crearVista(fila, elemento), LinearLayout.LayoutParams(
-                    0, ViewGroup.LayoutParams.MATCH_PARENT, 1f
+                    0, if (igualarAlturas) ViewGroup.LayoutParams.MATCH_PARENT else ViewGroup.LayoutParams.WRAP_CONTENT, 1f
                 ).apply { if (columna == 1) marginStart = espacio })
             }
             if (grupo.size == 1) {
@@ -83,7 +84,7 @@ object CuadriculaProductos {
 
     private fun enlazar(b: ItemProductoBinding, p: Producto, esFavorito: Boolean, vendido: Boolean = false) {
         val ctx = b.root.context
-        b.icono.setImageResource(p.categoria.icono)
+        b.icono.mostrarFoto(p.fotos, p.categoria.icono)
         b.titulo.text = p.titulo
         b.precio.text = p.precio.comoPrecio()
         b.punto.text = p.puntoEntrega

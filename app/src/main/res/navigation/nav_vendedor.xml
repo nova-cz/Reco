@@ -7,33 +7,18 @@
 
     <fragment
         android:id="@+id/panel"
-        android:name="com.fcc.reco.ui.comun.PlaceholderFragment"
-        tools:layout="@layout/fragment_placeholder">
-        <argument
-            android:name="titulo"
-            android:defaultValue="Panel"
-            app:argType="string" />
-    </fragment>
+        android:name="com.fcc.reco.ui.vendedor.PanelFragment"
+        tools:layout="@layout/fragment_panel" />
 
     <fragment
         android:id="@+id/anuncios"
-        android:name="com.fcc.reco.ui.comun.PlaceholderFragment"
-        tools:layout="@layout/fragment_placeholder">
-        <argument
-            android:name="titulo"
-            android:defaultValue="Anuncios"
-            app:argType="string" />
-    </fragment>
+        android:name="com.fcc.reco.ui.vendedor.AnunciosFragment"
+        tools:layout="@layout/fragment_anuncios" />
 
     <fragment
         android:id="@+id/ventas"
-        android:name="com.fcc.reco.ui.comun.PlaceholderFragment"
-        tools:layout="@layout/fragment_placeholder">
-        <argument
-            android:name="titulo"
-            android:defaultValue="Ventas"
-            app:argType="string" />
-    </fragment>
+        android:name="com.fcc.reco.ui.vendedor.VentasFragment"
+        tools:layout="@layout/fragment_ventas" />
 
     <fragment
         android:id="@+id/perfilVendedor"

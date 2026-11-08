@@ -6,6 +6,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.fcc.reco.R
+import com.fcc.reco.data.model.EstadoAnuncio
 import com.fcc.reco.data.model.EstadoPedido
 
 /** Pares texto/fondo de los chips de estado (Figma). */
@@ -46,4 +47,14 @@ val EstadoPedido.estiloComprador: EstiloEstado
         EstadoPedido.LIBERADO -> EstiloEstado.VERDE
         EstadoPedido.EN_RECLAMO -> EstiloEstado.ROJO
         EstadoPedido.CANCELADO -> EstiloEstado.GRIS
+    }
+
+/** Color del chip de cada estado de anuncio. */
+val EstadoAnuncio.estilo: EstiloEstado
+    get() = when (this) {
+        EstadoAnuncio.PUBLICADO -> EstiloEstado.VERDE
+        EstadoAnuncio.EN_REVISION -> EstiloEstado.NARANJA
+        EstadoAnuncio.RECHAZADO -> EstiloEstado.ROJO
+        EstadoAnuncio.VENDIDO, EstadoAnuncio.RESERVADO -> EstiloEstado.AZUL
+        EstadoAnuncio.PAUSADO, EstadoAnuncio.BORRADOR -> EstiloEstado.GRIS
     }

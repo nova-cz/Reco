@@ -60,7 +60,9 @@ class DetalleProductoFragment : Fragment(R.layout.fragment_detalle_producto) {
                 launch {
                     viewModel.carrito.collect { ids ->
                         val enCarrito = producto.id in ids
-                        b.botonAgregar.setText(if (enCarrito) R.string.ir_al_carrito else R.string.agregar_carrito)
+                        // Nadie puede comprar sus propios anuncios.
+                        b.botonAgregar.isEnabled = !producto.esPropio
+                        b.botonAgregar.setText(if (producto.esPropio) R.string.anuncio_propio else if (enCarrito) R.string.ir_al_carrito else R.string.agregar_carrito)
                         b.botonAgregar.setOnClickListener {
                             if (enCarrito) findNavController().irA(R.id.carrito) else viewModel.agregarAlCarrito()
                         }
@@ -117,8 +119,8 @@ class DetalleProductoFragment : Fragment(R.layout.fragment_detalle_producto) {
         }
 
         // Galería simulada con indicador de puntos
-        val fotos = 4
-        b.pager.adapter = FotoPagerAdapter(p.categoria.icono, fotos)
+        val fotos = if (p.fotos.isNotEmpty()) p.fotos.size else 4
+        b.pager.adapter = FotoPagerAdapter(p.categoria.icono, fotos, p.fotos)
         crearPuntos(b, fotos)
         marcarPunto(b, 0)
         b.pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
