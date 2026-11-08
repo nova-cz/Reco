@@ -247,7 +247,8 @@ begin
   end if;
   return new;
 end $$;
-create trigger productos_limite before insert or update of estado on productos
+-- Dispara en todo UPDATE (no solo "of estado"): productos_estado puede cambiar new.estado y corre antes (orden alfabético).
+create trigger productos_limite before insert or update on productos
   for each row execute function limitar_anuncios_activos();
 
 -- Nadie compra sus propios anuncios ni equipos que no están publicados; al pagarse, el equipo sale del catálogo.
@@ -318,8 +319,12 @@ create function verificar_estudiante() returns void language plpgsql security de
 declare uni uuid; correo text;
 begin
   select u.id, lower(i.identity_data ->> 'email') into uni, correo
-  from auth.identities i join universidades u on lower(i.identity_data ->> 'email') like '%@' || u.dominio
-  where i.user_id = auth.uid() limit 1;
+  from auth.identities i
+  join universidades u on split_part(lower(i.identity_data ->> 'email'), '@', 2) = lower(u.dominio)
+  where i.user_id = auth.uid()
+    and i.provider in ('azure', 'google')                                   -- proveedores de la universidad
+    and coalesce((i.identity_data ->> 'email_verified')::boolean, false)    -- correo verificado por el proveedor
+  limit 1;
   if uni is null then raise exception 'No hay una cuenta institucional ligada'; end if;
   update perfiles set verificado = true, universidad_id = uni, correo_institucional = correo where id = auth.uid();
 end $$;
@@ -404,6 +409,7 @@ grant update (nombre, carrera, semestre, telefono, punto_preferido_id, disponibi
 create view perfiles_publicos with (security_invoker = false) as
   select id, nombre, carrera, universidad_id, verificado, es_vendedor, reputacion, ventas_completadas, creado
   from perfiles;
+revoke all on perfiles_publicos from anon, public;
 grant select on perfiles_publicos to authenticated;
 
 -- Productos: el comprador solo lee los publicados (y los que ya compró); el vendedor solo edita los suyos.
