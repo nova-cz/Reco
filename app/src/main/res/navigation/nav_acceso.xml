@@ -29,4 +29,9 @@
         android:id="@+id/elegirModo"
         android:name="com.fcc.reco.ui.acceso.ElegirModoFragment"
         tools:layout="@layout/fragment_elegir_modo" />
+
+    <fragment
+        android:id="@+id/registroVendedor"
+        android:name="com.fcc.reco.ui.vendedor.RegistroVendedorFragment"
+        tools:layout="@layout/fragment_registro_vendedor" />
 </navigation>

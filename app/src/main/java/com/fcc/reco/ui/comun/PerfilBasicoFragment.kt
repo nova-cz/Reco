@@ -11,6 +11,7 @@ import com.fcc.reco.data.repository.PerfilRepositorySimulado
 import com.fcc.reco.databinding.FragmentPerfilBasicoBinding
 import com.fcc.reco.ui.acceso.abrirModoYTerminar
 import com.fcc.reco.ui.acceso.cerrarSesionYSalir
+import androidx.navigation.fragment.findNavController
 import com.fcc.reco.ui.vendedor.VendedorActivity
 
 /** Perfil mínimo (datos de la sesión, cambiar de modo y cerrar sesión) mientras se diseña el real. */
@@ -31,10 +32,16 @@ class PerfilBasicoFragment : Fragment(R.layout.fragment_perfil_basico) {
 
         val enModoVendedor = requireActivity() is VendedorActivity
         val otroModo = if (enModoVendedor) ModoUsuario.COMPRADOR else ModoUsuario.VENDEDOR
-        b.botonCambiar.setText(if (enModoVendedor) R.string.cambiar_a_comprador else R.string.cambiar_a_vendedor)
-        b.botonCambiar.setOnClickListener {
-            PerfilRepositorySimulado(local).cambiarModo(otroModo)
-            requireActivity().abrirModoYTerminar(otroModo)
+        if (!enModoVendedor && sesion?.esVendedor != true) {
+            // Aún no es vendedor: "¿Quieres vender algo?" lleva al registro.
+            b.botonCambiar.setText(R.string.quieres_vender)
+            b.botonCambiar.setOnClickListener { findNavController().irA(R.id.registroVendedor) }
+        } else {
+            b.botonCambiar.setText(if (enModoVendedor) R.string.cambiar_a_comprador else R.string.cambiar_a_vendedor)
+            b.botonCambiar.setOnClickListener {
+                PerfilRepositorySimulado(local).cambiarModo(otroModo)
+                requireActivity().abrirModoYTerminar(otroModo)
+            }
         }
         b.botonSalir.setOnClickListener { requireActivity().cerrarSesionYSalir() }
     }

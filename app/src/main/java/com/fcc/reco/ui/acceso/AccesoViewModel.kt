@@ -37,6 +37,7 @@ sealed interface EventoAcceso {
     data object IrAVerificar : EventoAcceso
     data object MostrarCarrera : EventoAcceso
     data object IrAElegirModo : EventoAcceso
+    data object IrARegistroVendedor : EventoAcceso
     data class AbrirModo(val modo: ModoUsuario) : EventoAcceso
     data class Mensaje(val texto: Int) : EventoAcceso
 }
@@ -113,6 +114,11 @@ class AccesoViewModel(aplicacion: Application) : AndroidViewModel(aplicacion) {
     }
 
     fun elegirModo(modo: ModoUsuario) {
+        // Para vender primero hay que completar el registro de vendedor.
+        if (modo == ModoUsuario.VENDEDOR && sesion()?.esVendedor != true) {
+            viewModelScope.launch { _eventos.send(EventoAcceso.IrARegistroVendedor) }
+            return
+        }
         perfil.cambiarModo(modo)
         viewModelScope.launch { _eventos.send(EventoAcceso.AbrirModo(modo)) }
     }

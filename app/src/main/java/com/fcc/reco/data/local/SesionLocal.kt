@@ -3,6 +3,9 @@ package com.fcc.reco.data.local
 import android.content.Context
 import androidx.core.content.edit
 import com.fcc.reco.data.model.ModoUsuario
+import com.fcc.reco.data.model.PerfilVendedor
+import org.json.JSONArray
+import org.json.JSONObject
 import com.fcc.reco.data.model.Sesion
 
 /** Guarda la sesión simulada en SharedPreferences (sin contraseñas). */
@@ -17,7 +20,8 @@ class SesionLocal(contexto: Context) {
             verificado = prefs.getBoolean(VERIFICADO, false),
             universidad = prefs.getString(UNIVERSIDAD, null),
             carrera = prefs.getString(CARRERA, null),
-            ultimoModo = prefs.getString(MODO, null)?.let { runCatching { ModoUsuario.valueOf(it) }.getOrNull() }
+            ultimoModo = prefs.getString(MODO, null)?.let { runCatching { ModoUsuario.valueOf(it) }.getOrNull() },
+            vendedor = prefs.getString(VENDEDOR, null)?.let { leerVendedor(it) }
         )
     }
 
@@ -28,7 +32,19 @@ class SesionLocal(contexto: Context) {
         putString(UNIVERSIDAD, sesion.universidad)
         putString(CARRERA, sesion.carrera)
         putString(MODO, sesion.ultimoModo?.name)
+        putString(VENDEDOR, sesion.vendedor?.let { escribirVendedor(it) })
     }
+
+    private fun escribirVendedor(v: PerfilVendedor): String = JSONObject().apply {
+        put("telefono", v.telefono); put("punto", v.puntoEntrega); put("clabe", v.clabe)
+        put("dias", JSONArray(v.dias)); put("franjas", JSONArray(v.franjas))
+    }.toString()
+
+    private fun leerVendedor(texto: String): PerfilVendedor? = runCatching {
+        val o = JSONObject(texto)
+        fun lista(clave: String) = o.getJSONArray(clave).let { a -> (0 until a.length()).map { a.getString(it) } }
+        PerfilVendedor(o.getString("telefono"), o.getString("punto"), lista("dias"), lista("franjas"), o.getString("clabe"))
+    }.getOrNull()
 
     fun borrar() = prefs.edit { clear() }
 
@@ -39,5 +55,6 @@ class SesionLocal(contexto: Context) {
         const val UNIVERSIDAD = "universidad"
         const val CARRERA = "carrera"
         const val MODO = "ultimo_modo"
+        const val VENDEDOR = "vendedor"
     }
 }

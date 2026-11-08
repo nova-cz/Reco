@@ -26,7 +26,9 @@ object DatosSimulados {
 
     val puntosEntrega = listOf(
         PuntoEntrega("Biblioteca Central", "Ciudad Universitaria · planta baja"),
-        PuntoEntrega("Cafetería FCC", "Edificio CCO1")
+        PuntoEntrega("Cafetería FCC", "Edificio CCO1"),
+        PuntoEntrega("Explanada de Ingeniería", "Ciudad Universitaria · frente a la Facultad"),
+        PuntoEntrega("Comedor universitario", "Ciudad Universitaria · entrada principal")
     )
 
     val horariosEntrega = listOf("Lun 11:00", "Mar 13:00", "Mié 16:00", "Jue 12:00")

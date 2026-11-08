@@ -41,6 +41,7 @@ fun Fragment.recolectarEventosAcceso(viewModel: AccesoViewModel) {
                         }
                     EventoAcceso.IrAElegirModo ->
                         findNavController().irA(R.id.elegirModo, popHasta = R.id.bienvenida, inclusivo = true)
+                    EventoAcceso.IrARegistroVendedor -> findNavController().irA(R.id.registroVendedor)
                     is EventoAcceso.AbrirModo -> requireActivity().abrirModoYTerminar(evento.modo)
                     is EventoAcceso.Mensaje ->
                         Toast.makeText(requireContext(), evento.texto, Toast.LENGTH_LONG).show()

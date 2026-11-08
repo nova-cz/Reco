@@ -234,4 +234,27 @@
     <string name="calificar_comentario">Escribe un comentario (opcional)</string>
     <string name="calificar_enviar">Enviar calificación</string>
     <string name="calificar_gracias">¡Gracias por tu calificación!</string>
+
+    <!-- Registro de vendedor -->
+    <string name="quieres_vender">¿Quieres vender algo?</string>
+    <string name="registro_titulo_barra">Perfil de vendedor</string>
+    <string name="registro_vendedor_titulo">Empieza a vender</string>
+    <string name="registro_desc">Solo te pedimos lo necesario para que el comprador te encuentre en el campus.</string>
+    <string name="registro_foto">Foto de perfil</string>
+    <string name="registro_foto_desc">Opcional · ayuda a generar confianza</string>
+    <string name="registro_telefono">Teléfono (10 dígitos)</string>
+    <string name="registro_punto">Punto de entrega preferido</string>
+    <string name="registro_punto_hint">Elige un punto</string>
+    <string name="registro_dias">Días y horarios disponibles</string>
+    <string name="franja_manana">Mañana</string>
+    <string name="franja_tarde">Tarde</string>
+    <string name="registro_clabe">Cuenta para cobrar · CLABE simulada (18 dígitos)</string>
+    <string name="registro_reglas">Leí y acepto las reglas de publicación</string>
+    <string name="registro_reglas_desc">Solo equipos funcionales, sin bloqueo ni reporte</string>
+    <string name="registro_crear">Crear perfil de vendedor</string>
+    <string name="error_telefono">Escribe un teléfono de 10 dígitos.</string>
+    <string name="error_clabe">La CLABE debe tener 18 dígitos.</string>
+    <string name="error_registro_punto">Elige un punto de entrega.</string>
+    <string name="error_registro_dias">Elige al menos un día y una franja de horario.</string>
+    <string name="error_registro_reglas">Debes aceptar las reglas de publicación.</string>
 </resources>
