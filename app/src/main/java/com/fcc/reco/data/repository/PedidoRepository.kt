@@ -16,6 +16,11 @@ interface PedidoRepository {
     val pedidos: StateFlow<List<Pedido>>
     fun crearPedidos(entregas: List<EntregaElegida>, stripePaymentId: String): List<Pedido>
     fun obtener(id: Int): Pedido?
+    /** El vendedor marca que entregó el equipo (Pago retenido -> Listo para entregar). */
+    fun marcarEntregado(id: Int): Boolean
+    /** El comprador revisó el equipo y confirma: se libera el pago al vendedor. */
+    fun confirmarEntrega(id: Int): Boolean
+    fun registrarEstrellas(id: Int, estrellas: Int)
 }
 
 /** Pedidos en memoria, guardados en un JSON interno. El dinero queda retenido hasta confirmar la entrega. */
@@ -47,6 +52,25 @@ class PedidoRepositorySimulado(private val almacen: AlmacenJson) : PedidoReposit
     }
 
     override fun obtener(id: Int): Pedido? = _pedidos.value.firstOrNull { it.id == id }
+
+    override fun marcarEntregado(id: Int): Boolean =
+        cambiar(id, desde = EstadoPedido.PAGADO_RETENIDO) { it.copy(estado = EstadoPedido.ENTREGADO) }
+
+    override fun confirmarEntrega(id: Int): Boolean =
+        cambiar(id, desde = EstadoPedido.ENTREGADO) { it.copy(estado = EstadoPedido.LIBERADO) }
+
+    override fun registrarEstrellas(id: Int, estrellas: Int) {
+        cambiar(id, desde = null) { it.copy(estrellas = estrellas) }
+    }
+
+    /** Aplica el cambio solo si el pedido existe y está en el estado esperado. */
+    private fun cambiar(id: Int, desde: EstadoPedido?, transformar: (Pedido) -> Pedido): Boolean {
+        val actual = obtener(id) ?: return false
+        if (desde != null && actual.estado != desde) return false
+        _pedidos.value = _pedidos.value.map { if (it.id == id) transformar(it) else it }
+        guardar()
+        return true
+    }
 
     private fun guardar() {
         val json = JSONArray()

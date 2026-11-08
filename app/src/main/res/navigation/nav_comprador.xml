@@ -41,13 +41,13 @@
 
     <fragment
         android:id="@+id/compras"
-        android:name="com.fcc.reco.ui.comun.PlaceholderFragment"
-        tools:layout="@layout/fragment_placeholder">
-        <argument
-            android:name="titulo"
-            android:defaultValue="Compras"
-            app:argType="string" />
-    </fragment>
+        android:name="com.fcc.reco.ui.comprador.ComprasFragment"
+        tools:layout="@layout/fragment_compras" />
+
+    <fragment
+        android:id="@+id/detallePedido"
+        android:name="com.fcc.reco.ui.comprador.DetallePedidoFragment"
+        tools:layout="@layout/fragment_detalle_pedido" />
 
     <fragment
         android:id="@+id/perfil"

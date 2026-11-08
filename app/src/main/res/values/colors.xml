@@ -55,4 +55,16 @@
 
     <!-- Ícono adaptativo -->
     <color name="launcher_fondo">#151517</color>
+
+    <!-- Estados (texto / fondo) -->
+    <color name="estado_verde">#1E9E5A</color>
+    <color name="estado_verde_fondo">#E8F7EF</color>
+    <color name="estado_naranja">#E0650C</color>
+    <color name="estado_naranja_fondo">#FFF1E6</color>
+    <color name="estado_azul">#2F7BF6</color>
+    <color name="estado_azul_fondo">#EEF4FF</color>
+    <color name="estado_rojo">#E5484D</color>
+    <color name="estado_rojo_fondo">#FDECEC</color>
+    <color name="estado_gris">#6E6E76</color>
+    <color name="estado_gris_fondo">#EDEDF1</color>
 </resources>

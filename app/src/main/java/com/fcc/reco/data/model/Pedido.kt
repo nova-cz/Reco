@@ -23,7 +23,31 @@ data class Pedido(
     val estrellas: Int? = null
 ) {
     val gananciaVendedor: Int get() = monto - comision
+
+    /** Código visible del pedido, p. ej. "RC-1042". */
+    val codigo: String get() = "RC-${1000 + id}"
+
+    /** Código de 4 dígitos que el comprador muestra al vendedor en la entrega (simulado, estable por pedido). */
+    val codigoEntrega: String get() = (1000 + (id * 7919 + 1234) % 9000).toString()
 }
+
+/** Reseña que el comprador deja al vendedor al confirmar la entrega. */
+data class Calificacion(
+    val id: Int,
+    val pedidoId: Int,
+    val vendedor: String,
+    val estrellas: Int,
+    val etiquetas: List<String>,
+    val comentario: String,
+    val creado: Long
+) {
+    companion object {
+        const val PUNTUAL = "Puntual"
+        val ETIQUETAS = listOf(PUNTUAL, "Como se describió", "Amable", "Buen precio")
+    }
+}
+
+data class Reputacion(val promedio: Double, val total: Int)
 
 /** Equipos del carrito de un mismo vendedor. */
 data class GrupoCarrito(val vendedor: VendedorResumen, val productos: List<Producto>) {
