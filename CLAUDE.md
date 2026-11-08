@@ -112,15 +112,33 @@ Barra inferior flotante con efecto glass:
 
 Persistencia: carrito, favoritos y pedidos se guardan en JSON internos (`AlmacenJson`, en `filesDir`). La sesión va en SharedPreferences (`SesionLocal`). Pruebas unitarias en `src/test`: `ValidadorAcceso`, `Comision`, `Luhn` y `ValidadorPago`.
 
-### Pendiente (en el orden acordado)
+### Estado al 8 de noviembre de 2026 (sesión de trabajo)
 
-1. **Flujo 2 · Favoritos**: pantalla con los equipos marcados (el repositorio ya existe; hoy la pestaña es un marcador "Próximamente").
-2. **Flujo 4 · Seguimiento**: Mis compras → Detalle de pedido → Confirmar entrega (libera el pago) → Calificar vendedor. Falta ampliar `PedidoRepository` (`marcarEntregado`, `confirmarEntrega`, `abrirReclamo`) y crear `CalificacionRepository`. La pestaña Compras es un marcador.
-3. **Flujo 5 · Volverse vendedor**: Perfil "¿Quieres vender algo?" → Registro de vendedor (Figma `7:219`). Hoy el Perfil es mínimo (`PerfilBasicoFragment`: datos, cambiar de modo, cerrar sesión).
-4. **Flujo 6 · Publicar**: 5 pasos con patrón Builder (Figma `8:134` y `8:257` para los pasos 1 y 2; 3 a 5 sin diseño). Validación con `ValidadorPublicacion` (IMEI de 15 dígitos con Luhn —ya existe `domain/Luhn.kt`—, lista `imei_bloqueados`, IMEI no duplicado, 4 a 8 fotos, precio entre 30 % y 100 % del precio de referencia, máximo 3 anuncios activos del vendedor nuevo). Estados del anuncio, y moderación con botón de debug (aprobar/rechazar). Falta el catálogo de modelos con precio de referencia.
-5. **Flujo 7 · Gestionar ventas**: Panel (Figma `7:307`) → Mis anuncios con estados → Ventas con detalle integrado, "Marcar entregado" y ganancia neta. El anuncio aprobado debe aparecer en el catálogo del comprador y cada compra en Ventas del vendedor (hoy el catálogo es estático en `DatosSimulados`).
-6. **Flujo 8 · Perfil completo** y pulido general (estados vacíos, errores, rotación).
-7. **Supabase (obligatorio para la entrega final)**: `schema.sql`, `seed.sql`, RLS, Auth con correo, fotos en Storage, tablas de perfiles, productos, pedidos (+ `pedido_items`), calificaciones y favoritos. Solo se cambia la implementación de los repositorios, que ya son interfaces; el punto de cambio es `data/Repositorios.kt`. Google Sign-In real (Credential Manager) y verificación institucional con Chrome Custom Tab si alcanza.
+Hecho, probado en el emulador y commiteado, flujo por flujo:
+
+| Flujo | Qué incluye |
+| --- | --- |
+| Favoritos | Pantalla con filtros Todos / Disponibles / Vendidos; los vendidos salen atenuados. |
+| Seguimiento | Mis compras (En curso / Completadas) → Detalle de pedido con línea de tiempo → Confirmar entrega (libera el pago) → hoja Calificar vendedor. `CalificacionRepository`. "Reportar un problema" solo muestra un aviso. |
+| Registro de vendedor | Teléfono, punto, días y franjas, CLABE simulada (18 dígitos), reglas. Datos en `Sesion.vendedor`. Se llega desde Perfil o desde "Quiero vender". |
+| Publicar | Asistente de 5 pasos con `AnuncioBuilder`, `ValidadorPublicacion` (IMEI Luhn o serie, bloqueados, duplicado, 2 a 8 fotos, rango 30–100 %, máximo 3 activos), `CatalogoModelos` (18 modelos), fotos reales con el selector del sistema, Borrador y envío a revisión. |
+| Panel, Anuncios, Ventas | Panel con ganancias del mes, Mis anuncios con estados y acciones (Pausar, Reactivar, Corregir, Continuar, eliminar con mantener presionado), Ventas con "Marcar como entregado" y ganancia neta. Lo aprobado aparece en el catálogo del comprador. |
+| Perfil | Un solo `PerfilFragment` que cambia si ya es vendedor, y Perfil público (A la venta / Reseñas, insignia "Entrega puntual" con ≥70 %). Se abre desde Detalle de producto, Detalle de pedido y "Ver mi perfil público". |
+
+Decisiones de esta sesión:
+- **Serie vs. IMEI**: celulares y tablets llevan IMEI de 15 dígitos con Luhn; el resto, número de serie (6 a 20 letras o números). Lista de bloqueados de prueba: `356918102345611`, `867501049283749`, `BLOQUEADO001`. IMEI válidos para probar: `490154203237518`, `353321087654326`.
+- **Un solo dispositivo, una cuenta**: los anuncios propios sí salen en el catálogo, pero el botón de compra dice "Este anuncio es tuyo". Las compras de otros estudiantes sobre tus anuncios se simulan.
+- **Botones solo en debug** (`FLAG_DEBUGGABLE`): en Mis anuncios, Aprobar / Rechazar (moderación) y Simular compra; en Ventas, "Simular: el comprador confirmó" (que además deja una reseña de 5 estrellas); en Detalle de pedido, "Simular: el vendedor marcó la entrega"; en Publicar 3, "Agregar foto de prueba".
+- **Pedidos**: `Pedido.comprador` vacío = compra de este usuario; con nombre = venta de uno de sus anuncios (Mis compras filtra las primeras, Ventas las segundas).
+- **Estado del pedido en la vista del vendedor**: Pago retenido → Por confirmar (el vendedor marcó entregado) → Completada (el comprador confirmó).
+- La barra de progreso de Publicar es negra (componente existente), no naranja como en el Figma.
+
+### Pendiente
+
+1. **Supabase (obligatorio para la entrega final)**: `supabase/schema.sql` y `supabase/seed.sql` ya están escritos. Falta crear el proyecto, correr los dos archivos, poner `SUPABASE_URL` y `SUPABASE_ANON_KEY` en `local.properties`, agregar supabase-kt y cambiar las implementaciones `...Simulado` por las de Supabase en `data/Repositorios.kt` (Auth con correo, productos con fotos en Storage, pedidos, calificaciones, favoritos).
+2. Google Sign-In real (Credential Manager) solo si sobra tiempo tras Supabase.
+3. Pendientes por definir de abajo (proveedor de cuentas BUAP, puntos reales de CU).
+4. Menores: foto de perfil en el registro de vendedor, palomita verde en la CLABE, "Mis datos" y "Puntos de entrega" del Perfil muestran "Próximamente".
 
 ### Decisiones tomadas durante la implementación
 
