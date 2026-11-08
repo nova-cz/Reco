@@ -39,4 +39,29 @@
         android:id="@+id/perfilVendedor"
         android:name="com.fcc.reco.ui.comun.PerfilBasicoFragment"
         tools:layout="@layout/fragment_perfil_basico" />
+
+    <fragment
+        android:id="@+id/publicar1"
+        android:name="com.fcc.reco.ui.vendedor.Publicar1Fragment"
+        tools:layout="@layout/fragment_publicar_1" />
+
+    <fragment
+        android:id="@+id/publicar2"
+        android:name="com.fcc.reco.ui.vendedor.Publicar2Fragment"
+        tools:layout="@layout/fragment_publicar_2" />
+
+    <fragment
+        android:id="@+id/publicar3"
+        android:name="com.fcc.reco.ui.vendedor.Publicar3Fragment"
+        tools:layout="@layout/fragment_publicar_3" />
+
+    <fragment
+        android:id="@+id/publicar4"
+        android:name="com.fcc.reco.ui.vendedor.Publicar4Fragment"
+        tools:layout="@layout/fragment_publicar_4" />
+
+    <fragment
+        android:id="@+id/publicar5"
+        android:name="com.fcc.reco.ui.vendedor.Publicar5Fragment"
+        tools:layout="@layout/fragment_publicar_5" />
 </navigation>

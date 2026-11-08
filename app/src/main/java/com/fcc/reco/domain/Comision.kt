@@ -7,6 +7,9 @@ object Comision {
     const val PORCENTAJE = 0.136
     const val FIJA = 8
 
+    /** Costo opcional de la certificación de pago, en MXN. */
+    const val CERTIFICACION = 99
+
     fun calcular(monto: Int): Int = (monto * PORCENTAJE).roundToInt() + FIJA
 
     /** Lo que recibe el vendedor: monto menos comisión. */

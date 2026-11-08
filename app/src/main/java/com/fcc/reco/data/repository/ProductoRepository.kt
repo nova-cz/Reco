@@ -1,6 +1,7 @@
 package com.fcc.reco.data.repository
 
 import com.fcc.reco.data.DatosSimulados
+import com.fcc.reco.data.model.EstadoAnuncio
 import com.fcc.reco.data.model.FiltrosProducto
 import com.fcc.reco.data.model.Grado
 import com.fcc.reco.data.model.Orden
@@ -11,18 +12,29 @@ interface ProductoRepository {
     fun obtenerPorId(id: Int): Producto?
     fun marcas(): List<String>
     fun destacado(): Producto?
+    fun obtenerPorVendedor(nombre: String): List<Producto>
     /** Verdadero si el equipo ya se pagó y salió del catálogo. */
     fun estaVendido(id: Int): Boolean
 }
 
 /** Catálogo en memoria. La versión real consulta Supabase (solo anuncios Publicados). */
 class ProductoRepositorySimulado(
-    private val idsVendidos: () -> Set<Int> = { emptySet() }
+    private val idsVendidos: () -> Set<Int> = { emptySet() },
+    private val anuncios: AnuncioRepository? = null,
+    private val correoActual: () -> String? = { null }
 ) : ProductoRepository {
 
-    private val todos = DatosSimulados.productos
-    /** Cada equipo es pieza única: sale del catálogo cuando se paga. */
-    private val catalogo: List<Producto> get() = idsVendidos().let { vendidos -> todos.filter { it.id !in vendidos } }
+    private fun deAnuncios(soloPublicados: Boolean): List<Producto> =
+        anuncios?.anuncios?.value.orEmpty()
+            .filter { !soloPublicados || it.estado == EstadoAnuncio.PUBLICADO }
+            .map { it.comoProducto(esPropio = it.vendedorCorreo == correoActual()) }
+
+    /** Todo lo que existe (para favoritos y pedidos), incluso lo ya vendido. */
+    private val todos: List<Producto> get() = DatosSimulados.productos + deAnuncios(soloPublicados = false)
+
+    /** Cada equipo es pieza única: sale del catálogo cuando se paga. Solo anuncios Publicados. */
+    private val catalogo: List<Producto>
+        get() = idsVendidos().let { vendidos -> (DatosSimulados.productos + deAnuncios(soloPublicados = true)).filter { it.id !in vendidos } }
 
     override fun obtenerPublicados(filtros: FiltrosProducto): List<Producto> {
         val consulta = filtros.consulta.trim().lowercase()
@@ -50,6 +62,8 @@ class ProductoRepositorySimulado(
             .map { it.key }
 
     override fun estaVendido(id: Int): Boolean = id in idsVendidos()
+
+    override fun obtenerPorVendedor(nombre: String): List<Producto> = catalogo.filter { it.vendedor.nombre == nombre }
 
     override fun destacado(): Producto? = catalogo.firstOrNull { it.certificado && it.categoria.name == "LAPTOPS" }
 }

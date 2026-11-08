@@ -31,6 +31,9 @@ object DatosSimulados {
         PuntoEntrega("Comedor universitario", "Ciudad Universitaria · entrada principal")
     )
 
+    /** IMEI y series reportados (tabla `imei_bloqueados`). Los dos IMEI son válidos con Luhn, para probar el rechazo. */
+    val imeiBloqueados: Set<String> = setOf("356918102345611", "867501049283749", "BLOQUEADO001")
+
     val horariosEntrega = listOf("Lun 11:00", "Mar 13:00", "Mié 16:00", "Jue 12:00")
 
     private val vendedores = listOf(

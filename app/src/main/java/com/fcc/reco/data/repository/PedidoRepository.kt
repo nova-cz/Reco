@@ -14,7 +14,7 @@ import org.json.JSONObject
 
 interface PedidoRepository {
     val pedidos: StateFlow<List<Pedido>>
-    fun crearPedidos(entregas: List<EntregaElegida>, stripePaymentId: String): List<Pedido>
+    fun crearPedidos(entregas: List<EntregaElegida>, stripePaymentId: String, comprador: String = ""): List<Pedido>
     fun obtener(id: Int): Pedido?
     /** El vendedor marca que entregó el equipo (Pago retenido -> Listo para entregar). */
     fun marcarEntregado(id: Int): Boolean
@@ -29,7 +29,7 @@ class PedidoRepositorySimulado(private val almacen: AlmacenJson) : PedidoReposit
     private val _pedidos = MutableStateFlow(leer())
     override val pedidos: StateFlow<List<Pedido>> = _pedidos.asStateFlow()
 
-    override fun crearPedidos(entregas: List<EntregaElegida>, stripePaymentId: String): List<Pedido> {
+    override fun crearPedidos(entregas: List<EntregaElegida>, stripePaymentId: String, comprador: String): List<Pedido> {
         var siguienteId = (_pedidos.value.maxOfOrNull { it.id } ?: 0) + 1
         val nuevos = entregas.map { e ->
             val monto = e.grupo.subtotal
@@ -43,7 +43,8 @@ class PedidoRepositorySimulado(private val almacen: AlmacenJson) : PedidoReposit
                 horario = e.horario,
                 estado = EstadoPedido.PAGADO_RETENIDO,
                 creado = System.currentTimeMillis(),
-                stripePaymentId = stripePaymentId
+                stripePaymentId = stripePaymentId,
+                comprador = comprador
             )
         }
         _pedidos.value = _pedidos.value + nuevos
@@ -86,7 +87,7 @@ class PedidoRepositorySimulado(private val almacen: AlmacenJson) : PedidoReposit
                 put("monto", p.monto); put("comision", p.comision)
                 put("punto", p.puntoEntrega); put("horario", p.horario)
                 put("estado", p.estado.name); put("creado", p.creado)
-                put("stripe", p.stripePaymentId); put("estrellas", p.estrellas ?: -1)
+                put("stripe", p.stripePaymentId); put("estrellas", p.estrellas ?: -1); put("comprador", p.comprador)
             })
         }
         almacen.guardar(json)
@@ -110,7 +111,8 @@ class PedidoRepositorySimulado(private val almacen: AlmacenJson) : PedidoReposit
                     puntoEntrega = o.getString("punto"), horario = o.getString("horario"),
                     estado = EstadoPedido.valueOf(o.getString("estado")),
                     creado = o.getLong("creado"), stripePaymentId = o.getString("stripe"),
-                    estrellas = o.getInt("estrellas").takeIf { it >= 0 }
+                    estrellas = o.getInt("estrellas").takeIf { it >= 0 },
+                    comprador = o.optString("comprador", "")
                 )
             }.getOrNull()
         }

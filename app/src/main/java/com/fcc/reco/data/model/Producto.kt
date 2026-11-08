@@ -38,7 +38,11 @@ data class Producto(
     val accesorios: String,
     val imeiUltimos4: String?,
     val puntoEntrega: String,
-    val diasPublicado: Int
+    val diasPublicado: Int,
+    /** Fotos reales (rutas internas). Vacío en los productos simulados, que usan el ícono de la categoría. */
+    val fotos: List<String> = emptyList(),
+    /** Anuncio del propio usuario: no puede comprarlo. */
+    val esPropio: Boolean = false
 ) {
     /** Título corto para tarjetas: "MacBook Air M1 · 256 GB". */
     val titulo: String get() = if (almacenamiento != null) "$modelo · $almacenamiento" else modelo

@@ -20,7 +20,9 @@ data class Pedido(
     val estado: EstadoPedido,
     val creado: Long,
     val stripePaymentId: String,
-    val estrellas: Int? = null
+    val estrellas: Int? = null,
+    /** Vacío si lo compró este usuario; con nombre si es una venta de uno de sus anuncios. */
+    val comprador: String = ""
 ) {
     val gananciaVendedor: Int get() = monto - comision
 

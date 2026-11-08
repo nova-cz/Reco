@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 enum class FiltroCompras { EN_CURSO, COMPLETADAS }
@@ -27,7 +28,8 @@ class ComprasViewModel : ViewModel() {
     private val filtro = MutableStateFlow(FiltroCompras.EN_CURSO)
 
     val estado: StateFlow<EstadoCompras> = combine(
-        Repositorios.pedidos.pedidos,
+        // Mis compras no incluye las ventas de mis anuncios (esas tienen comprador).
+        Repositorios.pedidos.pedidos.map { lista -> lista.filter { it.comprador.isEmpty() } },
         Repositorios.calificaciones.calificaciones,
         filtro
     ) { pedidos, _, filtroActual ->

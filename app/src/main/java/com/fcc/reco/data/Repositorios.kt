@@ -2,8 +2,11 @@ package com.fcc.reco.data
 
 import android.content.Context
 import com.fcc.reco.data.local.AlmacenJson
+import com.fcc.reco.data.local.SesionLocal
 import com.fcc.reco.data.model.EstadoPedido
 import com.fcc.reco.data.repository.CarritoRepositorioSimulado
+import com.fcc.reco.data.repository.AnuncioRepository
+import com.fcc.reco.data.repository.AnuncioRepositorySimulado
 import com.fcc.reco.data.repository.CalificacionRepository
 import com.fcc.reco.data.repository.CalificacionRepositorySimulado
 import com.fcc.reco.data.repository.CarritoRepository
@@ -25,6 +28,8 @@ object Repositorios {
         private set
     lateinit var productos: ProductoRepository
         private set
+    lateinit var anuncios: AnuncioRepository
+        private set
     lateinit var favoritos: FavoritoRepository
         private set
     lateinit var carrito: CarritoRepository
@@ -36,9 +41,12 @@ object Repositorios {
 
     fun iniciar(contexto: Context) {
         pedidos = PedidoRepositorySimulado(AlmacenJson(contexto, "pedidos"))
-        productos = ProductoRepositorySimulado {
+        val vendidos = {
             pedidos.pedidos.value.filter { it.estado != EstadoPedido.CANCELADO }.flatMap { it.productoIds }.toSet()
         }
+        val sesion = SesionLocal(contexto)
+        anuncios = AnuncioRepositorySimulado(AlmacenJson(contexto, "anuncios"), vendidos)
+        productos = ProductoRepositorySimulado(vendidos, anuncios) { sesion.leer()?.correo }
         favoritos = FavoritoRepositorySimulado(AlmacenJson(contexto, "favoritos"))
         carrito = CarritoRepositorioSimulado(AlmacenJson(contexto, "carrito"), productos)
         pagos = PagoRepositorySimulado()
