@@ -172,32 +172,69 @@ create trigger pedidos_comision before insert on pedidos
   for each row execute function pedido_calcula_comision();
 
 -- ---------------------------------------------------------------- Reglas que no se pueden saltar desde la app
--- Solo el moderador (sin auth.uid(), desde el panel) pasa un anuncio a publicado o rechazado.
-create function proteger_estado_anuncio() returns trigger language plpgsql as $$
+-- "Cliente" = una petición hecha por la app con la sesión del usuario (rol authenticated).
+-- El moderador trabaja desde el panel de Supabase (rol postgres) y no pasa por estas restricciones.
+create function es_cliente() returns boolean language sql stable as $$ select current_user = 'authenticated' $$;
+
+-- Precio fuera del 30 %–100 % de la referencia: lo calcula el servidor, no el cliente.
+create function calcular_revision_manual() returns trigger language plpgsql as $$
+declare ref int;
 begin
-  if auth.uid() is not null then
-    if new.estado in ('publicado', 'rechazado') and new.estado is distinct from old.estado then
-      raise exception 'Solo el moderador puede publicar o rechazar un anuncio';
+  select precio_referencia into ref from modelos where id = new.modelo_id;
+  new.revision_manual := new.precio > 0 and (new.precio < ref * 0.30 or new.precio > ref);
+  return new;
+end $$;
+create trigger productos_revision before insert or update on productos
+  for each row execute function calcular_revision_manual();
+
+-- Altas: un anuncio nuevo solo puede ser borrador o estar en revisión; certificado y motivo no los escribe el cliente.
+create function proteger_alta_anuncio() returns trigger language plpgsql as $$
+begin
+  if es_cliente() then
+    if new.estado not in ('borrador', 'en_revision') then
+      raise exception 'Un anuncio nuevo solo puede ser borrador o estar en revisión';
     end if;
-    if new.certificado is distinct from old.certificado or new.motivo_rechazo is distinct from old.motivo_rechazo then
-      raise exception 'Solo el moderador puede certificar o rechazar';
+    new.certificado := false;
+    new.motivo_rechazo := null;
+  end if;
+  return new;
+end $$;
+create trigger productos_alta before insert on productos
+  for each row execute function proteger_alta_anuncio();
+
+-- Cambios: el cliente solo hace estas transiciones; Publicado, Rechazado, Reservado y Vendido son del moderador y del servidor.
+-- Si cambia el contenido de un anuncio ya publicado, vuelve a revisión.
+create function proteger_estado_anuncio() returns trigger language plpgsql as $$
+declare contenido_cambio boolean;
+begin
+  if es_cliente() then
+    if new.vendedor_id is distinct from old.vendedor_id then
+      raise exception 'No se puede cambiar el vendedor de un anuncio';
+    end if;
+    new.certificado := old.certificado;
+    new.motivo_rechazo := old.motivo_rechazo;
+
+    if new.estado is distinct from old.estado and not (
+         (old.estado = 'borrador'  and new.estado = 'en_revision') or
+         (old.estado = 'rechazado' and new.estado = 'en_revision') or
+         (old.estado = 'publicado' and new.estado = 'pausado') or
+         (old.estado = 'pausado'   and new.estado = 'publicado')) then
+      raise exception 'Cambio de estado no permitido: % a %', old.estado, new.estado;
+    end if;
+
+    contenido_cambio := (new.modelo_id, new.almacenamiento, new.ram, new.color, new.grado, new.salud_bateria,
+                         new.imei, new.accesorios, new.descripcion, new.precio)
+                        is distinct from
+                        (old.modelo_id, old.almacenamiento, old.ram, old.color, old.grado, old.salud_bateria,
+                         old.imei, old.accesorios, old.descripcion, old.precio);
+    if contenido_cambio and old.estado in ('publicado', 'pausado', 'reservado') then
+      new.estado := 'en_revision';
     end if;
   end if;
   return new;
 end $$;
 create trigger productos_estado before update on productos
   for each row execute function proteger_estado_anuncio();
-
--- Los anuncios nuevos nacen como borrador o en revisión, nunca ya publicados.
-create function proteger_alta_anuncio() returns trigger language plpgsql as $$
-begin
-  if auth.uid() is not null and new.estado not in ('borrador', 'en_revision') then
-    raise exception 'Un anuncio nuevo solo puede ser borrador o estar en revisión';
-  end if;
-  return new;
-end $$;
-create trigger productos_alta before insert on productos
-  for each row execute function proteger_alta_anuncio();
 
 -- Máximo 3 anuncios activos por vendedor.
 create function limitar_anuncios_activos() returns trigger language plpgsql as $$
@@ -213,8 +250,8 @@ end $$;
 create trigger productos_limite before insert or update of estado on productos
   for each row execute function limitar_anuncios_activos();
 
--- Nadie compra sus propios anuncios ni equipos que no están publicados.
-create function validar_item_pedido() returns trigger language plpgsql as $$
+-- Nadie compra sus propios anuncios ni equipos que no están publicados; al pagarse, el equipo sale del catálogo.
+create function validar_item_pedido() returns trigger language plpgsql security definer set search_path = public as $$
 declare p productos; ped pedidos;
 begin
   select * into p from productos where id = new.producto_id;
@@ -222,14 +259,14 @@ begin
   if p.vendedor_id = ped.comprador_id then raise exception 'No puedes comprar tu propio anuncio'; end if;
   if p.vendedor_id <> ped.vendedor_id then raise exception 'El equipo no es de este vendedor'; end if;
   if p.estado <> 'publicado' then raise exception 'El equipo ya no está disponible'; end if;
-  update productos set estado = 'vendido' where id = p.id;   -- sale del catálogo al pagarse
+  update productos set estado = 'vendido' where id = p.id;
   return new;
 end $$;
 create trigger pedido_items_validar before insert on pedido_items
   for each row execute function validar_item_pedido();
 
 -- Con 3 reportes el anuncio se oculta y vuelve a revisión.
-create function ocultar_por_reportes() returns trigger language plpgsql as $$
+create function ocultar_por_reportes() returns trigger language plpgsql security definer set search_path = public as $$
 begin
   if (select count(*) from reportes where producto_id = new.producto_id) >= 3 then
     update productos set estado = 'en_revision' where id = new.producto_id and estado = 'publicado';
@@ -240,7 +277,7 @@ create trigger reportes_ocultar after insert on reportes
   for each row execute function ocultar_por_reportes();
 
 -- Con 3 rechazos por fraude la cuenta se suspende.
-create function contar_rechazos() returns trigger language plpgsql as $$
+create function contar_rechazos() returns trigger language plpgsql security definer set search_path = public as $$
 begin
   if new.estado = 'rechazado' and old.estado is distinct from 'rechazado' then
     update perfiles set rechazos = rechazos + 1, suspendido = (rechazos + 1 >= 3) where id = new.vendedor_id;
@@ -251,7 +288,7 @@ create trigger productos_rechazos after update of estado on productos
   for each row execute function contar_rechazos();
 
 -- Al liberar un pago sube el contador de ventas; al calificar se recalcula la reputación.
-create function sumar_venta() returns trigger language plpgsql as $$
+create function sumar_venta() returns trigger language plpgsql security definer set search_path = public as $$
 begin
   if new.estado = 'liberado' and old.estado is distinct from 'liberado' then
     update perfiles set ventas_completadas = ventas_completadas + 1 where id = new.vendedor_id;
@@ -261,7 +298,7 @@ end $$;
 create trigger pedidos_venta after update of estado on pedidos
   for each row execute function sumar_venta();
 
-create function recalcular_reputacion() returns trigger language plpgsql as $$
+create function recalcular_reputacion() returns trigger language plpgsql security definer set search_path = public as $$
 declare v uuid;
 begin
   select vendedor_id into v from pedidos where id = new.pedido_id;
@@ -272,6 +309,65 @@ begin
 end $$;
 create trigger calificaciones_reputacion after insert on calificaciones
   for each row execute function recalcular_reputacion();
+
+-- ---------------------------------------------------------------- Funciones que la app puede llamar (SECURITY DEFINER)
+-- La verificación, el modo vendedor y los cambios de estado del pedido NO se escriben con UPDATE desde la app.
+
+-- Verificación: exige una identidad ligada (linkIdentity) con correo de una universidad registrada.
+create function verificar_estudiante() returns void language plpgsql security definer set search_path = public, auth as $$
+declare uni uuid; correo text;
+begin
+  select u.id, lower(i.identity_data ->> 'email') into uni, correo
+  from auth.identities i join universidades u on lower(i.identity_data ->> 'email') like '%@' || u.dominio
+  where i.user_id = auth.uid() limit 1;
+  if uni is null then raise exception 'No hay una cuenta institucional ligada'; end if;
+  update perfiles set verificado = true, universidad_id = uni, correo_institucional = correo where id = auth.uid();
+end $$;
+
+create function activar_vendedor(p_telefono text, p_punto uuid, p_disponibilidad jsonb, p_clabe text)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  if not exists (select 1 from perfiles where id = auth.uid() and verificado and not suspendido) then
+    raise exception 'Verifica tu cuenta de estudiante primero';
+  end if;
+  update perfiles set es_vendedor = true, telefono = p_telefono, punto_preferido_id = p_punto,
+    disponibilidad = p_disponibilidad, clabe_simulada = p_clabe where id = auth.uid();
+end $$;
+
+-- Pedido: el vendedor marca entregado; el comprador confirma y se libera el pago.
+create function marcar_entregado(p_pedido uuid) returns void language plpgsql security definer set search_path = public as $$
+begin
+  update pedidos set estado = 'entregado' where id = p_pedido and vendedor_id = auth.uid() and estado = 'pagado_retenido';
+  if not found then raise exception 'No se puede marcar como entregado'; end if;
+end $$;
+
+create function confirmar_entrega(p_pedido uuid) returns void language plpgsql security definer set search_path = public as $$
+begin
+  update pedidos set estado = 'liberado' where id = p_pedido and comprador_id = auth.uid() and estado = 'entregado';
+  if not found then raise exception 'No se puede confirmar la entrega'; end if;
+end $$;
+
+-- Crear el pedido: SOLO la Edge Function crear-pago (service_role), después de verificar el pago en Stripe.
+-- El monto se calcula aquí con los precios reales; el cliente nunca lo manda.
+create function crear_pedido(p_comprador uuid, p_vendedor uuid, p_productos uuid[], p_punto uuid, p_horario text, p_stripe text)
+returns uuid language plpgsql security definer set search_path = public as $$
+declare total int; encontrados int; pid uuid;
+begin
+  select coalesce(sum(precio), 0), count(*) into total, encontrados
+    from productos where id = any(p_productos) and vendedor_id = p_vendedor and estado = 'publicado';
+  if encontrados <> cardinality(p_productos) or total <= 0 then raise exception 'Hay equipos que ya no están disponibles'; end if;
+  insert into pedidos (comprador_id, vendedor_id, monto, comision, stripe_payment_id, punto_id, horario)
+    values (p_comprador, p_vendedor, total, 0, p_stripe, p_punto, p_horario) returning id into pid;
+  insert into pedido_items (pedido_id, producto_id) select pid, unnest(p_productos);
+  return pid;
+end $$;
+
+revoke execute on function verificar_estudiante(), activar_vendedor(text, uuid, jsonb, text),
+  marcar_entregado(uuid), confirmar_entrega(uuid) from public, anon;
+grant execute on function verificar_estudiante(), activar_vendedor(text, uuid, jsonb, text),
+  marcar_entregado(uuid), confirmar_entrega(uuid) to authenticated;
+revoke execute on function crear_pedido(uuid, uuid, uuid[], uuid, text, text) from public, anon, authenticated;
+grant execute on function crear_pedido(uuid, uuid, uuid[], uuid, text, text) to service_role;
 
 -- ---------------------------------------------------------------- RLS
 alter table universidades    enable row level security;
@@ -288,17 +384,29 @@ alter table pedidos          enable row level security;
 alter table pedido_items     enable row level security;
 alter table calificaciones   enable row level security;
 
--- Catálogos: lectura para cualquier sesión. imei_bloqueados no se expone (se valida en el servidor).
+-- Catálogos: lectura para cualquier sesión. imei_bloqueados no se expone (se valida con triggers/servidor).
 create policy "leer universidades"  on universidades  for select to authenticated using (true);
 create policy "leer puntos"         on puntos_entrega for select to authenticated using (true);
 create policy "leer modelos"        on modelos        for select to authenticated using (true);
 
--- Perfiles: cada quien ve y edita el suyo; los demás ven el perfil público (nombre, reputación, ventas).
-create policy "leer perfiles"   on perfiles for select to authenticated using (true);
-create policy "crear mi perfil" on perfiles for insert to authenticated with check (id = auth.uid());
+-- Perfiles: la tabla solo la ve su dueño (tiene teléfono y CLABE). Los demás ven la vista pública, sin datos de contacto.
+create policy "leer mi perfil"   on perfiles for select to authenticated using (id = auth.uid());
+create policy "crear mi perfil"  on perfiles for insert to authenticated
+  with check (id = auth.uid() and not verificado and not es_vendedor and reputacion = 0
+              and ventas_completadas = 0 and rechazos = 0 and not suspendido);
 create policy "editar mi perfil" on perfiles for update to authenticated using (id = auth.uid()) with check (id = auth.uid());
+-- Solo estas columnas se editan con UPDATE; verificado, es_vendedor, reputacion, ventas, rechazos y suspendido
+-- cambian únicamente con las funciones de arriba, los triggers o el moderador.
+revoke update on perfiles from authenticated;
+grant update (nombre, carrera, semestre, telefono, punto_preferido_id, disponibilidad, clabe_simulada, ultimo_modo)
+  on perfiles to authenticated;
 
--- Productos: el comprador solo lee los publicados (y los suyos); el vendedor solo edita los suyos.
+create view perfiles_publicos with (security_invoker = false) as
+  select id, nombre, carrera, universidad_id, verificado, es_vendedor, reputacion, ventas_completadas, creado
+  from perfiles;
+grant select on perfiles_publicos to authenticated;
+
+-- Productos: el comprador solo lee los publicados (y los que ya compró); el vendedor solo edita los suyos.
 create policy "leer productos" on productos for select to authenticated
   using (estado = 'publicado' or vendedor_id = auth.uid()
          or id in (select producto_id from pedido_items i join pedidos p on p.id = i.pedido_id
@@ -321,24 +429,21 @@ create policy "mis favoritos" on favoritos for all to authenticated using (usuar
 create policy "reportar"      on reportes  for insert to authenticated with check (usuario_id = auth.uid());
 create policy "ver mis reportes" on reportes for select to authenticated using (usuario_id = auth.uid());
 
--- Pedidos: el comprador y el vendedor ven los suyos. Nadie crea un pedido sobre un producto propio
--- (lo vuelve a revisar el trigger de pedido_items). El pago real lo crea la Edge Function crear-pago.
+-- Pedidos: solo lectura para sus dos partes. Se crean con crear_pedido (service_role) y cambian de estado
+-- con marcar_entregado y confirmar_entrega; la app no tiene INSERT ni UPDATE sobre estas tablas.
 create policy "leer mis pedidos" on pedidos for select to authenticated
   using (comprador_id = auth.uid() or vendedor_id = auth.uid());
-create policy "crear mi pedido" on pedidos for insert to authenticated
-  with check (comprador_id = auth.uid() and vendedor_id <> auth.uid());
-create policy "actualizar mi pedido" on pedidos for update to authenticated
-  using (comprador_id = auth.uid() or vendedor_id = auth.uid());
-
 create policy "leer items de mis pedidos" on pedido_items for select to authenticated
   using (pedido_id in (select id from pedidos where comprador_id = auth.uid() or vendedor_id = auth.uid()));
-create policy "agregar items a mi pedido" on pedido_items for insert to authenticated
-  with check (pedido_id in (select id from pedidos where comprador_id = auth.uid()));
+revoke insert, update, delete on pedidos, pedido_items from authenticated, anon;
 
--- Calificaciones: se leen en el perfil público; solo el comprador califica, una vez, con el pedido liberado.
+-- Calificaciones: se leen en el perfil público; solo el comprador califica, una vez, un pedido ya liberado con equipos.
 create policy "leer calificaciones" on calificaciones for select to authenticated using (true);
 create policy "calificar mi pedido" on calificaciones for insert to authenticated
-  with check (pedido_id in (select id from pedidos where comprador_id = auth.uid() and estado = 'liberado'));
+  with check (pedido_id in (
+    select p.id from pedidos p
+    where p.comprador_id = auth.uid() and p.estado = 'liberado'
+      and exists (select 1 from pedido_items i where i.pedido_id = p.id)));
 
 -- ---------------------------------------------------------------- Storage: bucket "fotos" (lectura pública, escritura de la carpeta propia)
 insert into storage.buckets (id, name, public) values ('fotos', 'fotos', true) on conflict do nothing;

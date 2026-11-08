@@ -135,7 +135,7 @@ Decisiones de esta sesión:
 
 ### Pendiente
 
-1. **Supabase (obligatorio para la entrega final)**: `supabase/schema.sql` y `supabase/seed.sql` ya están escritos. Falta crear el proyecto, correr los dos archivos, poner `SUPABASE_URL` y `SUPABASE_ANON_KEY` en `local.properties`, agregar supabase-kt y cambiar las implementaciones `...Simulado` por las de Supabase en `data/Repositorios.kt` (Auth con correo, productos con fotos en Storage, pedidos, calificaciones, favoritos).
+1. **Supabase (obligatorio para la entrega final)**: `supabase/schema.sql` y `supabase/seed.sql` ya están escritos (sin probar en un proyecto real todavía). La app no tiene INSERT ni UPDATE directo sobre `pedidos`: los pedidos los crea la Edge Function `crear-pago` con `crear_pedido` (service_role) tras verificar el pago, y cambian de estado con `marcar_entregado` y `confirmar_entrega`; `verificar_estudiante` y `activar_vendedor` son funciones, y los perfiles de otros se leen por la vista `perfiles_publicos` (sin teléfono ni CLABE). Falta crear el proyecto, correr los dos archivos, poner `SUPABASE_URL` y `SUPABASE_ANON_KEY` en `local.properties`, agregar supabase-kt y cambiar las implementaciones `...Simulado` por las de Supabase en `data/Repositorios.kt` (Auth con correo, productos con fotos en Storage, pedidos, calificaciones, favoritos).
 2. Google Sign-In real (Credential Manager) solo si sobra tiempo tras Supabase.
 3. Pendientes por definir de abajo (proveedor de cuentas BUAP, puntos reales de CU).
 4. Menores: foto de perfil en el registro de vendedor, palomita verde en la CLABE, "Mis datos" y "Puntos de entrega" del Perfil muestran "Próximamente".
