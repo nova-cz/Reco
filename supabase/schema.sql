@@ -9,7 +9,10 @@ create extension if not exists "pgcrypto";
 create table universidades (
   id        uuid primary key default gen_random_uuid(),
   nombre    text not null,
-  dominio   text not null unique
+  dominio   text not null unique,
+  -- Con qué se ata la verificación a ESTA universidad (no basta el nombre del proveedor):
+  azure_tenant_id uuid,            -- tenant de Microsoft de la universidad; null = Microsoft no verifica
+  google_hd       text             -- dominio "hd" de Google Workspace; null = Google no verifica
 );
 
 create table puntos_entrega (
@@ -322,8 +325,16 @@ begin
   from auth.identities i
   join universidades u on split_part(lower(i.identity_data ->> 'email'), '@', 2) = lower(u.dominio)
   where i.user_id = auth.uid()
-    and i.provider in ('azure', 'google')                                   -- proveedores de la universidad
     and coalesce((i.identity_data ->> 'email_verified')::boolean, false)    -- correo verificado por el proveedor
+    and (
+      -- Microsoft: el token debe venir del tenant de la universidad (cualquier otra organización puede poner el mismo correo).
+      (i.provider = 'azure' and u.azure_tenant_id is not null
+         and i.identity_data ->> 'iss' = 'https://login.microsoftonline.com/' || u.azure_tenant_id || '/v2.0')
+      or
+      -- Google: la cuenta debe pertenecer al Workspace de la universidad (claim hd).
+      (i.provider = 'google' and u.google_hd is not null
+         and lower(coalesce(i.identity_data -> 'custom_claims' ->> 'hd', i.identity_data ->> 'hd')) = lower(u.google_hd))
+    )
   limit 1;
   if uni is null then raise exception 'No hay una cuenta institucional ligada'; end if;
   update perfiles set verificado = true, universidad_id = uni, correo_institucional = correo where id = auth.uid();

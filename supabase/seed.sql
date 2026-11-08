@@ -1,5 +1,10 @@
 -- Reco · datos iniciales. Correr después de schema.sql.
 
+-- azure_tenant_id y google_hd quedan en null hasta saber con qué proveedor son las cuentas de la BUAP
+-- (pendiente por definir). Mientras estén en null, verificar_estudiante() falla cerrado.
+-- Microsoft:  update universidades set azure_tenant_id = '<tenant-id-de-la-buap>' where dominio = 'alumno.buap.mx';
+-- Google:     update universidades set google_hd = 'alumno.buap.mx' where dominio = 'alumno.buap.mx';
+-- Confirmar contra una fila real de auth.identities que 'iss' y 'hd' vengan en las rutas usadas en schema.sql.
 insert into universidades (nombre, dominio) values ('BUAP', 'alumno.buap.mx');
 
 insert into puntos_entrega (universidad_id, nombre, descripcion)
