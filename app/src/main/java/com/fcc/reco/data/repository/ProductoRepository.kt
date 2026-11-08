@@ -6,6 +6,7 @@ import com.fcc.reco.data.model.FiltrosProducto
 import com.fcc.reco.data.model.Grado
 import com.fcc.reco.data.model.Orden
 import com.fcc.reco.data.model.Producto
+import com.fcc.reco.data.model.VendedorResumen
 
 interface ProductoRepository {
     fun obtenerPublicados(filtros: FiltrosProducto = FiltrosProducto()): List<Producto>
@@ -13,6 +14,8 @@ interface ProductoRepository {
     fun marcas(): List<String>
     fun destacado(): Producto?
     fun obtenerPorVendedor(nombre: String): List<Producto>
+    /** Datos públicos de un vendedor a partir de su nombre (de sus anuncios, vendidos o no). */
+    fun buscarVendedor(nombre: String): VendedorResumen?
     /** Verdadero si el equipo ya se pagó y salió del catálogo. */
     fun estaVendido(id: Int): Boolean
 }
@@ -62,6 +65,9 @@ class ProductoRepositorySimulado(
             .map { it.key }
 
     override fun estaVendido(id: Int): Boolean = id in idsVendidos()
+
+    override fun buscarVendedor(nombre: String): VendedorResumen? =
+        todos.firstOrNull { it.vendedor.nombre == nombre }?.vendedor
 
     override fun obtenerPorVendedor(nombre: String): List<Producto> = catalogo.filter { it.vendedor.nombre == nombre }
 

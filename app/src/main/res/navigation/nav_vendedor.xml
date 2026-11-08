@@ -22,8 +22,8 @@
 
     <fragment
         android:id="@+id/perfilVendedor"
-        android:name="com.fcc.reco.ui.comun.PerfilBasicoFragment"
-        tools:layout="@layout/fragment_perfil_basico" />
+        android:name="com.fcc.reco.ui.comun.PerfilFragment"
+        tools:layout="@layout/fragment_perfil" />
 
     <fragment
         android:id="@+id/publicar1"
@@ -49,4 +49,9 @@
         android:id="@+id/publicar5"
         android:name="com.fcc.reco.ui.vendedor.Publicar5Fragment"
         tools:layout="@layout/fragment_publicar_5" />
+
+    <fragment
+        android:id="@+id/perfilPublico"
+        android:name="com.fcc.reco.ui.comun.PerfilPublicoFragment"
+        tools:layout="@layout/fragment_perfil_publico" />
 </navigation>

@@ -50,6 +50,6 @@ object Repositorios {
         favoritos = FavoritoRepositorySimulado(AlmacenJson(contexto, "favoritos"))
         carrito = CarritoRepositorioSimulado(AlmacenJson(contexto, "carrito"), productos)
         pagos = PagoRepositorySimulado()
-        calificaciones = CalificacionRepositorySimulado(AlmacenJson(contexto, "calificaciones"), pedidos)
+        calificaciones = CalificacionRepositorySimulado(AlmacenJson(contexto, "calificaciones"), pedidos) { productos.obtenerPorId(it)?.titulo.orEmpty() }
     }
 }

@@ -16,6 +16,7 @@
             android:name=".ui.acceso.AccesoActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Reco.Splash"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -38,13 +39,16 @@
         <activity
             android:name=".ui.acceso.PortalSimuladoActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.comprador.CompradorActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.vendedor.VendedorActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

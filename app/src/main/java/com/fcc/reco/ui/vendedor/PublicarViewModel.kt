@@ -96,7 +96,7 @@ class PublicarViewModel(private val aplicacion: Application) : AndroidViewModel(
     private fun construir(estado: EstadoAnuncio): Anuncio? {
         if (borrador.modelo == null) return null
         val sesion = SesionLocal(aplicacion).leer() ?: return null
-        val vendedor = VendedorResumen(abreviar(sesion.nombre), sesion.carrera.orEmpty(), sesion.universidad ?: "BUAP", 5.0, 0)
+        val vendedor = VendedorResumen(sesion.nombreCorto, sesion.carrera.orEmpty(), sesion.universidad ?: "BUAP", 5.0, 0)
         val punto = sesion.vendedor?.puntoEntrega ?: DatosSimulados.puntosEntrega.first().nombre
         return builder.construir(sesion.correo, vendedor, punto, estado)
     }
@@ -117,10 +117,5 @@ class PublicarViewModel(private val aplicacion: Application) : AndroidViewModel(
         val error = Repositorios.anuncios.enviarARevision(anuncio)
         if (error == null) nuevo()
         return error
-    }
-
-    private fun abreviar(nombre: String): String {
-        val partes = nombre.trim().split(" ").filter { it.isNotEmpty() }
-        return if (partes.size >= 2) "${partes.first()} ${partes.last().first().uppercase()}." else nombre
     }
 }

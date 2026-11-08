@@ -44,7 +44,7 @@ class DetalleProductoFragment : Fragment(R.layout.fragment_detalle_producto) {
         b.botonCompartir.setOnClickListener { compartir(producto) }
         b.botonFavorito.setOnClickListener { viewModel.alternarFavorito() }
         b.tarjetaVendedor.setOnClickListener {
-            Toast.makeText(requireContext(), R.string.proximamente, Toast.LENGTH_SHORT).show()
+            findNavController().irA(R.id.perfilPublico, Bundle().apply { putString("vendedor", producto.vendedor.nombre) })
         }
         pintarProducto(b, producto)
 

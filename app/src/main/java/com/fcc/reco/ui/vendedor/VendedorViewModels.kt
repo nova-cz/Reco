@@ -71,7 +71,7 @@ class PanelViewModel(aplicacion: Application) : AndroidViewModel(aplicacion) {
         val proxima = ventas.filter { it.estado == EstadoPedido.PAGADO_RETENIDO || it.estado == EstadoPedido.ENTREGADO }.minByOrNull { it.creado }
         EstadoPanel(
             nombre = s?.nombre.orEmpty(),
-            reputacion = s?.nombre?.let { Repositorios.calificaciones.obtenerReputacion(it)?.promedio },
+            reputacion = s?.nombreCorto?.let { Repositorios.calificaciones.obtenerReputacion(it)?.promedio },
             mes = SimpleDateFormat("MMMM", Locale.forLanguageTag("es-MX")).format(Date()),
             ganancias = resumen.total, disponible = resumen.disponible, retenido = resumen.porCobrar,
             ventasMes = delMes.size,
@@ -171,5 +171,12 @@ class VentasViewModel : androidx.lifecycle.ViewModel() {
     fun ponerFiltro(f: FiltroVentas) { filtro.value = f }
     fun marcarEntregado(id: Int) = Repositorios.pedidos.marcarEntregado(id)
     /** Solo para probar: el comprador es simulado, así que aquí se confirma por él. */
-    fun simularConfirmacionDelComprador(id: Int) = Repositorios.pedidos.confirmarEntrega(id)
+    fun simularConfirmacionDelComprador(id: Int) {
+        if (Repositorios.pedidos.confirmarEntrega(id)) {
+            Repositorios.calificaciones.calificarVendedor(
+                id, 5, listOf(com.fcc.reco.data.model.Calificacion.PUNTUAL, "Como se describió"),
+                "Todo perfecto, llegó a la hora y el equipo estaba impecable."
+            )
+        }
+    }
 }

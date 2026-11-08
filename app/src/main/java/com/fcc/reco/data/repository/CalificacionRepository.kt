@@ -1,8 +1,11 @@
 package com.fcc.reco.data.repository
 
+import com.fcc.reco.data.DatosSimulados
 import com.fcc.reco.data.local.AlmacenJson
 import com.fcc.reco.data.model.Calificacion
 import com.fcc.reco.data.model.EstadoPedido
+import com.fcc.reco.data.model.Resena
+import com.fcc.reco.data.model.VendedorResumen
 import com.fcc.reco.data.model.Reputacion
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,12 +19,15 @@ interface CalificacionRepository {
     fun calificarVendedor(pedidoId: Int, estrellas: Int, etiquetas: List<String>, comentario: String): Calificacion?
     fun obtenerPorPedido(pedidoId: Int): Calificacion?
     fun obtenerReputacion(vendedor: String): Reputacion?
+    /** Reseñas que se muestran en el perfil de un vendedor: las reales más las de los vendedores simulados. */
+    fun resenasDe(vendedor: VendedorResumen): List<Resena>
 }
 
 /** Calificaciones en memoria, guardadas en un JSON interno. */
 class CalificacionRepositorySimulado(
     private val almacen: AlmacenJson,
-    private val pedidos: PedidoRepository
+    private val pedidos: PedidoRepository,
+    private val tituloDe: (Int) -> String = { "" }
 ) : CalificacionRepository {
 
     private val _calificaciones = MutableStateFlow(leer())
@@ -40,7 +46,9 @@ class CalificacionRepositorySimulado(
             estrellas = estrellas,
             etiquetas = etiquetas,
             comentario = comentario.trim(),
-            creado = System.currentTimeMillis()
+            creado = System.currentTimeMillis(),
+            autor = pedido.comprador.ifEmpty { "Tú" },
+            producto = pedido.productoIds.firstOrNull()?.let(tituloDe).orEmpty()
         )
         _calificaciones.value = _calificaciones.value + nueva
         guardar()
@@ -57,6 +65,12 @@ class CalificacionRepositorySimulado(
         return Reputacion(propias.map { it.estrellas }.average(), propias.size)
     }
 
+    override fun resenasDe(vendedor: VendedorResumen): List<Resena> {
+        val reales = _calificaciones.value.filter { it.vendedor == vendedor.nombre }
+            .map { Resena(it.autor.ifEmpty { "Tú" }, it.producto, it.estrellas, it.etiquetas, it.comentario, it.creado) }
+        return (reales + DatosSimulados.resenasSimuladas(vendedor)).sortedByDescending { it.fecha }
+    }
+
     private fun guardar() {
         val json = JSONArray()
         _calificaciones.value.forEach { c ->
@@ -64,6 +78,7 @@ class CalificacionRepositorySimulado(
                 put("id", c.id); put("pedidoId", c.pedidoId); put("vendedor", c.vendedor)
                 put("estrellas", c.estrellas); put("etiquetas", JSONArray(c.etiquetas))
                 put("comentario", c.comentario); put("creado", c.creado)
+                put("autor", c.autor); put("producto", c.producto)
             })
         }
         almacen.guardar(json)
@@ -78,7 +93,8 @@ class CalificacionRepositorySimulado(
                 Calificacion(
                     id = o.getInt("id"), pedidoId = o.getInt("pedidoId"), vendedor = o.getString("vendedor"),
                     estrellas = o.getInt("estrellas"), etiquetas = (0 until et.length()).map { et.getString(it) },
-                    comentario = o.getString("comentario"), creado = o.getLong("creado")
+                    comentario = o.getString("comentario"), creado = o.getLong("creado"),
+                    autor = o.optString("autor", ""), producto = o.optString("producto", "")
                 )
             }.getOrNull()
         }

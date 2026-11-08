@@ -21,7 +21,8 @@ class SesionLocal(contexto: Context) {
             universidad = prefs.getString(UNIVERSIDAD, null),
             carrera = prefs.getString(CARRERA, null),
             ultimoModo = prefs.getString(MODO, null)?.let { runCatching { ModoUsuario.valueOf(it) }.getOrNull() },
-            vendedor = prefs.getString(VENDEDOR, null)?.let { leerVendedor(it) }
+            vendedor = prefs.getString(VENDEDOR, null)?.let { leerVendedor(it) },
+            creado = prefs.getLong(CREADO, 0L).takeIf { it > 0 } ?: System.currentTimeMillis().also { prefs.edit { putLong(CREADO, it) } }
         )
     }
 
@@ -33,6 +34,7 @@ class SesionLocal(contexto: Context) {
         putString(CARRERA, sesion.carrera)
         putString(MODO, sesion.ultimoModo?.name)
         putString(VENDEDOR, sesion.vendedor?.let { escribirVendedor(it) })
+        if (prefs.getLong(CREADO, 0L) == 0L) putLong(CREADO, sesion.creado.takeIf { it > 0 } ?: System.currentTimeMillis())
     }
 
     private fun escribirVendedor(v: PerfilVendedor): String = JSONObject().apply {
@@ -56,5 +58,6 @@ class SesionLocal(contexto: Context) {
         const val CARRERA = "carrera"
         const val MODO = "ultimo_modo"
         const val VENDEDOR = "vendedor"
+        const val CREADO = "creado"
     }
 }

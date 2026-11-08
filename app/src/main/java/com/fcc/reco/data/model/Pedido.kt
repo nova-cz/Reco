@@ -41,7 +41,10 @@ data class Calificacion(
     val estrellas: Int,
     val etiquetas: List<String>,
     val comentario: String,
-    val creado: Long
+    val creado: Long,
+    /** Quién escribió la reseña y sobre qué equipo (vacío en las anteriores a este campo). */
+    val autor: String = "",
+    val producto: String = ""
 ) {
     companion object {
         const val PUNTUAL = "Puntual"
@@ -60,3 +63,13 @@ data class PuntoEntrega(val nombre: String, val descripcion: String)
 
 /** Lo que el comprador eligió para entregar un grupo del carrito. */
 data class EntregaElegida(val grupo: GrupoCarrito, val punto: PuntoEntrega, val horario: String)
+
+/** Reseña tal como se muestra en un perfil (reales o simuladas). */
+data class Resena(
+    val autor: String,
+    val producto: String,
+    val estrellas: Int,
+    val etiquetas: List<String>,
+    val comentario: String,
+    val fecha: Long
+)

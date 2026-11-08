@@ -51,11 +51,16 @@
 
     <fragment
         android:id="@+id/perfil"
-        android:name="com.fcc.reco.ui.comun.PerfilBasicoFragment"
-        tools:layout="@layout/fragment_perfil_basico" />
+        android:name="com.fcc.reco.ui.comun.PerfilFragment"
+        tools:layout="@layout/fragment_perfil" />
 
     <fragment
         android:id="@+id/registroVendedor"
         android:name="com.fcc.reco.ui.vendedor.RegistroVendedorFragment"
         tools:layout="@layout/fragment_registro_vendedor" />
+
+    <fragment
+        android:id="@+id/perfilPublico"
+        android:name="com.fcc.reco.ui.comun.PerfilPublicoFragment"
+        tools:layout="@layout/fragment_perfil_publico" />
 </navigation>

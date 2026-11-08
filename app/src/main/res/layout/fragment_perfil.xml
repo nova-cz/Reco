@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/raiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/margen_pantalla"
+        android:paddingTop="24dp"
+        android:paddingEnd="@dimen/margen_pantalla"
+        android:paddingBottom="110dp">
+
+        <TextView
+            style="@style/Reco.Texto.Titulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/perfil_titulo" />
+
+        <include
+            android:id="@+id/tarjeta"
+            layout="@layout/layout_tarjeta_perfil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp" />
+
+        <!-- Aún no es vendedor -->
+        <LinearLayout
+            android:id="@+id/tarjeta_vender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_degradado_gaming"
+            android:clickable="true"
+            android:elevation="@dimen/elevacion_suave"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="18dp">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_icono_translucido"
+                android:importantForAccessibility="no"
+                android:padding="12dp"
+                android:src="@drawable/ic_etiqueta"
+                app:tint="@color/white" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/Reco.Texto.Boton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/perfil_vender_titulo"
+                    android:textColor="@color/white"
+                    android:textSize="17sp" />
+
+                <TextView
+                    style="@style/Reco.Texto.Cuerpo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/perfil_vender_desc"
+                    android:textColor="#E6FFFFFF"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_circulo_blanco"
+                android:importantForAccessibility="no"
+                android:padding="11dp"
+                android:src="@drawable/ic_chevron_der" />
+        </LinearLayout>
+
+        <!-- Ya es vendedor: artículos y reseñas -->
+        <LinearLayout
+            android:id="@+id/seccion_vendedor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Reco.Texto.Seccion"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/perfil_articulos"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/ver_todo_articulos"
+                    style="@style/Reco.Texto.Boton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:padding="4dp"
+                    android:text="@string/panel_ver_todo"
+                    android:textColor="@color/azul"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lista_articulos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical" />
+
+            <TextView
+                android:id="@+id/sin_articulos"
+                style="@style/Reco.Texto.Secundario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_tarjeta"
+                android:gravity="center"
+                android:padding="18dp"
+                android:text="@string/perfil_sin_articulos"
+                android:visibility="gone" />
+
+            <com.fcc.reco.ui.comun.BotonPildora
+                android:id="@+id/boton_perfil_publico"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/perfil_ver_publico"
+                app:botonEstilo="secundario" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Reco.Texto.Seccion"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/perfil_resenas_recibidas"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/ver_resenas"
+                    style="@style/Reco.Texto.Boton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:padding="4dp"
+                    android:textColor="@color/azul"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lista_resenas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical" />
+
+            <TextView
+                android:id="@+id/sin_resenas"
+                style="@style/Reco.Texto.Secundario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_tarjeta"
+                android:gravity="center"
+                android:padding="18dp"
+                android:text="@string/perfil_sin_resenas"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_tarjeta"
+            android:elevation="@dimen/elevacion_suave"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="6dp" />
+    </LinearLayout>
+</ScrollView>

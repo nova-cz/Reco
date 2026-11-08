@@ -6,6 +6,8 @@ import com.fcc.reco.data.model.Grado
 import com.fcc.reco.data.model.Producto
 import com.fcc.reco.data.model.PuntoEntrega
 import com.fcc.reco.data.model.Universidad
+import com.fcc.reco.data.model.Calificacion
+import com.fcc.reco.data.model.Resena
 import com.fcc.reco.data.model.VendedorResumen
 
 /** Datos de prueba en memoria. Se reemplazan por Supabase más adelante. */
@@ -34,9 +36,38 @@ object DatosSimulados {
     /** IMEI y series reportados (tabla `imei_bloqueados`). Los dos IMEI son válidos con Luhn, para probar el rechazo. */
     val imeiBloqueados: Set<String> = setOf("356918102345611", "867501049283749", "BLOQUEADO001")
 
+    private val autoresResenas = listOf("Luis P.", "Mariana V.", "José L.", "Daniela R.", "Carlos M.", "Paola S.")
+    private val comentariosResenas = listOf(
+        "Todo perfecto, llegó a la hora y el equipo estaba impecable.",
+        "Tal cual las fotos. Muy amable en la entrega.",
+        "Buen precio y el equipo funciona de maravilla.",
+        "Nos vimos en la biblioteca, todo rápido y sin problemas.",
+        "Lo recomiendo, el equipo venía con todos sus accesorios."
+    )
+
+    /** Reseñas de ejemplo de un vendedor simulado (una por venta). Con Supabase salen de `calificaciones`. */
+    fun resenasSimuladas(v: VendedorResumen): List<Resena> {
+        if (vendedores.none { it.nombre == v.nombre }) return emptyList()
+        val altas = ((v.reputacion - 4.0) * 10).toInt().coerceIn(0, 10)
+        return (0 until v.ventas).map { i ->
+            Resena(
+                autor = autoresResenas[(i + v.nombre.length) % autoresResenas.size],
+                producto = "",
+                estrellas = if (i % 10 < altas) 5 else 4,
+                // 4 de cada 5 reseñas marcan "Puntual": los vendedores con ≥70 % ganan la insignia.
+                etiquetas = buildList {
+                    if (i % 5 != 0) add(Calificacion.PUNTUAL)
+                    if (i % 2 == 0) add("Como se describió") else add("Amable")
+                },
+                comentario = comentariosResenas[(i + v.ventas) % comentariosResenas.size],
+                fecha = System.currentTimeMillis() - (i * 3 + 1) * 86_400_000L
+            )
+        }
+    }
+
     val horariosEntrega = listOf("Lun 11:00", "Mar 13:00", "Mié 16:00", "Jue 12:00")
 
-    private val vendedores = listOf(
+    val vendedores = listOf(
         VendedorResumen("Andrea R.", "Computación", "FCC", 4.9, 12),
         VendedorResumen("Luis M.", "Electrónica", "FCE", 4.7, 8),
         VendedorResumen("Sofía G.", "Diseño", "FAD", 4.8, 5),

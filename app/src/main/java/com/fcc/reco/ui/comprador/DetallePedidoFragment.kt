@@ -30,6 +30,7 @@ import com.fcc.reco.ui.comun.dp
 import com.fcc.reco.ui.comun.dpF
 import com.fcc.reco.ui.comun.estiloComprador
 import com.fcc.reco.ui.comun.iconoInicio
+import com.fcc.reco.ui.comun.irA
 import com.fcc.reco.ui.comun.ponerEstado
 import com.fcc.reco.ui.comun.sumarMargenInferiorDeBarras
 import com.fcc.reco.ui.comun.textoComprador
@@ -50,6 +51,9 @@ class DetallePedidoFragment : Fragment(R.layout.fragment_detalle_pedido) {
         val nav = findNavController()
 
         b.botonAtras.setOnClickListener { nav.popBackStack() }
+        b.filaVendedor.setOnClickListener {
+            viewModel.estado.value?.pedido?.let { p -> nav.irA(R.id.perfilPublico, Bundle().apply { putString("vendedor", p.vendedor.nombre) }) }
+        }
         b.reportar.setOnClickListener {
             Toast.makeText(requireContext(), R.string.aviso_reporte, Toast.LENGTH_LONG).show()
         }
