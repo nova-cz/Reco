@@ -11,6 +11,8 @@ interface ProductoRepository {
     fun obtenerPorId(id: Int): Producto?
     fun marcas(): List<String>
     fun destacado(): Producto?
+    /** Verdadero si el equipo ya se pagó y salió del catálogo. */
+    fun estaVendido(id: Int): Boolean
 }
 
 /** Catálogo en memoria. La versión real consulta Supabase (solo anuncios Publicados). */
@@ -46,6 +48,8 @@ class ProductoRepositorySimulado(
         catalogo.groupingBy { it.marca }.eachCount().entries
             .sortedWith(compareByDescending<Map.Entry<String, Int>> { it.value }.thenBy { it.key })
             .map { it.key }
+
+    override fun estaVendido(id: Int): Boolean = id in idsVendidos()
 
     override fun destacado(): Producto? = catalogo.firstOrNull { it.certificado && it.categoria.name == "LAPTOPS" }
 }

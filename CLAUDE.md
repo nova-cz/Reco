@@ -155,7 +155,24 @@ Unas 21 pantallas en 8 flujos. Cada flujo se construye completo, se prueba en el
 7. **Gestionar ventas**: Panel → Mis anuncios (estados) → Ventas con detalle integrado, "Marcar entregado" y ganancia neta (13.6% + $8).
 8. **Cuenta**: Perfil completo, cambiar de modo y cerrar sesión.
 
-**Fuera de alcance** (recortado): Notificaciones, Perfil público del vendedor, hoja de filtros avanzada, Detalle de venta como pantalla aparte y Crear cuenta como pantalla aparte (reutiliza Iniciar sesión).
+**Fuera de alcance** (recortado): Notificaciones, hoja de filtros avanzada, Detalle de venta como pantalla aparte, Crear cuenta como pantalla aparte (reutiliza Iniciar sesión) y `abrirReclamo` (en Detalle de pedido solo hay un botón "Reportar problema" que muestra un aviso). **Perfil público del vendedor sí entra** (22 pantallas en total).
+
+## Decisiones de alcance definitivas (8 de noviembre de 2026)
+
+Estas decisiones mandan sobre cualquier línea anterior que las contradiga.
+
+- **Catálogo**: 15 a 20 modelos (2 a 3 por categoría) con precio de referencia.
+- **Fotos al publicar**: mínimo 2, máximo 8. **Máximo 3 anuncios activos** por vendedor.
+- **App bloqueada en vertical** (`screenOrientation="portrait"`); no se maneja rotación.
+- **Verificación**: portal simulado (Custom Tab + `reco://verificado`). Google Sign-In real solo si sobra tiempo tras Supabase.
+- **Certificación**: $99 MXN. **Comisión 13.6 % + $8**, calculada en un solo lugar (`domain/Comision.kt`).
+- **Puntos de entrega**: Biblioteca Central, FCC, Explanada de Ingeniería y Comedor universitario. Horario 10:00 a 18:00.
+- **Datos simulados persistentes**: JSON interno (`AlmacenJson`), sin Room.
+- **Supabase** es obligatorio para la entrega final y va al último.
+- **Perfil**: un solo Fragment que cambia si el usuario ya es vendedor. **Perfil público del vendedor** se abre desde Detalle de producto, Detalle de pedido y "Ver mi perfil público"; pestañas "A la venta" y "Reseñas"; insignia "Entrega puntual" si ≥70 % de las reseñas la tienen; sin datos de contacto.
+- **Colores de estado** (texto / fondo): verde `#1E9E5A` / `#E8F7EF` (Publicado, Entregado); naranja `#E0650C` / `#FFF1E6` (En revisión, Listo para entregar); azul `#2F7BF6` / `#EEF4FF` (Pago retenido, Vendido); rojo `#E5484D` / `#FDECEC` (Rechazado); gris `#6E6E76` / `#EDEDF1` (Pausado).
+- **Nodos Figma nuevos**: Favoritos `33:156`, Mis compras `33:445`, Detalle de pedido `33:713`, Calificar vendedor (bottom sheet) `33:914`, Perfil sin vender `7:101`, Perfil con vendedor activo `38:265`, Perfil público `38:456`, Publicar 3 `34:200`, Publicar 4 `34:387`, Publicar 5 `34:558`, Mis anuncios `35:233`, Ventas `35:439`. Los textos de los diseños son de ejemplo; se usan los datos simulados.
+- **Orden**: 1 Favoritos, 2 Seguimiento, 3 Registro de vendedor, 4 Publicar + `ValidadorPublicacion` + moderación debug, 5 Panel / Mis anuncios / Ventas, 6 Perfil + Perfil público + estados vacíos y errores, 7 Supabase.
 
 **Orden**: Comprar completo → Vender completo → Perfil y conexión → Supabase.
 

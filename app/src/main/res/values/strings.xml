@@ -175,4 +175,17 @@
     <string name="seguir_explorando">Seguir explorando</string>
     <string name="pedido_resumen_entrega">%1$s · %2$s</string>
     <string name="error_pago">No se pudo procesar el pago. Intenta de nuevo.</string>
+
+    <!-- Favoritos -->
+    <plurals name="favoritos_guardados">
+        <item quantity="one">%d equipo guardado</item>
+        <item quantity="other">%d equipos guardados</item>
+    </plurals>
+    <string name="filtro_todos">Todos</string>
+    <string name="filtro_disponibles">Disponibles</string>
+    <string name="filtro_vendidos">Vendidos</string>
+    <string name="vendido">Vendido</string>
+    <string name="favoritos_vacio">Aún no tienes favoritos</string>
+    <string name="favoritos_vacio_desc">Toca el corazón de un equipo para guardarlo aquí.</string>
+    <string name="favoritos_filtro_vacio">No hay equipos en este filtro.</string>
 </resources>

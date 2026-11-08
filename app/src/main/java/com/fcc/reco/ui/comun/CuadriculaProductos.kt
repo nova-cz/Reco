@@ -22,6 +22,7 @@ object CuadriculaProductos {
         contenedor: LinearLayout,
         productos: List<Producto>,
         favoritos: Set<Int>,
+        vendidos: Set<Int> = emptySet(),
         alAbrir: (Producto) -> Unit,
         alAlternarFavorito: (Producto) -> Unit
     ) {
@@ -29,7 +30,7 @@ object CuadriculaProductos {
         val inflater = LayoutInflater.from(contenedor.context)
         armarFilas(contenedor, productos) { fila, producto ->
             val b = ItemProductoBinding.inflate(inflater, fila, false)
-            enlazar(b, producto, producto.id in favoritos)
+            enlazar(b, producto, producto.id in favoritos, producto.id in vendidos)
             b.root.setOnClickListener { alAbrir(producto) }
             b.botonFavorito.setOnClickListener { alAlternarFavorito(producto) }
             b.root
@@ -80,13 +81,18 @@ object CuadriculaProductos {
         }
     }
 
-    private fun enlazar(b: ItemProductoBinding, p: Producto, esFavorito: Boolean) {
+    private fun enlazar(b: ItemProductoBinding, p: Producto, esFavorito: Boolean, vendido: Boolean = false) {
         val ctx = b.root.context
         b.icono.setImageResource(p.categoria.icono)
         b.titulo.text = p.titulo
         b.precio.text = p.precio.comoPrecio()
         b.punto.text = p.puntoEntrega
-        if (p.certificado) {
+        // Un equipo vendido se muestra atenuado y con la insignia "Vendido" (Favoritos).
+        b.root.alpha = if (vendido) 0.6f else 1f
+        if (vendido) {
+            b.chipCertificado.configurar(ChipInsignia.Tipo.GRADO, ctx.getString(R.string.vendido))
+            b.chipCertificado.visibility = View.VISIBLE
+        } else if (p.certificado) {
             b.chipCertificado.configurar(ChipInsignia.Tipo.CERTIFICADO, ctx.getString(R.string.certificado))
             b.chipCertificado.visibility = View.VISIBLE
         } else {
