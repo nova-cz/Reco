@@ -12,7 +12,7 @@ import com.fcc.reco.ui.comun.edgeToEdgeClaro
 
 /**
  * Activity de acceso. Decide a dónde ir según la sesión guardada:
- * sin sesión -> Bienvenida; sin verificar -> Verificar; con todo listo -> abre el último modo.
+ * sin sesión -> Bienvenida; sin verificar -> Verificar; con todo listo -> abre la app.
  * También recibe el deep link `reco://verificado` de vuelta del login institucional.
  */
 class AccesoActivity : AppCompatActivity() {
@@ -26,7 +26,7 @@ class AccesoActivity : AppCompatActivity() {
 
         val sesion = viewModel.sesion()
         if (sesion?.completa == true && intent.data == null) {
-            abrirModoYTerminar(sesion.ultimoModo!!)
+            abrirAppYTerminar()
             return
         }
 
@@ -48,7 +48,6 @@ class AccesoActivity : AppCompatActivity() {
 
     private fun destinoInicial(sesion: Sesion?): Int = when {
         sesion == null -> R.id.bienvenida
-        !sesion.verificado || sesion.carrera == null -> R.id.verificarEstudiante
-        else -> R.id.elegirModo
+        else -> R.id.verificarEstudiante
     }
 }

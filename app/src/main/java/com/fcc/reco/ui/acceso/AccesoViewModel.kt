@@ -6,7 +6,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.fcc.reco.R
 import com.fcc.reco.data.local.SesionLocal
-import com.fcc.reco.data.model.ModoUsuario
 import com.fcc.reco.data.model.Sesion
 import com.fcc.reco.data.repository.AuthRepository
 import com.fcc.reco.data.repository.AuthRepositorySimulado
@@ -36,9 +35,7 @@ data class EstadoAcceso(
 sealed interface EventoAcceso {
     data object IrAVerificar : EventoAcceso
     data object MostrarCarrera : EventoAcceso
-    data object IrAElegirModo : EventoAcceso
-    data object IrARegistroVendedor : EventoAcceso
-    data class AbrirModo(val modo: ModoUsuario) : EventoAcceso
+    data object AbrirApp : EventoAcceso
     data class Mensaje(val texto: Int) : EventoAcceso
 }
 
@@ -85,8 +82,7 @@ class AccesoViewModel(aplicacion: Application) : AndroidViewModel(aplicacion) {
             resultado.onSuccess { sesion ->
                 _eventos.send(
                     when {
-                        sesion.completa -> EventoAcceso.AbrirModo(sesion.ultimoModo!!)
-                        sesion.verificado && sesion.carrera != null -> EventoAcceso.IrAElegirModo
+                        sesion.completa -> EventoAcceso.AbrirApp
                         sesion.verificado -> EventoAcceso.MostrarCarrera
                         else -> EventoAcceso.IrAVerificar
                     }
@@ -110,16 +106,6 @@ class AccesoViewModel(aplicacion: Application) : AndroidViewModel(aplicacion) {
 
     fun elegirCarrera(carrera: String) {
         perfil.guardarCarrera(carrera)
-        viewModelScope.launch { _eventos.send(EventoAcceso.IrAElegirModo) }
-    }
-
-    fun elegirModo(modo: ModoUsuario) {
-        // Para vender primero hay que completar el registro de vendedor.
-        if (modo == ModoUsuario.VENDEDOR && sesion()?.esVendedor != true) {
-            viewModelScope.launch { _eventos.send(EventoAcceso.IrARegistroVendedor) }
-            return
-        }
-        perfil.cambiarModo(modo)
-        viewModelScope.launch { _eventos.send(EventoAcceso.AbrirModo(modo)) }
+        viewModelScope.launch { _eventos.send(EventoAcceso.AbrirApp) }
     }
 }

@@ -3,6 +3,7 @@
     <dimen name="radio_tarjeta">24dp</dimen>
     <dimen name="radio_campo">20dp</dimen>
     <dimen name="radio_pildora">999dp</dimen>
+    <dimen name="radio_boton">16dp</dimen>
 
     <dimen name="margen_pantalla">20dp</dimen>
     <dimen name="espacio_s">8dp</dimen>

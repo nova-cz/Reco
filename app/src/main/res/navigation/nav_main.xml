@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Grafo único de la app v2: comprar, mis compras, vender y cuenta. -->
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -20,24 +21,14 @@
         tools:layout="@layout/fragment_detalle_producto" />
 
     <fragment
+        android:id="@+id/comprar"
+        android:name="com.fcc.reco.ui.comprador.ComprarFragment"
+        tools:layout="@layout/fragment_comprar" />
+
+    <fragment
         android:id="@+id/favoritos"
         android:name="com.fcc.reco.ui.comprador.FavoritosFragment"
         tools:layout="@layout/fragment_favoritos" />
-
-    <fragment
-        android:id="@+id/carrito"
-        android:name="com.fcc.reco.ui.comprador.CarritoFragment"
-        tools:layout="@layout/fragment_carrito" />
-
-    <fragment
-        android:id="@+id/entregaPago"
-        android:name="com.fcc.reco.ui.comprador.EntregaPagoFragment"
-        tools:layout="@layout/fragment_entrega_pago" />
-
-    <fragment
-        android:id="@+id/compraConfirmada"
-        android:name="com.fcc.reco.ui.comprador.CompraConfirmadaFragment"
-        tools:layout="@layout/fragment_compra_confirmada" />
 
     <fragment
         android:id="@+id/compras"
@@ -50,14 +41,34 @@
         tools:layout="@layout/fragment_detalle_pedido" />
 
     <fragment
-        android:id="@+id/perfil"
-        android:name="com.fcc.reco.ui.comun.PerfilFragment"
-        tools:layout="@layout/fragment_perfil" />
-
-    <fragment
-        android:id="@+id/registroVendedor"
+        android:id="@+id/vendeEnReco"
         android:name="com.fcc.reco.ui.vendedor.RegistroVendedorFragment"
         tools:layout="@layout/fragment_registro_vendedor" />
+
+    <fragment
+        android:id="@+id/misVentas"
+        android:name="com.fcc.reco.ui.vendedor.MisVentasFragment"
+        tools:layout="@layout/fragment_mis_ventas" />
+
+    <fragment
+        android:id="@+id/publicar1"
+        android:name="com.fcc.reco.ui.vendedor.Publicar1Fragment"
+        tools:layout="@layout/fragment_publicar_1" />
+
+    <fragment
+        android:id="@+id/publicar2"
+        android:name="com.fcc.reco.ui.vendedor.Publicar2Fragment"
+        tools:layout="@layout/fragment_publicar_2" />
+
+    <fragment
+        android:id="@+id/publicar3"
+        android:name="com.fcc.reco.ui.vendedor.Publicar3Fragment"
+        tools:layout="@layout/fragment_publicar_3" />
+
+    <fragment
+        android:id="@+id/cuenta"
+        android:name="com.fcc.reco.ui.comun.PerfilFragment"
+        tools:layout="@layout/fragment_perfil" />
 
     <fragment
         android:id="@+id/perfilPublico"

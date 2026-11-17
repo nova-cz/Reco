@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/raiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Fondo que desenfoca la barra glass (hermano de la barra, no ancestro). -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_fondo_app"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_main" />
+
+    <!-- Barra de 4 pestañas y, aparte, el botón "Vender" en pastilla con degradado. -->
+    <LinearLayout
+        android:id="@+id/barra_contenedor"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/barra_alto"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/barra_margen"
+        android:layout_marginEnd="@dimen/barra_margen"
+        android:layout_marginBottom="@dimen/barra_margen"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.fcc.reco.ui.comun.BarraInferiorFlotante
+            android:id="@+id/barra"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/boton_vender"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_button_primary"
+            android:clickable="true"
+            android:contentDescription="@string/tab_vender"
+            android:elevation="8dp"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingEnd="22dp">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_mas"
+                app:tint="@color/white" />
+
+            <TextView
+                style="@style/Reco.Texto.Boton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/tab_vender"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

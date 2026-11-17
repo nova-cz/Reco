@@ -1,11 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Tema único, siempre claro (la guía visual de Reco no tiene modo oscuro). -->
     <style name="Base.Theme.Reco" parent="Theme.Material3.Light.NoActionBar">
-        <item name="colorPrimary">@color/tinta</item>
+        <item name="colorPrimary">@color/verde</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorPrimaryContainer">@color/superficie_gris</item>
+        <item name="colorPrimaryContainer">@color/acento_fondo</item>
         <item name="colorOnPrimaryContainer">@color/tinta</item>
-        <item name="colorSecondary">@color/tinta</item>
+        <item name="colorSecondary">@color/verde_azulado</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSurface">@color/superficie</item>
         <item name="colorOnSurface">@color/tinta</item>
@@ -38,7 +38,7 @@
 
     <!-- Pantalla de arranque con el camaleón -->
     <style name="Theme.Reco.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/fondo</item>
+        <item name="windowSplashScreenBackground">@color/acento_fondo</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_camaleon</item>
         <item name="postSplashScreenTheme">@style/Theme.Reco</item>
     </style>

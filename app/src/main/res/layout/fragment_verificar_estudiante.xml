@@ -48,7 +48,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/paso_2_de_3"
+                android:text="@string/paso_2_de_2"
                 android:textColor="@color/texto_secundario"
                 android:textSize="13sp" />
 
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             app:pasosActual="2"
-            app:pasosTotal="3" />
+            app:pasosTotal="2" />
 
         <!-- Tarjeta principal -->
         <LinearLayout

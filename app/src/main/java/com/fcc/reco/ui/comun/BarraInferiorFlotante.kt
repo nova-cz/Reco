@@ -22,21 +22,17 @@ import androidx.navigation.NavDestination
 import androidx.navigation.navOptions
 import com.fcc.reco.R
 
-/**
- * Un elemento de la barra. Para vincularla con Navigation, [id] debe ser el id del destino
- * en el grafo. Si [esAccion] es verdadero se pinta como el botón naranja "+" y no navega:
- * solo avisa por [BarraInferiorFlotante.alSeleccionar].
- */
+/** Un elemento de la barra. Para vincularla con Navigation, [id] debe ser el id del destino en el grafo. */
 data class ItemBarra(
     @IdRes val id: Int,
     @DrawableRes val icono: Int,
-    @StringRes val titulo: Int,
-    val esAccion: Boolean = false
+    @StringRes val titulo: Int
 )
 
 /**
- * Barra inferior flotante con efecto glass. La pestaña activa se muestra como píldora negra
- * con ícono y texto; las demás, solo ícono. Admite un globito naranja con contador.
+ * Barra inferior flotante con efecto glass. La pestaña activa se muestra como píldora en degradado
+ * verde con ícono y texto; las demás, solo ícono. Admite un globito naranja con contador.
+ * El botón "Vender" va aparte, junto a la barra (ver activity_main.xml).
  */
 class BarraInferiorFlotante @JvmOverloads constructor(
     context: Context,
@@ -51,12 +47,12 @@ class BarraInferiorFlotante @JvmOverloads constructor(
     var seleccionadoId: Int = View.NO_ID
         private set
 
-    /** Se llama al tocar cualquier elemento (también el botón de acción). */
+    /** Se llama al tocar cualquier elemento. */
     var alSeleccionar: ((ItemBarra) -> Unit)? = null
 
     private var nav: NavController? = null
     private val escuchaDestino = NavController.OnDestinationChangedListener { _, destino, _ ->
-        val coincidencia = items.firstOrNull { !it.esAccion && contiene(destino, it.id) }
+        val coincidencia = items.firstOrNull { contiene(destino, it.id) }
         if (coincidencia != null) seleccionar(coincidencia.id)
     }
 
@@ -72,7 +68,7 @@ class BarraInferiorFlotante @JvmOverloads constructor(
     /** Define los elementos de la barra y cuál empieza seleccionado. */
     fun configurar(
         lista: List<ItemBarra>,
-        seleccionInicial: Int = lista.firstOrNull { !it.esAccion }?.id ?: View.NO_ID
+        seleccionInicial: Int = lista.firstOrNull()?.id ?: View.NO_ID
     ) {
         items = lista
         seleccionadoId = seleccionInicial
@@ -122,7 +118,6 @@ class BarraInferiorFlotante @JvmOverloads constructor(
 
     private fun alTocar(item: ItemBarra) {
         alSeleccionar?.invoke(item)
-        if (item.esAccion) return
         val controlador = nav
         if (controlador == null) {
             seleccionar(item.id)
@@ -144,14 +139,11 @@ class BarraInferiorFlotante @JvmOverloads constructor(
             val vista = crearVista(item)
             vista.setOnClickListener { alTocar(item) }
             vista.contentDescription = context.getString(item.titulo)
-            val activo = item.id == seleccionadoId && !item.esAccion
-            val parametros = when {
-                item.esAccion -> LinearLayout.LayoutParams(dp(48), dp(48)).apply {
-                    marginStart = dp(4)
-                    marginEnd = dp(4)
-                }
-                activo -> LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, dp(48))
-                else -> LinearLayout.LayoutParams(0, dp(48), 1f)
+            val activo = item.id == seleccionadoId
+            val parametros = if (activo) {
+                LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, dp(48))
+            } else {
+                LinearLayout.LayoutParams(0, dp(48), 1f)
             }
             fila.addView(vista, parametros)
         }
@@ -159,22 +151,13 @@ class BarraInferiorFlotante @JvmOverloads constructor(
 
     private fun crearVista(item: ItemBarra): View {
         val blanco = ColorStateList.valueOf(Color.WHITE)
-        if (item.esAccion) {
-            return ImageView(context).apply {
-                setImageResource(item.icono)
-                scaleType = ImageView.ScaleType.CENTER
-                setBackgroundResource(R.drawable.bg_boton_naranja)
-                ImageViewCompat.setImageTintList(this, blanco)
-            }
-        }
-
         val envoltorio = FrameLayout(context)
         val activo = item.id == seleccionadoId
         if (activo) {
             val pildora = LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER
-                setBackgroundResource(R.drawable.bg_boton_primario)
+                setBackgroundResource(R.drawable.bg_button_primary)
                 setPadding(dp(16), 0, dp(18), 0)
             }
             pildora.addView(ImageView(context).apply {

@@ -17,11 +17,23 @@
         android:paddingEnd="@dimen/margen_pantalla"
         android:paddingBottom="24dp">
 
-        <ImageView
-            android:id="@+id/boton_atras"
-            style="@style/Reco.BotonCircular"
-            android:contentDescription="@string/volver"
-            android:src="@drawable/ic_atras" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/boton_atras"
+                style="@style/Reco.BotonCircular"
+                android:contentDescription="@string/volver"
+                android:src="@drawable/ic_atras" />
+
+            <ImageView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="end|center_vertical"
+                android:importantForAccessibility="no"
+                android:src="@drawable/reco_logo" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/titulo"
@@ -69,7 +81,7 @@
             android:layout_marginTop="14dp"
             android:padding="4dp"
             android:text="@string/olvidaste_contrasena"
-            android:textColor="@color/azul"
+            android:textColor="@color/verde_azulado"
             android:textSize="13sp" />
 
         <com.fcc.reco.ui.comun.BotonPildora

@@ -13,8 +13,8 @@ import androidx.core.content.ContextCompat
 import com.fcc.reco.R
 
 /**
- * Botón en forma de píldora.
- * - primario: negro con degradado sutil y texto blanco.
+ * Botón con esquinas de 16dp.
+ * - primario: degradado horizontal verde azulado -> verde y texto blanco.
  * - secundario: blanco con borde suave y texto tinta.
  * Admite un ícono opcional al inicio (`app:botonIcono`).
  */
@@ -43,10 +43,10 @@ class BotonPildora @JvmOverloads constructor(
         compoundDrawablePadding = dp(10)
         isClickable = true
         isFocusable = true
-        // Contorno de píldora explícito: así la sombra no sale rectangular.
+        // Contorno con esquinas de 16dp explícito: así la sombra no sale rectangular.
         outlineProvider = object : ViewOutlineProvider() {
             override fun getOutline(view: View, outline: Outline) {
-                outline.setRoundRect(0, 0, view.width, view.height, view.height / 2f)
+                outline.setRoundRect(0, 0, view.width, view.height, dpF(16f))
             }
         }
 
@@ -67,7 +67,7 @@ class BotonPildora @JvmOverloads constructor(
     private fun aplicarEstilo() {
         val color: Int
         if (estilo == Estilo.PRIMARIO) {
-            setBackgroundResource(R.drawable.bg_boton_primario)
+            setBackgroundResource(R.drawable.bg_button_primary)
             color = Color.WHITE
             elevation = dpF(8f)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {

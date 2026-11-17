@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Grafo de acceso. El destino inicial se decide en AccesoActivity según la sesión guardada. -->
+<!-- Grafo de acceso (Entrar). El destino inicial se decide en AccesoActivity según la sesión guardada. -->
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -24,14 +24,4 @@
         android:id="@+id/verificarEstudiante"
         android:name="com.fcc.reco.ui.acceso.VerificarEstudianteFragment"
         tools:layout="@layout/fragment_verificar_estudiante" />
-
-    <fragment
-        android:id="@+id/elegirModo"
-        android:name="com.fcc.reco.ui.acceso.ElegirModoFragment"
-        tools:layout="@layout/fragment_elegir_modo" />
-
-    <fragment
-        android:id="@+id/registroVendedor"
-        android:name="com.fcc.reco.ui.vendedor.RegistroVendedorFragment"
-        tools:layout="@layout/fragment_registro_vendedor" />
 </navigation>

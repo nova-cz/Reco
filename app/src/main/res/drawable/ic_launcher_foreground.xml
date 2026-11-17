@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Camaleón de la marca (Figma 21:156), dentro de la zona segura del ícono adaptativo. -->
 <inset xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/logo_camaleon"
+    android:drawable="@drawable/reco_logo"
     android:insetLeft="19%"
     android:insetTop="19%"
     android:insetRight="19%"

@@ -7,7 +7,8 @@
     <string name="tab_favoritos">Favoritos</string>
     <string name="tab_carrito">Carrito</string>
     <string name="tab_compras">Compras</string>
-    <string name="tab_perfil">Perfil</string>
+    <string name="tab_cuenta">Cuenta</string>
+    <string name="tab_vender">Vender</string>
 
     <!-- Barra inferior · vendedor -->
     <string name="tab_panel">Panel</string>
@@ -57,7 +58,7 @@
 
     <!-- Verificación -->
     <string name="verificacion">Verificación</string>
-    <string name="paso_2_de_3">Paso 2 de 3</string>
+    <string name="paso_2_de_2">Paso 2 de 2</string>
     <string name="paso_3_de_3">Paso 3 de 3</string>
     <string name="tu_perfil">Tu perfil</string>
     <string name="verifica_titulo">Verifica que eres estudiante</string>

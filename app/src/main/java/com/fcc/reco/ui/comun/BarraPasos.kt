@@ -42,7 +42,7 @@ class BarraPasos @JvmOverloads constructor(
                 setColor(
                     ContextCompat.getColor(
                         context,
-                        if (indice < actual) R.color.tinta else R.color.borde_suave
+                        if (indice < actual) R.color.verde else R.color.borde_suave
                     )
                 )
             }

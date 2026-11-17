@@ -83,6 +83,12 @@
         <item name="android:focusable">true</item>
     </style>
 
+    <!-- Botón primario: el fondo en degradado se aplica por estilo (y BotonPildora lo usa por defecto). -->
+    <style name="Reco.Boton.Primario" parent="Reco.Boton">
+        <item name="android:background">@drawable/bg_button_primary</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <style name="Reco.BotonCircular" parent="">
         <item name="android:layout_width">@dimen/boton_circular</item>
         <item name="android:layout_height">@dimen/boton_circular</item>
