@@ -43,7 +43,7 @@ class RegistroVendedorViewModel(aplicacion: Application) : AndroidViewModel(apli
 
     fun alternarReglas() = _estado.update { it.copy(reglas = !it.reglas, errorGeneral = null) }
 
-    fun crear(telefono: String, clabe: String) {
+    fun crear(apodo: String, acerca: String, telefono: String, clabe: String) {
         val e = _estado.value
         val errorTelefono = if (ValidadorVendedor.telefonoValido(telefono)) null else R.string.error_telefono
         val errorClabe = if (ValidadorVendedor.clabeValida(clabe)) null else R.string.error_clabe
@@ -62,7 +62,9 @@ class RegistroVendedorViewModel(aplicacion: Application) : AndroidViewModel(apli
                 puntoEntrega = e.punto!!,
                 dias = e.dias.toList(),
                 franjas = e.franjas.toList(),
-                clabe = ValidadorVendedor.soloDigitos(clabe)
+                clabe = ValidadorVendedor.soloDigitos(clabe),
+                apodo = apodo.trim(),
+                acerca = acerca.trim()
             )
         )
         _estado.update { it.copy(registrado = true) }

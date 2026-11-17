@@ -51,6 +51,11 @@
         tools:layout="@layout/fragment_mis_ventas" />
 
     <fragment
+        android:id="@+id/elegirModelo"
+        android:name="com.fcc.reco.ui.vendedor.ElegirModeloFragment"
+        tools:layout="@layout/fragment_elegir_modelo" />
+
+    <fragment
         android:id="@+id/publicar1"
         android:name="com.fcc.reco.ui.vendedor.Publicar1Fragment"
         tools:layout="@layout/fragment_publicar_1" />

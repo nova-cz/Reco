@@ -262,6 +262,14 @@
             </LinearLayout>
         </LinearLayout>
 
+        <com.fcc.reco.ui.comun.BotonPildora
+            android:id="@+id/boton_publicar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="@string/publicar_equipo"
+            app:botonIcono="@drawable/ic_mas" />
+
         <LinearLayout
             android:id="@+id/tarjeta_proxima"
             android:layout_width="match_parent"
@@ -326,7 +334,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/panel_mis_productos" />
+                android:text="@string/mis_anuncios" />
 
             <TextView
                 android:id="@+id/ver_todo"

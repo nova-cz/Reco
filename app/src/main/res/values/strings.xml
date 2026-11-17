@@ -237,11 +237,27 @@
 
     <!-- Registro de vendedor -->
     <string name="quieres_vender">¿Quieres vender algo?</string>
-    <string name="registro_titulo_barra">Perfil de vendedor</string>
-    <string name="registro_vendedor_titulo">Empieza a vender</string>
-    <string name="registro_desc">Solo te pedimos lo necesario para que el comprador te encuentre en el campus.</string>
-    <string name="registro_foto">Foto de perfil</string>
-    <string name="registro_foto_desc">Opcional · ayuda a generar confianza</string>
+    <string name="vende_barra">Vende en Reco</string>
+    <string name="vende_titulo">Vende lo que ya no usas</string>
+    <string name="vende_desc">Publica tus equipos para estudiantes de tu campus. Te pagamos cuando el comprador confirma que lo recibió.</string>
+    <string name="vende_ganas">Lo que ganas</string>
+    <string name="vende_ganas_1">Pago protegido</string>
+    <string name="vende_ganas_1_desc">El dinero se guarda y te llega cuando el comprador confirma.</string>
+    <string name="vende_ganas_2">Entrega en tu campus</string>
+    <string name="vende_ganas_2_desc">Eliges el punto y el horario; sin envíos ni paquetería.</string>
+    <string name="vende_ganas_3">Solo pagas si vendes</string>
+    <string name="vende_ganas_3_desc">Comisión de 13.6% + $8 por venta. Publicar es gratis.</string>
+    <string name="vende_reglas">Las reglas</string>
+    <string name="vende_regla_1">Solo electrónica que encienda y funcione.</string>
+    <string name="vende_regla_2">Fotos reales del equipo, de 2 a 8.</string>
+    <string name="vende_regla_3">Grado y batería verdaderos; se revisan antes de publicar.</string>
+    <string name="vende_regla_4">Nada robado ni con bloqueo de cuenta.</string>
+    <string name="vende_datos">Tus datos de vendedor</string>
+    <string name="vende_apodo">Apodo</string>
+    <string name="vende_apodo_hint">Cómo te conocen en el campus</string>
+    <string name="vende_acerca">Acerca de ti</string>
+    <string name="vende_acerca_hint">Ej. Estudiante de Computación; vendo lo que ya no uso.</string>
+    <string name="vende_unirme">Unirme como vendedor</string>
     <string name="registro_telefono">Teléfono (10 dígitos)</string>
     <string name="registro_punto">Punto de entrega preferido</string>
     <string name="registro_punto_hint">Elige un punto</string>
@@ -251,7 +267,6 @@
     <string name="registro_clabe">Cuenta para cobrar · CLABE simulada (18 dígitos)</string>
     <string name="registro_reglas">Leí y acepto las reglas de publicación</string>
     <string name="registro_reglas_desc">Solo equipos funcionales, sin bloqueo ni reporte</string>
-    <string name="registro_crear">Crear perfil de vendedor</string>
     <string name="error_telefono">Escribe un teléfono de 10 dígitos.</string>
     <string name="error_clabe">La CLABE debe tener 18 dígitos.</string>
     <string name="error_registro_punto">Elige un punto de entrega.</string>
@@ -261,12 +276,10 @@
     <!-- Publicar -->
     <string name="pub_titulo">Publicar</string>
     <string name="pub_borrador">Borrador</string>
-    <string name="pub_paso">Paso %d de 5</string>
-    <string name="pub_p1">Categoría y modelo</string>
-    <string name="pub_p2">Detalles</string>
-    <string name="pub_p3">Fotos</string>
-    <string name="pub_p4">Precio</string>
-    <string name="pub_p5">Resumen</string>
+    <string name="pub_paso">Paso %d de 3</string>
+    <string name="pub_p1">Tu equipo</string>
+    <string name="pub_p2">Fotos</string>
+    <string name="pub_p3">Precio y publicar</string>
     <string name="pub_siguiente">Siguiente</string>
     <string name="pub_que_vender">¿Qué vas a vender?</string>
     <string name="pub_marca">Marca</string>
@@ -333,6 +346,7 @@
     <string name="pub_enviar">Enviar a revisión</string>
     <string name="pub_borrador_guardado">Borrador guardado.</string>
     <string name="pub_elige_modelo">Elige un modelo para guardar el borrador.</string>
+    <string name="pub_aviso_revision">Revisamos tu anuncio en menos de 24 h. Al aprobarlo aparece en el catálogo de tu campus.</string>
     <string name="pub_enviado">Tu anuncio quedó en revisión.</string>
     <string name="err_confirmar">Confirma que el equipo es tuyo.</string>
     <string name="err_envio_limite">Ya tienes 3 anuncios activos. Pausa o elimina uno para publicar otro.</string>
@@ -343,7 +357,13 @@
     <string name="pub_modelo_sub">%1$s · %2$s</string>
 
     <!-- Panel, Mis anuncios y Ventas -->
-    <string name="panel_hola">Hola, %s</string>
+    <string name="mis_ventas">Mis ventas</string>
+    <string name="publicar_equipo">Publicar un equipo</string>
+    <string name="mis_anuncios">Mis anuncios</string>
+    <string name="ver_menos">Ver menos</string>
+    <string name="entrega_pregunta">¿Ya entregaste el equipo?</string>
+    <string name="entrega_marcar">Marcar como entregado</string>
+    <string name="entrega_esperando">Esperando que el comprador confirme la entrega.</string>
     <string name="panel_vendedor_verificado">Vendedor verificado</string>
     <string name="panel_vendedor_verificado_rep">★ %1$.1f · Vendedor verificado</string>
     <string name="panel_ganancias">Ganancias de %s</string>
@@ -357,7 +377,7 @@
     <string name="panel_mis_productos">Mis productos en venta</string>
     <string name="panel_ver_todo">Ver todo</string>
     <string name="panel_sin_anuncios">Aún no tienes anuncios</string>
-    <string name="panel_sin_anuncios_desc">Toca el botón naranja + para publicar tu primer equipo.</string>
+    <string name="panel_sin_anuncios_desc">Toca «Publicar un equipo» para publicar el primero.</string>
     <string name="anuncios_titulo">Mis anuncios</string>
     <string name="anuncios_subtitulo">%1$d de %2$d anuncios activos · máximo %2$d</string>
     <string name="filtro_anuncios_todos">Todos · %d</string>

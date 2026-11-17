@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.fcc.reco.data.Repositorios
 import com.fcc.reco.data.local.SesionLocal
 import com.fcc.reco.data.model.Anuncio
+import com.fcc.reco.data.model.Calificacion
 import com.fcc.reco.data.model.EntregaElegida
 import com.fcc.reco.data.model.EstadoAnuncio
 import com.fcc.reco.data.model.EstadoPedido
@@ -28,6 +29,9 @@ data class AnuncioConEstado(val anuncio: Anuncio, val estado: EstadoAnuncio)
 
 private val COMPRADORES = listOf("Carlos M.", "Mariana V.", "José L.", "Daniela R.")
 
+/** Cuántos anuncios se ven en Mis ventas antes de tocar "Ver todo". */
+private const val ANUNCIOS_VISIBLES = 4
+
 /** Anuncios del usuario actual con su estado efectivo, siempre al día. */
 private fun misAnuncios(correo: String): List<AnuncioConEstado> =
     Repositorios.anuncios.misAnuncios(correo).map { AnuncioConEstado(it, Repositorios.anuncios.estadoEfectivo(it)) }
@@ -35,9 +39,7 @@ private fun misAnuncios(correo: String): List<AnuncioConEstado> =
 /** Ventas = pedidos de otros estudiantes sobre equipos de este vendedor. */
 private fun ventasDe(pedidos: List<Pedido>) = pedidos.filter { it.comprador.isNotEmpty() }
 
-// ---------------------------------------------------------------- Panel
-
-data class EstadoPanel(
+data class EstadoMisVentas(
     val nombre: String = "",
     val reputacion: Double? = null,
     val mes: String = "",
@@ -50,18 +52,22 @@ data class EstadoPanel(
     val vendidos: Int = 0,
     val proxima: Pedido? = null,
     val proximaTitulo: String = "",
-    val recientes: List<AnuncioConEstado> = emptyList()
+    val anuncios: List<AnuncioConEstado> = emptyList(),
+    val hayMas: Boolean = false,
+    val verTodo: Boolean = false
 )
 
-class PanelViewModel(aplicacion: Application) : AndroidViewModel(aplicacion) {
+/** Mis ventas: ganancias, contadores, próxima entrega y Mis anuncios con sus acciones. */
+class MisVentasViewModel(aplicacion: Application) : AndroidViewModel(aplicacion) {
     private val sesion = SesionLocal(aplicacion)
+    private val verTodo = MutableStateFlow(false)
 
-    val estado: StateFlow<EstadoPanel> = combine(
-        Repositorios.anuncios.anuncios, Repositorios.pedidos.pedidos, Repositorios.calificaciones.calificaciones
-    ) { _, pedidos, _ ->
+    val estado: StateFlow<EstadoMisVentas> = combine(
+        Repositorios.anuncios.anuncios, Repositorios.pedidos.pedidos, Repositorios.calificaciones.calificaciones, verTodo
+    ) { _, pedidos, _, todo ->
         val s = sesion.leer()
         val correo = s?.correo.orEmpty()
-        val anuncios = misAnuncios(correo)
+        val todos = misAnuncios(correo)
         val ventas = ventasDe(pedidos)
         val ahora = Calendar.getInstance()
         val delMes = ventas.filter {
@@ -69,61 +75,36 @@ class PanelViewModel(aplicacion: Application) : AndroidViewModel(aplicacion) {
         }
         val resumen = ResumenVentas.de(delMes)
         val proxima = ventas.filter { it.estado == EstadoPedido.PAGADO_RETENIDO || it.estado == EstadoPedido.ENTREGADO }.minByOrNull { it.creado }
-        EstadoPanel(
+        // Al ver todo se incluyen los borradores, para poder continuarlos.
+        val lista = if (todo) todos else todos.filter { it.estado != EstadoAnuncio.BORRADOR }.take(ANUNCIOS_VISIBLES)
+        EstadoMisVentas(
             nombre = s?.nombre.orEmpty(),
             reputacion = s?.nombreCorto?.let { Repositorios.calificaciones.obtenerReputacion(it)?.promedio },
             mes = SimpleDateFormat("MMMM", Locale.forLanguageTag("es-MX")).format(Date()),
             ganancias = resumen.total, disponible = resumen.disponible, retenido = resumen.porCobrar,
             ventasMes = delMes.size,
-            activos = anuncios.count { it.estado == EstadoAnuncio.PUBLICADO || it.estado == EstadoAnuncio.RESERVADO },
-            enRevision = anuncios.count { it.estado == EstadoAnuncio.EN_REVISION },
-            vendidos = anuncios.count { it.estado == EstadoAnuncio.VENDIDO },
+            activos = todos.count { it.estado == EstadoAnuncio.PUBLICADO || it.estado == EstadoAnuncio.RESERVADO },
+            enRevision = todos.count { it.estado == EstadoAnuncio.EN_REVISION },
+            vendidos = todos.count { it.estado == EstadoAnuncio.VENDIDO },
             proxima = proxima,
             proximaTitulo = proxima?.productoIds?.firstOrNull()?.let { Repositorios.productos.obtenerPorId(it)?.titulo }.orEmpty(),
-            recientes = anuncios.filter { it.estado != EstadoAnuncio.BORRADOR }.take(4)
+            anuncios = lista,
+            hayMas = todos.size > ANUNCIOS_VISIBLES,
+            verTodo = todo
         )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), EstadoPanel())
-}
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), EstadoMisVentas())
 
-// ---------------------------------------------------------------- Mis anuncios
+    fun alternarVerTodo() { verTodo.value = !verTodo.value }
 
-enum class FiltroAnuncios(val estados: Set<EstadoAnuncio>?) {
-    TODOS(null),
-    PUBLICADOS(setOf(EstadoAnuncio.PUBLICADO)),
-    EN_REVISION(setOf(EstadoAnuncio.EN_REVISION)),
-    RECHAZADOS(setOf(EstadoAnuncio.RECHAZADO)),
-    PAUSADOS(setOf(EstadoAnuncio.PAUSADO)),
-    VENDIDOS(setOf(EstadoAnuncio.VENDIDO)),
-    BORRADORES(setOf(EstadoAnuncio.BORRADOR))
-}
-
-data class EstadoAnuncios(
-    val filtro: FiltroAnuncios = FiltroAnuncios.TODOS,
-    val total: Int = 0,
-    val activos: Int = 0,
-    val items: List<AnuncioConEstado> = emptyList()
-)
-
-class AnunciosViewModel(aplicacion: Application) : AndroidViewModel(aplicacion) {
-    private val sesion = SesionLocal(aplicacion)
-    private val filtro = MutableStateFlow(FiltroAnuncios.TODOS)
-
-    val estado: StateFlow<EstadoAnuncios> = combine(
-        Repositorios.anuncios.anuncios, Repositorios.pedidos.pedidos, filtro
-    ) { _, _, f ->
-        val todos = misAnuncios(sesion.leer()?.correo.orEmpty())
-        EstadoAnuncios(
-            filtro = f, total = todos.size, activos = todos.count { it.estado.esActivo },
-            items = todos.filter { f.estados == null || it.estado in f.estados }
-        )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), EstadoAnuncios())
-
-    fun ponerFiltro(f: FiltroAnuncios) { filtro.value = f }
+    // Acciones sobre un anuncio
     fun pausar(id: Int) = Repositorios.anuncios.pausar(id)
     fun reanudar(id: Int) = Repositorios.anuncios.reanudar(id)
     fun eliminar(id: Int) = Repositorios.anuncios.eliminar(id)
 
-    // Moderación y compra de otro estudiante: solo para probar (en Supabase se hace desde el panel).
+    // Entregas
+    fun marcarEntregado(id: Int) = Repositorios.pedidos.marcarEntregado(id)
+
+    // Solo para probar (botones de debug): en Supabase la moderación se hace desde el panel y el comprador es real.
     fun aprobar(id: Int) = Repositorios.anuncios.aprobar(id)
     fun rechazar(id: Int, motivo: String) = Repositorios.anuncios.rechazar(id, motivo)
 
@@ -135,46 +116,12 @@ class AnunciosViewModel(aplicacion: Application) : AndroidViewModel(aplicacion) 
             "pi_simulado", comprador
         )
     }
-}
 
-// ---------------------------------------------------------------- Ventas
-
-enum class FiltroVentas { POR_ENTREGAR, ENTREGADAS, COMPLETADAS }
-
-data class EstadoVentas(
-    val filtro: FiltroVentas = FiltroVentas.POR_ENTREGAR,
-    val resumen: ResumenVentas = ResumenVentas(0, 0, 0),
-    val porEntregar: Int = 0,
-    val totalVentas: Int = 0,
-    val ventas: List<Pedido> = emptyList()
-)
-
-class VentasViewModel : androidx.lifecycle.ViewModel() {
-    private val filtro = MutableStateFlow(FiltroVentas.POR_ENTREGAR)
-
-    val estado: StateFlow<EstadoVentas> = combine(Repositorios.pedidos.pedidos, filtro) { pedidos, f ->
-        val ventas = ventasDe(pedidos)
-        EstadoVentas(
-            filtro = f, resumen = ResumenVentas.de(ventas),
-            porEntregar = ventas.count { it.estado == EstadoPedido.PAGADO_RETENIDO },
-            totalVentas = ventas.size,
-            ventas = ventas.filter {
-                when (f) {
-                    FiltroVentas.POR_ENTREGAR -> it.estado == EstadoPedido.PAGADO_RETENIDO
-                    FiltroVentas.ENTREGADAS -> it.estado == EstadoPedido.ENTREGADO
-                    FiltroVentas.COMPLETADAS -> it.estado == EstadoPedido.LIBERADO || it.estado == EstadoPedido.CANCELADO
-                }
-            }.sortedByDescending { it.creado }
-        )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), EstadoVentas())
-
-    fun ponerFiltro(f: FiltroVentas) { filtro.value = f }
-    fun marcarEntregado(id: Int) = Repositorios.pedidos.marcarEntregado(id)
-    /** Solo para probar: el comprador es simulado, así que aquí se confirma por él. */
+    /** El comprador es simulado, así que aquí se confirma por él (y deja una reseña de 5 estrellas). */
     fun simularConfirmacionDelComprador(id: Int) {
         if (Repositorios.pedidos.confirmarEntrega(id)) {
             Repositorios.calificaciones.calificarVendedor(
-                id, 5, listOf(com.fcc.reco.data.model.Calificacion.PUNTUAL, "Como se describió"),
+                id, 5, listOf(Calificacion.PUNTUAL, "Como se describió"),
                 "Todo perfecto, llegó a la hora y el equipo estaba impecable."
             )
         }

@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
@@ -17,16 +16,15 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.fcc.reco.R
 import com.fcc.reco.data.DatosSimulados
-import com.fcc.reco.data.model.ModoUsuario
 import com.fcc.reco.databinding.FragmentRegistroVendedorBinding
-import com.fcc.reco.ui.acceso.abrirModoYTerminar
 import com.fcc.reco.ui.comun.ChipFiltro
 import com.fcc.reco.ui.comun.ajustarPorBarrasDelSistema
 import com.fcc.reco.ui.comun.dp
 import com.fcc.reco.ui.comun.dpF
+import com.fcc.reco.ui.comun.irA
 import kotlinx.coroutines.launch
 
-/** Registro de vendedor: teléfono, punto de entrega, horarios, CLABE simulada y reglas (Figma 7:219). */
+/** Vende en Reco: reglas, apodo, acerca de ti, teléfono, punto de entrega, horarios, CLABE simulada y "Unirme como vendedor" (Figma 48:1472). */
 class RegistroVendedorFragment : Fragment(R.layout.fragment_registro_vendedor) {
 
     private val viewModel: RegistroVendedorViewModel by viewModels()
@@ -38,9 +36,6 @@ class RegistroVendedorFragment : Fragment(R.layout.fragment_registro_vendedor) {
         b.raiz.ajustarPorBarrasDelSistema()
 
         b.botonAtras.setOnClickListener { findNavController().popBackStack() }
-        b.filaFoto.setOnClickListener {
-            Toast.makeText(requireContext(), R.string.proximamente, Toast.LENGTH_SHORT).show()
-        }
 
         // Punto de entrega: menú desplegable con los puntos del campus.
         b.selectorPunto.setOnClickListener {
@@ -79,13 +74,14 @@ class RegistroVendedorFragment : Fragment(R.layout.fragment_registro_vendedor) {
         }
 
         b.filaReglas.setOnClickListener { viewModel.alternarReglas() }
-        b.botonCrear.setOnClickListener { viewModel.crear(b.campoTelefono.texto, b.campoClabe.texto) }
+        b.botonCrear.setOnClickListener { viewModel.crear(b.campoApodo.texto, b.campoAcerca.texto, b.campoTelefono.texto, b.campoClabe.texto) }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.estado.collect { e ->
                     if (e.registrado) {
-                        requireActivity().abrirModoYTerminar(ModoUsuario.VENDEDOR)
+                        // Ya es vendedor: se abre Mis ventas y "Vende en Reco" sale de la pila.
+                        findNavController().irA(R.id.misVentas, popHasta = R.id.vendeEnReco, inclusivo = true)
                         return@collect
                     }
                     b.puntoTexto.text = e.punto ?: getString(R.string.registro_punto_hint)

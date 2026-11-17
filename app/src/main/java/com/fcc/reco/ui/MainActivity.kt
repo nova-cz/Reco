@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         // Estas pantallas traen su propia barra inferior (precio, pagar, confirmar...) o son un asistente.
         val sinBarra = setOf(
             R.id.detalleProducto, R.id.comprar, R.id.detallePedido, R.id.vendeEnReco,
-            R.id.publicar1, R.id.publicar2, R.id.publicar3
+            R.id.elegirModelo, R.id.publicar1, R.id.publicar2, R.id.publicar3
         )
         nav.addOnDestinationChangedListener { _, destino, _ ->
             b.barraContenedor.visibility = if (destino.id in sinBarra) View.GONE else View.VISIBLE

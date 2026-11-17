@@ -32,72 +32,312 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/registro_titulo_barra"
+                android:text="@string/vende_barra"
                 android:textSize="18sp" />
         </FrameLayout>
 
         <TextView
             style="@style/Reco.Texto.Titulo"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/registro_vendedor_titulo" />
+            android:text="@string/vende_titulo" />
 
         <TextView
             style="@style/Reco.Texto.Secundario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="@string/registro_desc" />
+            android:lineSpacingMultiplier="1.1"
+            android:text="@string/vende_desc" />
 
-        <!-- Foto de perfil (opcional) -->
+        <!-- Lo que ganas -->
         <LinearLayout
-            android:id="@+id/fila_foto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:background="@drawable/bg_tarjeta"
+            android:elevation="@dimen/elevacion_suave"
+            android:orientation="vertical"
+            android:padding="18dp">
 
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="@drawable/bg_circulo_gris"
-                android:importantForAccessibility="no"
-                android:padding="26dp"
-                android:src="@drawable/ic_camara"
-                app:tint="@color/texto_secundario" />
+            <TextView
+                style="@style/Reco.Texto.Boton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/vende_ganas"
+                android:textSize="16sp" />
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_circulo_verde_suave"
+                    android:importantForAccessibility="no"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_escudo_ok"
+                    app:tint="@color/verde" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Reco.Texto.Boton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/vende_ganas_1"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        style="@style/Reco.Texto.Secundario"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/vende_ganas_1_desc"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_circulo_acento"
+                    android:importantForAccessibility="no"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_ubicacion"
+                    app:tint="@color/verde_azulado" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Reco.Texto.Boton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/vende_ganas_2"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        style="@style/Reco.Texto.Secundario"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/vende_ganas_2_desc"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_circulo_naranja_suave"
+                    android:importantForAccessibility="no"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_tarjeta"
+                    app:tint="@color/naranja" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Reco.Texto.Boton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/vende_ganas_3"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        style="@style/Reco.Texto.Secundario"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/vende_ganas_3_desc"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Las reglas -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_tarjeta"
+            android:elevation="@dimen/elevacion_suave"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                style="@style/Reco.Texto.Boton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/vende_reglas"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
-                    style="@style/Reco.Texto.Boton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/registro_foto"
-                    android:textSize="16sp" />
+                    style="@style/Reco.Texto.Etiqueta"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/bg_circulo_rojo_suave"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textColor="@color/estado_rojo" />
 
                 <TextView
-                    style="@style/Reco.Texto.Secundario"
-                    android:layout_width="wrap_content"
+                    style="@style/Reco.Texto.CuerpoMedio"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/registro_foto_desc"
-                    android:textSize="13sp" />
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:text="@string/vende_regla_1"
+                    android:textSize="14sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Reco.Texto.Etiqueta"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/bg_circulo_rojo_suave"
+                    android:gravity="center"
+                    android:text="2"
+                    android:textColor="@color/estado_rojo" />
+
+                <TextView
+                    style="@style/Reco.Texto.CuerpoMedio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:text="@string/vende_regla_2"
+                    android:textSize="14sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Reco.Texto.Etiqueta"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/bg_circulo_rojo_suave"
+                    android:gravity="center"
+                    android:text="3"
+                    android:textColor="@color/estado_rojo" />
+
+                <TextView
+                    style="@style/Reco.Texto.CuerpoMedio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:text="@string/vende_regla_3"
+                    android:textSize="14sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Reco.Texto.Etiqueta"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/bg_circulo_rojo_suave"
+                    android:gravity="center"
+                    android:text="4"
+                    android:textColor="@color/estado_rojo" />
+
+                <TextView
+                    style="@style/Reco.Texto.CuerpoMedio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:text="@string/vende_regla_4"
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
+
+        <TextView
+            style="@style/Reco.Texto.Seccion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:text="@string/vende_datos" />
+
+        <com.fcc.reco.ui.comun.CampoTexto
+            android:id="@+id/campo_apodo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:campoEtiqueta="@string/vende_apodo"
+            app:campoHint="@string/vende_apodo_hint"
+            app:campoIcono="@drawable/ic_perfil"
+            app:campoTipo="texto" />
+
+        <com.fcc.reco.ui.comun.CampoTexto
+            android:id="@+id/campo_acerca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            app:campoEtiqueta="@string/vende_acerca"
+            app:campoHint="@string/vende_acerca_hint"
+            app:campoIcono="@drawable/ic_info"
+            app:campoTipo="texto" />
 
         <com.fcc.reco.ui.comun.CampoTexto
             android:id="@+id/campo_telefono"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="14dp"
             app:campoEtiqueta="@string/registro_telefono"
             app:campoHint="222 123 4567"
             app:campoIcono="@drawable/ic_telefono"
@@ -240,6 +480,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="@string/registro_crear" />
+            android:text="@string/vende_unirme" />
     </LinearLayout>
 </ScrollView>

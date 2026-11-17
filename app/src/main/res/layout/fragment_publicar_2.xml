@@ -39,177 +39,69 @@
                 android:layout_marginTop="18dp"
                 android:orientation="horizontal">
 
-                <LinearLayout
-                    android:id="@+id/bloque_alm"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/Reco.Texto.Seccion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/pub_almacenamiento"
-                        android:textSize="16sp" />
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/grupo_alm"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        app:chipSpacingHorizontal="8dp"
-                        app:chipSpacingVertical="8dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/bloque_ram"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/Reco.Texto.Seccion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/pub_ram"
-                        android:textSize="16sp" />
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/grupo_ram"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        app:chipSpacingHorizontal="8dp"
-                        app:chipSpacingVertical="8dp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <TextView
-                style="@style/Reco.Texto.Seccion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/pub_color"
-                android:textSize="16sp" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/grupo_color"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:chipSpacingHorizontal="8dp"
-                app:chipSpacingVertical="8dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
                 <TextView
                     style="@style/Reco.Texto.Seccion"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/pub_grado"
-                    android:textSize="16sp" />
+                    android:text="@string/pub_fotos_titulo" />
 
                 <TextView
-                    style="@style/Reco.Texto.Secundario"
+                    android:id="@+id/contador"
+                    style="@style/Reco.Texto.Boton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/pub_grado_desc"
-                    android:textSize="13sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/fila_grados"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/bloque_bateria"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/Reco.Texto.Secundario"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="6dp"
-                        android:text="@string/pub_bateria"
-                        android:textSize="13sp" />
-
-                    <com.fcc.reco.ui.comun.CampoTexto
-                        android:id="@+id/campo_bateria"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:campoHint="89"
-                        app:campoIcono="@drawable/ic_bateria"
-                        app:campoTipo="numero" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_weight="1.3"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/etiqueta_id"
-                        style="@style/Reco.Texto.Secundario"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="6dp"
-                        android:textSize="13sp" />
-
-                    <com.fcc.reco.ui.comun.CampoTexto
-                        android:id="@+id/campo_id"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:campoIcono="@drawable/ic_etiqueta" />
-                </LinearLayout>
+                    android:textColor="@color/texto_secundario"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <TextView
-                android:id="@+id/estado_id"
-                style="@style/Reco.Texto.Cuerpo"
+                style="@style/Reco.Texto.Secundario"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:drawablePadding="8dp"
-                android:textSize="13sp"
-                android:visibility="gone" />
+                android:layout_marginTop="6dp"
+                android:text="@string/pub_fotos_desc"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:id="@+id/grilla_fotos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical" />
 
             <TextView
-                style="@style/Reco.Texto.Seccion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/pub_accesorios"
-                android:textSize="16sp" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/grupo_accesorios"
+                android:id="@+id/foto_prueba"
+                style="@style/Reco.Texto.Boton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:chipSpacingHorizontal="8dp"
-                app:chipSpacingVertical="8dp" />
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/pub_foto_prueba"
+                android:textColor="@color/azul"
+                android:textSize="13sp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/lista_piden"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_tarjeta"
+                android:elevation="@dimen/elevacion_suave"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    style="@style/Reco.Texto.Boton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/pub_fotos_piden"
+                    android:textSize="15sp" />
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

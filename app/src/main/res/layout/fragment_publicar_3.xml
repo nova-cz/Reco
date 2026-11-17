@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/raiz"
     android:layout_width="match_parent"
@@ -26,82 +27,259 @@
                 android:id="@+id/cabecera"
                 layout="@layout/layout_cabecera_publicar" />
 
-            <include
-                android:id="@+id/modelo"
-                layout="@layout/layout_modelo_publicar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp" />
-
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/Reco.Texto.Seccion"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/pub_fotos_titulo" />
-
-                <TextView
-                    android:id="@+id/contador"
-                    style="@style/Reco.Texto.Boton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/texto_secundario"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <TextView
-                style="@style/Reco.Texto.Secundario"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="@string/pub_fotos_desc"
-                android:textSize="13sp" />
-
-            <LinearLayout
-                android:id="@+id/grilla_fotos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="vertical" />
-
-            <TextView
-                android:id="@+id/foto_prueba"
-                style="@style/Reco.Texto.Boton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="?attr/selectableItemBackground"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="@string/pub_foto_prueba"
-                android:textColor="@color/azul"
-                android:textSize="13sp"
-                android:visibility="gone" />
-
-            <LinearLayout
-                android:id="@+id/lista_piden"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:background="@drawable/bg_tarjeta"
                 android:elevation="@dimen/elevacion_suave"
+                android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="18dp">
+
+                <TextView
+                    style="@style/Reco.Texto.Secundario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pub_tu_precio" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/Reco.Texto.Titulo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$"
+                        android:textColor="@color/texto_secundario"
+                        android:textSize="36sp"
+                        tools:ignore="HardcodedText" />
+
+                    <EditText
+                        android:id="@+id/campo_precio"
+                        style="@style/Reco.Texto.Titulo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:background="@null"
+                        android:hint="0"
+                        android:importantForAutofill="no"
+                        android:inputType="number"
+                        android:maxLength="6"
+                        android:minWidth="80dp"
+                        android:textSize="52sp"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+
+                <TextView
+                    style="@style/Reco.Texto.Secundario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pub_mxn"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_tarjeta"
+                android:elevation="@dimen/elevacion_suave"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/ref_titulo"
+                        style="@style/Reco.Texto.Boton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/ref_grado"
+                        style="@style/Reco.Texto.Secundario"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <com.fcc.reco.ui.comun.BarraRangoPrecio
+                    android:id="@+id/barra_rango"
+                    android:layout_width="match_parent"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="14dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/rango_min"
+                        style="@style/Reco.Texto.Boton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        style="@style/Reco.Texto.Secundario"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/pub_rango"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/rango_max"
+                        style="@style/Reco.Texto.Boton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/aviso_precio"
+                    style="@style/Reco.Texto.Cuerpo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:drawablePadding="10dp"
+                    android:gravity="center_vertical"
+                    android:padding="12dp"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_tarjeta"
+                android:elevation="@dimen/elevacion_suave"
+                android:orientation="vertical"
+                android:padding="18dp">
 
                 <TextView
                     style="@style/Reco.Texto.Boton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/pub_fotos_piden"
-                    android:textSize="15sp" />
+                    android:text="@string/pub_recibes"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/Reco.Texto.Secundario"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/pub_precio_venta"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/lin_precio"
+                        style="@style/Reco.Texto.Boton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/Reco.Texto.Secundario"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/pub_comision"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/lin_comision"
+                        style="@style/Reco.Texto.Boton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/borde_suave" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/Reco.Texto.Boton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/pub_recibes_confirmar"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/lin_recibes"
+                        style="@style/Reco.Texto.Boton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/estado_verde"
+                        android:textSize="16sp" />
+                </LinearLayout>
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_tarjeta"
+                android:elevation="@dimen/elevacion_suave"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <ImageView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_circulo_verde_suave"
+                    android:importantForAccessibility="no"
+                    android:padding="11dp"
+                    android:src="@drawable/ic_escudo_ok"
+                    app:tint="@color/estado_verde" />
+
+                <TextView
+                android:id="@+id/aviso_revision"
+                style="@style/Reco.Texto.CuerpoMedio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_nota_naranja"
+                android:lineSpacingMultiplier="1.1"
+                android:padding="14dp"
+                android:text="@string/pub_aviso_revision"
+                android:textColor="@color/estado_naranja"
+                android:textSize="14sp" />
 
         </LinearLayout>
     </ScrollView>
@@ -114,6 +292,6 @@
         android:layout_marginStart="@dimen/margen_pantalla"
         android:layout_marginEnd="@dimen/margen_pantalla"
         android:layout_marginBottom="16dp"
-        android:text="@string/pub_siguiente"
+        android:text="@string/pub_enviar"
         app:botonIcono="@drawable/ic_chevron_der" />
 </FrameLayout>

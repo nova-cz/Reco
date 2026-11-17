@@ -23,11 +23,11 @@ import com.fcc.reco.ui.comun.dpF
 import com.fcc.reco.ui.comun.iconoInicio
 import com.google.android.material.chip.ChipGroup
 
-/** Cabecera común de los cinco pasos: cerrar, "Borrador" y la barra de progreso. */
+/** Cabecera común de los tres pasos: cerrar, "Borrador" y la barra de progreso. */
 fun LayoutCabeceraPublicarBinding.configurar(fragment: Fragment, vm: PublicarViewModel, paso: Int, @StringRes nombre: Int) {
     pasoTexto.text = fragment.getString(R.string.pub_paso, paso)
     pasoNombre.setText(nombre)
-    barraPasos.configurar(5, paso)
+    barraPasos.configurar(3, paso)
     cerrar.setOnClickListener { fragment.salirDelAsistente() }
     borrador.setOnClickListener {
         if (vm.guardarBorrador()) {
@@ -40,19 +40,19 @@ fun LayoutCabeceraPublicarBinding.configurar(fragment: Fragment, vm: PublicarVie
 }
 
 fun Fragment.salirDelAsistente() {
-    findNavController().popBackStack(R.id.publicar1, true)
+    findNavController().popBackStack(R.id.elegirModelo, true)
 }
 
 fun Fragment.esDebug() = (requireContext().applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
 
-/** Tarjeta con el modelo elegido (pasos 2 y 3). "Cambiar" regresa al paso 1. */
+/** Tarjeta con el modelo elegido. "Cambiar" regresa a elegir el modelo. */
 fun LayoutModeloPublicarBinding.pintar(fragment: Fragment, b: BorradorAnuncio) {
     val m = b.modelo ?: return
     modeloIcono.setImageResource(m.categoria.icono)
     ImageViewCompat.setImageTintList(modeloIcono, android.content.res.ColorStateList.valueOf(Color.WHITE))
     modeloTitulo.text = m.titulo
     modeloSub.text = fragment.getString(R.string.pub_modelo_sub, fragment.getString(m.categoria.nombre), m.marca)
-    modeloCambiar.setOnClickListener { fragment.findNavController().popBackStack(R.id.publicar1, false) }
+    modeloCambiar.setOnClickListener { fragment.findNavController().popBackStack(R.id.elegirModelo, false) }
 }
 
 /** Chips de selección única: el elegido va en negro. */
@@ -106,7 +106,7 @@ fun ErrorEnvio.mensaje(): Int = when (this) {
     ErrorEnvio.ID_DUPLICADO -> R.string.err_id_duplicado
 }
 
-/** Casilla cuadrada negra con palomita (confirmación del paso 5, reglas del registro). */
+/** Casilla cuadrada con palomita (reglas de "Vende en Reco"). */
 fun ImageView.pintarCasilla(marcada: Boolean) {
     background = GradientDrawable().apply {
         cornerRadius = dpF(7f)
