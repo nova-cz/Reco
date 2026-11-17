@@ -24,18 +24,12 @@ class GaleriaComponentesActivity : AppCompatActivity() {
     private val itemsComprador = listOf(
         ItemBarra(R.id.galeria_inicio, R.drawable.ic_inicio, R.string.tab_inicio),
         ItemBarra(R.id.galeria_favoritos, R.drawable.ic_favorito, R.string.tab_favoritos),
-        ItemBarra(R.id.galeria_carrito, R.drawable.ic_carrito, R.string.tab_carrito),
         ItemBarra(R.id.galeria_compras, R.drawable.ic_compras, R.string.tab_compras),
-        ItemBarra(R.id.galeria_perfil, R.drawable.ic_perfil, R.string.tab_perfil)
+        ItemBarra(R.id.galeria_perfil, R.drawable.ic_perfil, R.string.tab_cuenta)
     )
 
-    private val itemsVendedor = listOf(
-        ItemBarra(R.id.galeria_panel, R.drawable.ic_panel, R.string.tab_panel),
-        ItemBarra(R.id.galeria_anuncios, R.drawable.ic_anuncios, R.string.tab_anuncios),
-        ItemBarra(R.id.galeria_publicar, R.drawable.ic_mas, R.string.tab_publicar, esAccion = true),
-        ItemBarra(R.id.galeria_ventas, R.drawable.ic_ventas, R.string.tab_ventas),
-        ItemBarra(R.id.galeria_perfil, R.drawable.ic_perfil, R.string.tab_perfil)
-    )
+    // En la v2 no hay modo vendedor: la barra es la misma.
+    private val itemsVendedor = itemsComprador
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,12 +75,7 @@ class GaleriaComponentesActivity : AppCompatActivity() {
         // Barra inferior glass. Con API 31+ desenfoca el ScrollView que va detrás.
         binding.barra.vincularFondo(binding.scroll)
         mostrarBarra()
-        binding.barra.ponerInsignia(R.id.galeria_carrito, 3)
-        binding.barra.alSeleccionar = { item ->
-            if (item.esAccion) {
-                android.widget.Toast.makeText(this, "Botón + (publicar)", android.widget.Toast.LENGTH_SHORT).show()
-            }
-        }
+        binding.barra.ponerInsignia(R.id.galeria_compras, 3)
         binding.botonCambiarBarra.setOnClickListener {
             barraVendedor = !barraVendedor
             mostrarBarra()
@@ -97,6 +86,6 @@ class GaleriaComponentesActivity : AppCompatActivity() {
 
     private fun mostrarBarra() {
         binding.barra.configurar(if (barraVendedor) itemsVendedor else itemsComprador)
-        if (!barraVendedor) binding.barra.ponerInsignia(R.id.galeria_carrito, 3)
+        binding.barra.ponerInsignia(R.id.galeria_compras, 3)
     }
 }
