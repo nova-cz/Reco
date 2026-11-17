@@ -15,7 +15,7 @@ import com.fcc.reco.R
 import com.fcc.reco.databinding.FragmentPerfilPublicoBinding
 import kotlinx.coroutines.launch
 
-/** Perfil público del vendedor (Figma 38:456): pestañas "A la venta" y "Reseñas", sin datos de contacto. */
+/** Perfil del vendedor (Figma 48:2113): sobre, dónde entrega y pestañas "A la venta" y "Reseñas", sin datos de contacto. */
 class PerfilPublicoFragment : Fragment(R.layout.fragment_perfil_publico) {
 
     private val viewModel: PerfilPublicoViewModel by viewModels()
@@ -61,6 +61,11 @@ class PerfilPublicoFragment : Fragment(R.layout.fragment_perfil_publico) {
             e.aLaVenta.size.toString() to getString(R.string.perfil_a_la_venta)
         )
 
+        // Sobre el vendedor
+        b.tarjetaSobre.visibility = if (e.sobre.isBlank()) View.GONE else View.VISIBLE
+        b.sobreTitulo.text = getString(R.string.perfil_sobre, v.nombre.substringBefore(' '))
+        b.sobreTexto.text = e.sobre
+
         // Dónde entrega
         b.listaPuntos.removeAllViews()
         e.puntos.forEach { punto ->
@@ -87,10 +92,7 @@ class PerfilPublicoFragment : Fragment(R.layout.fragment_perfil_publico) {
                 val nav = findNavController()
                 CuadriculaProductos.mostrar(
                     b.contenido, e.aLaVenta, e.favoritos,
-                    alAbrir = { p ->
-                        // Desde modo vendedor no hay detalle de producto (es la vista del comprador).
-                        if (nav.graph.findNode(R.id.detalleProducto) != null) nav.irA(R.id.detalleProducto, Bundle().apply { putInt("productoId", p.id) })
-                    },
+                    alAbrir = { p -> nav.irA(R.id.detalleProducto, Bundle().apply { putInt("productoId", p.id) }) },
                     alAlternarFavorito = { viewModel.alternarFavorito(it) }
                 )
             }

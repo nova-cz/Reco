@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.fcc.reco.R
 import com.fcc.reco.data.Repositorios
 import com.fcc.reco.data.local.SesionLocal
 import com.fcc.reco.data.model.EstadoPedido
@@ -27,6 +28,8 @@ data class EstadoPerfilPublico(
     val puntual: Boolean = false,
     val ventas: Int = 0,
     val puntos: List<String> = emptyList(),
+    /** "Acerca de" del vendedor; vacío si no escribió nada. */
+    val sobre: String = "",
     val aLaVenta: List<Producto> = emptyList(),
     val favoritos: Set<Int> = emptySet(),
     val tab: TabPerfilPublico = TabPerfilPublico.A_LA_VENTA
@@ -56,7 +59,9 @@ class PerfilPublicoViewModel(aplicacion: Application, handle: SavedStateHandle) 
             promedio = resenas.takeIf { it.isNotEmpty() }?.map { it.estrellas }?.average() ?: vendedor.reputacion.takeIf { !esPropio },
             puntual = InsigniaPuntual.gana(resenas),
             ventas = if (esPropio) pedidos.count { it.comprador.isNotEmpty() && it.estado == EstadoPedido.LIBERADO } else vendedor.ventas,
-            puntos = puntos, aLaVenta = aLaVenta, favoritos = favoritos, tab = tabActual
+            puntos = puntos,
+            sobre = if (esPropio) sesion?.vendedor?.acerca.orEmpty() else getApplication<Application>().getString(R.string.perfil_sobre_simulado, vendedor.carrera),
+            aLaVenta = aLaVenta, favoritos = favoritos, tab = tabActual
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), EstadoPerfilPublico(tab = tab.value))
 

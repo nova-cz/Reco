@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Reco</string>
-    <string name="slogan">Electrónica entre estudiantes</string>
 
     <!-- Barra inferior · comprador -->
     <string name="tab_inicio">Inicio</string>
@@ -10,10 +9,6 @@
     <string name="tab_vender">Vender</string>
 
     <!-- Barra inferior · vendedor -->
-    <string name="tab_panel">Panel</string>
-    <string name="tab_anuncios">Anuncios</string>
-    <string name="tab_publicar">Publicar</string>
-    <string name="tab_ventas">Ventas</string>
 
     <!-- Categorías -->
     <string name="cat_laptops">Laptops</string>
@@ -58,8 +53,6 @@
     <!-- Verificación -->
     <string name="verificacion">Verificación</string>
     <string name="paso_2_de_2">Paso 2 de 2</string>
-    <string name="paso_3_de_3">Paso 3 de 3</string>
-    <string name="tu_perfil">Tu perfil</string>
     <string name="verifica_titulo">Verifica que eres estudiante</string>
     <string name="verifica_desc">Inicia sesión con tu cuenta institucional y regresa aquí ya verificado.</string>
     <string name="verifica_paso_1">Se abre la página de tu universidad</string>
@@ -71,7 +64,6 @@
     <string name="iniciar_sesion_institucional">Iniciar sesión institucional</string>
     <string name="universidad_no_aparece">Mi universidad no aparece</string>
     <string name="universidad_no_aparece_msg">Pronto agregaremos más universidades.</string>
-    <string name="verificado_ok">Estudiante verificado · BUAP</string>
     <string name="error_dominio">Usa tu correo institucional (@alumno.buap.mx)</string>
     <string name="error_enlace">El enlace de verificación no es válido</string>
 
@@ -86,19 +78,8 @@
     <string name="carrera_desc">La usamos para mostrarte equipos de tu carrera.</string>
 
     <!-- Elegir modo -->
-    <string name="modo_titulo">¿Qué quieres hacer hoy?</string>
-    <string name="modo_desc">Puedes cambiarlo cuando quieras desde tu perfil.</string>
-    <string name="modo_comprar">Quiero comprar</string>
-    <string name="modo_comprar_desc">Explora equipos de estudiantes verificados de tu campus.</string>
-    <string name="modo_vender">Quiero vender mis cosas</string>
-    <string name="modo_vender_desc">Publica tu equipo, entrégalo en el campus y cobra seguro.</string>
-    <string name="modo_vender_chip">Registro de vendedor · 2 min</string>
 
     <!-- Marcadores de modo (se reemplazan en la Fase 3) -->
-    <string name="modo_comprador">Modo comprador</string>
-    <string name="modo_vendedor">Modo vendedor</string>
-    <string name="cambiar_a_comprador">Cambiar a modo comprador</string>
-    <string name="cambiar_a_vendedor">Cambiar a modo vendedor</string>
     <string name="cerrar_sesion">Cerrar sesión</string>
 
     <!-- Inicio / Resultados / Detalle -->
@@ -134,20 +115,14 @@
 
     <!-- Comprar -->
     <string name="explorar">Explorar</string>
-    <string name="pedido_numero">Pedido %1$d · %2$s · %3$s</string>
-    <string name="subtotal_productos">Subtotal · %1$d productos</string>
-    <string name="subtotal_producto">Subtotal · 1 producto</string>
-    <string name="entrega">Entrega</string>
-    <string name="entrega_gratis">Gratis en tu campus</string>
     <string name="total">Total</string>
-    <string name="continuar">Continuar</string>
-    <string name="quitar">Quitar</string>
     <string name="punto_de_entrega">Punto de entrega</string>
     <string name="dia_y_horario">Día y horario</string>
     <string name="tarjeta_terminacion">Tarjeta •••• %1$s</string>
     <string name="tarjeta_modo_prueba">Tarjeta de prueba</string>
     <string name="cambiar">Cambiar</string>
     <string name="retencion_nota">El vendedor recibe el dinero hasta que confirmas que te entregó el equipo.</string>
+    <string name="pagar">Pagar</string>
     <string name="pagar_monto">Pagar %1$s</string>
     <string name="comprar">Comprar</string>
     <string name="comprar_titulo">Comprar</string>
@@ -170,8 +145,6 @@
     <string name="error_tarjeta_numero">Número de tarjeta no válido</string>
     <string name="error_tarjeta_vence">Fecha no válida</string>
     <string name="error_tarjeta_cvc">3 dígitos</string>
-    <string name="ver_mis_compras">Ver mis compras</string>
-    <string name="seguir_explorando">Seguir explorando</string>
     <string name="pedido_resumen_entrega">%1$s · %2$s</string>
     <string name="error_pago">No se pudo procesar el pago. Intenta de nuevo.</string>
 
@@ -236,7 +209,6 @@
     <string name="calificar_gracias">¡Gracias por tu calificación!</string>
 
     <!-- Registro de vendedor -->
-    <string name="quieres_vender">¿Quieres vender algo?</string>
     <string name="vende_barra">Vende en Reco</string>
     <string name="vende_titulo">Vende lo que ya no usas</string>
     <string name="vende_desc">Publica tus equipos para estudiantes de tu campus. Te pagamos cuando el comprador confirma que lo recibió.</string>
@@ -331,24 +303,13 @@
     <string name="pub_recibes">Lo que recibes</string>
     <string name="pub_precio_venta">Precio de venta</string>
     <string name="pub_comision">Comisión Reco (13.6 % + $8)</string>
-    <string name="pub_certificacion_linea">Certificación</string>
     <string name="pub_recibes_confirmar">Recibes al confirmar la entrega</string>
-    <string name="pub_certificar">Certificar equipo · $99</string>
-    <string name="pub_certificar_desc">Un revisor valida el equipo y gana la insignia Certificado.</string>
-    <string name="pub_detalles">Detalles</string>
-    <string name="pub_editar">Editar</string>
-    <string name="pub_alm_ram">Almacenamiento / RAM</string>
-    <string name="pub_fotos_n">%d fotos</string>
     <string name="pub_horario">Lun a Vie · 10:00 – 18:00</string>
-    <string name="pub_recibes_venta">Recibes por la venta</string>
-    <string name="pub_nota_revision">Tu anuncio pasará por revisión (menos de 24 h) antes de aparecer en el catálogo.</string>
-    <string name="pub_confirmo">Confirmo que el equipo es mío y la información es real.</string>
     <string name="pub_enviar">Enviar a revisión</string>
     <string name="pub_borrador_guardado">Borrador guardado.</string>
     <string name="pub_elige_modelo">Elige un modelo para guardar el borrador.</string>
     <string name="pub_aviso_revision">Revisamos tu anuncio en menos de 24 h. Al aprobarlo aparece en el catálogo de tu campus.</string>
     <string name="pub_enviado">Tu anuncio quedó en revisión.</string>
-    <string name="err_confirmar">Confirma que el equipo es tuyo.</string>
     <string name="err_envio_limite">Ya tienes 3 anuncios activos. Pausa o elimina uno para publicar otro.</string>
     <string name="err_envio_fotos">Agrega de 2 a 8 fotos.</string>
     <string name="err_envio_precio">Escribe el precio de venta.</string>
@@ -374,29 +335,12 @@
     <string name="panel_en_revision">En revisión</string>
     <string name="panel_vendidos">Vendidos</string>
     <string name="panel_proxima">Próxima entrega · %s</string>
-    <string name="panel_mis_productos">Mis productos en venta</string>
     <string name="panel_ver_todo">Ver todo</string>
-    <string name="panel_sin_anuncios">Aún no tienes anuncios</string>
     <string name="panel_sin_anuncios_desc">Toca «Publicar un equipo» para publicar el primero.</string>
-    <string name="anuncios_titulo">Mis anuncios</string>
-    <string name="anuncios_subtitulo">%1$d de %2$d anuncios activos · máximo %2$d</string>
-    <string name="filtro_anuncios_todos">Todos · %d</string>
-    <string name="filtro_publicados">Publicados</string>
-    <string name="filtro_en_revision">En revisión</string>
-    <string name="filtro_rechazados">Rechazados</string>
-    <string name="filtro_pausados">Pausados</string>
-    <string name="filtro_borradores">Borradores</string>
-    <string name="anuncios_vacio">No hay anuncios aquí</string>
-    <string name="anuncios_vacio_desc">Publica un equipo con el botón naranja +.</string>
     <string name="anuncio_pausar">Pausar</string>
     <string name="anuncio_reactivar">Reactivar</string>
     <string name="anuncio_corregir">Corregir</string>
     <string name="anuncio_continuar">Continuar</string>
-    <string name="nota_en_revision">Menos de 24 h</string>
-    <string name="nota_pausado">Oculto del catálogo</string>
-    <string name="nota_vendido">Vendido</string>
-    <string name="nota_borrador">Sin terminar</string>
-    <string name="nota_revision_manual">Precio en revisión manual</string>
     <string name="anuncio_eliminar_titulo">¿Eliminar este anuncio?</string>
     <string name="anuncio_eliminar_desc">No se puede deshacer.</string>
     <string name="eliminar">Eliminar</string>
@@ -404,30 +348,11 @@
     <string name="debug_aprobar">Aprobar</string>
     <string name="debug_rechazar">Rechazar</string>
     <string name="debug_simular_compra">Simular compra</string>
-    <string name="ventas_titulo">Ventas</string>
-    <string name="ventas_por_cobrar">Por cobrar</string>
-    <string name="ventas_disponible">Disponible</string>
-    <string name="ventas_comisiones">Comisiones</string>
-    <string name="ventas_por_entregar">Por entregar · %d</string>
-    <string name="ventas_entregadas">Entregadas</string>
-    <string name="ventas_completadas">Completadas</string>
-    <string name="ventas_vacio">Aún no tienes ventas</string>
-    <string name="ventas_vacio_desc">Cuando un estudiante compre uno de tus equipos, aparecerá aquí.</string>
-    <string name="ventas_filtro_vacio">No hay ventas en este filtro.</string>
-    <string name="venta_comprador">%s · Comprador</string>
-    <string name="venta_precio">Precio de venta</string>
-    <string name="venta_comision">Comisión Reco (13.6 % + $8)</string>
-    <string name="venta_ganancia">Tu ganancia</string>
-    <string name="venta_marcar_entregado">Marcar como entregado</string>
-    <string name="venta_nota_pago">El pago se libera cuando el comprador confirme la entrega.</string>
-    <string name="venta_esperando">Por confirmar</string>
-    <string name="venta_completada">Completada</string>
     <string name="debug_simular_confirmacion">Simular: el comprador confirmó</string>
-    <string name="estado_vendido_el">Vendido el %s</string>
     <string name="anuncio_propio">Este anuncio es tuyo</string>
 
     <!-- Perfil y Perfil público -->
-    <string name="perfil_titulo">Perfil</string>
+    <string name="perfil_titulo">Cuenta</string>
     <string name="perfil_miembro">Miembro desde %s</string>
     <string name="perfil_compras">Compras</string>
     <string name="perfil_favoritos">Favoritos</string>
@@ -444,8 +369,6 @@
     <string name="perfil_sin_resenas">Aún no tienes reseñas.</string>
     <string name="perfil_mis_compras">Mis compras</string>
     <string name="perfil_por_entregar">%d por entregar</string>
-    <string name="perfil_universidad">Mi universidad</string>
-    <string name="perfil_universidad_valor">%s · CU</string>
     <string name="perfil_mis_datos">Mis datos</string>
     <string name="perfil_mis_datos_valor">Carrera y teléfono</string>
     <string name="perfil_puntos">Puntos de entrega</string>
@@ -460,6 +383,8 @@
     <string name="perfil_entrega_puntual">Entrega puntual</string>
     <string name="perfil_n_resenas">%d reseñas</string>
     <string name="perfil_donde_entrega">Dónde entrega</string>
+    <string name="perfil_sobre">Sobre %1$s</string>
+    <string name="perfil_sobre_simulado">Estudiante de %1$s. Vendo los equipos que ya no uso; todo funciona y con caja.</string>
     <string name="perfil_a_la_venta">A la venta</string>
     <string name="perfil_a_la_venta_n">A la venta · %d</string>
     <string name="perfil_resenas_n">Reseñas · %d</string>

@@ -13,20 +13,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.fcc.reco.R
-import com.fcc.reco.data.local.SesionLocal
-import com.fcc.reco.data.model.ModoUsuario
-import com.fcc.reco.data.repository.PerfilRepositorySimulado
 import com.fcc.reco.databinding.FragmentPerfilBinding
 import com.fcc.reco.databinding.ItemAnuncioPanelBinding
 import com.fcc.reco.databinding.ItemMenuPerfilBinding
-import com.fcc.reco.ui.acceso.abrirModoYTerminar
 import com.fcc.reco.ui.acceso.cerrarSesionYSalir
-import com.fcc.reco.ui.vendedor.VendedorActivity
 import kotlinx.coroutines.launch
 
 /**
- * Perfil: un solo Fragment que cambia si el estudiante ya activó el modo vendedor
- * (Figma 7:101 sin vender y 38:265 con vendedor activo).
+ * Cuenta (Figma 48:1944): un solo Fragment, sin modos. Si el estudiante ya es vendedor muestra sus artículos,
+ * su perfil público y sus reseñas; si no, la tarjeta "¿Quieres vender algo?".
  */
 class PerfilFragment : Fragment(R.layout.fragment_perfil) {
 
@@ -47,7 +42,6 @@ class PerfilFragment : Fragment(R.layout.fragment_perfil) {
         val s = e.sesion ?: return
         val ctx = requireContext()
         val nav = findNavController()
-        val enModoVendedor = requireActivity() is VendedorActivity
         val esVendedor = s.esVendedor
 
         // Tarjeta
@@ -69,7 +63,7 @@ class PerfilFragment : Fragment(R.layout.fragment_perfil) {
 
         // "¿Quieres vender algo?" solo si aún no es vendedor
         b.tarjetaVender.visibility = if (esVendedor) View.GONE else View.VISIBLE
-        b.tarjetaVender.setOnClickListener { nav.irA(R.id.registroVendedor) }
+        b.tarjetaVender.setOnClickListener { nav.irA(R.id.vendeEnReco) }
 
         // Vendedor: artículos y reseñas recibidas
         b.seccionVendedor.visibility = if (esVendedor) View.VISIBLE else View.GONE
@@ -81,11 +75,11 @@ class PerfilFragment : Fragment(R.layout.fragment_perfil) {
                 c.precio.text = item.anuncio.precio.comoPrecio()
                 c.foto.mostrarFoto(item.anuncio.fotos, item.anuncio.categoria.icono)
                 c.chipEstado.ponerEstado(item.estado.etiqueta, item.estado.estilo)
-                c.root.setOnClickListener { irAAnuncios(nav, enModoVendedor) }
+                c.root.setOnClickListener { nav.irA(R.id.misVentas) }
                 c.root
             }
             b.sinArticulos.visibility = if (e.articulos.isEmpty()) View.VISIBLE else View.GONE
-            b.verTodoArticulos.setOnClickListener { irAAnuncios(nav, enModoVendedor) }
+            b.verTodoArticulos.setOnClickListener { nav.irA(R.id.misVentas) }
             b.botonPerfilPublico.setOnClickListener {
                 nav.irA(R.id.perfilPublico, Bundle().apply { putString("vendedor", s.nombreCorto) })
             }
@@ -99,25 +93,15 @@ class PerfilFragment : Fragment(R.layout.fragment_perfil) {
         // Menú
         b.menu.removeAllViews()
         val filas = buildList<Fila> {
-            if (!enModoVendedor) {
-                add(Fila(R.drawable.ic_compras, getString(R.string.perfil_mis_compras), e.porEntregar.takeIf { it > 0 }?.let { getString(R.string.perfil_por_entregar, it) }) { nav.irA(R.id.compras) })
-                add(Fila(R.drawable.ic_favorito, getString(R.string.tab_favoritos), null) { nav.irA(R.id.favoritos) })
-            }
+            add(Fila(R.drawable.ic_compras, getString(R.string.perfil_mis_compras), e.porEntregar.takeIf { it > 0 }?.let { getString(R.string.perfil_por_entregar, it) }) { nav.irA(R.id.compras) })
+            add(Fila(R.drawable.ic_favorito, getString(R.string.tab_favoritos), null) { nav.irA(R.id.favoritos) })
             if (esVendedor) {
                 val v = s.vendedor!!
                 add(Fila(R.drawable.ic_ubicacion, getString(R.string.perfil_puntos), v.puntoEntrega) { proximamente() })
                 add(Fila(R.drawable.ic_tarjeta, getString(R.string.perfil_cobro), getString(R.string.perfil_clabe, v.clabe.takeLast(4))) { proximamente() })
             }
-            add(Fila(R.drawable.ic_birrete, getString(R.string.perfil_universidad), getString(R.string.perfil_universidad_valor, s.universidad ?: "BUAP"), conChevron = false) {})
             add(Fila(R.drawable.ic_perfil, getString(R.string.perfil_mis_datos), getString(R.string.perfil_mis_datos_valor)) { proximamente() })
             add(Fila(R.drawable.ic_info, getString(R.string.perfil_ayuda), null) { mostrarReglas() })
-            if (esVendedor) {
-                val otro = if (enModoVendedor) ModoUsuario.COMPRADOR else ModoUsuario.VENDEDOR
-                add(Fila(R.drawable.ic_inicio, getString(if (enModoVendedor) R.string.cambiar_a_comprador else R.string.cambiar_a_vendedor), null) {
-                    PerfilRepositorySimulado(SesionLocal(requireContext())).cambiarModo(otro)
-                    requireActivity().abrirModoYTerminar(otro)
-                })
-            }
             add(Fila(R.drawable.ic_cerrar, getString(R.string.cerrar_sesion), null, rojo = true, conChevron = false) { requireActivity().cerrarSesionYSalir() })
         }
         val inflater = LayoutInflater.from(ctx)
@@ -141,14 +125,6 @@ class PerfilFragment : Fragment(R.layout.fragment_perfil) {
     }
 
     private class Fila(val icono: Int, val titulo: String, val valor: String?, val rojo: Boolean = false, val conChevron: Boolean = true, val alTocar: () -> Unit)
-
-    /** Desde modo comprador, "Ver todo" cambia a modo vendedor para abrir Mis anuncios. */
-    private fun irAAnuncios(nav: androidx.navigation.NavController, enModoVendedor: Boolean) {
-        if (enModoVendedor) nav.irA(R.id.anuncios) else {
-            PerfilRepositorySimulado(SesionLocal(requireContext())).cambiarModo(ModoUsuario.VENDEDOR)
-            requireActivity().abrirModoYTerminar(ModoUsuario.VENDEDOR)
-        }
-    }
 
     private fun proximamente() = Toast.makeText(requireContext(), R.string.proximamente, Toast.LENGTH_SHORT).show()
 
