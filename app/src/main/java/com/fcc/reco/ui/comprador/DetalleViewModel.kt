@@ -11,8 +11,6 @@ class DetalleViewModel(handle: SavedStateHandle) : ViewModel() {
     val producto: Producto? = Repositorios.productos.obtenerPorId(handle.get<Int>("productoId") ?: -1)
 
     val favoritos: StateFlow<Set<Int>> = Repositorios.favoritos.ids
-    val carrito: StateFlow<Set<Int>> = Repositorios.carrito.ids
 
     fun alternarFavorito() = producto?.let { Repositorios.favoritos.alternar(it.id) }
-    fun agregarAlCarrito() = producto?.let { Repositorios.carrito.agregar(it.id) }
 }

@@ -9,7 +9,7 @@ import com.fcc.reco.data.model.Anuncio
 import com.fcc.reco.data.model.EntregaElegida
 import com.fcc.reco.data.model.EstadoAnuncio
 import com.fcc.reco.data.model.EstadoPedido
-import com.fcc.reco.data.model.GrupoCarrito
+import com.fcc.reco.data.model.GrupoPedido
 import com.fcc.reco.data.model.Pedido
 import com.fcc.reco.data.model.PuntoEntrega
 import com.fcc.reco.domain.ResumenVentas
@@ -131,7 +131,7 @@ class AnunciosViewModel(aplicacion: Application) : AndroidViewModel(aplicacion) 
         val producto = a.comoProducto(esPropio = false)
         val comprador = COMPRADORES[Repositorios.pedidos.pedidos.value.size % COMPRADORES.size]
         Repositorios.pedidos.crearPedidos(
-            listOf(EntregaElegida(GrupoCarrito(a.vendedor, listOf(producto)), PuntoEntrega(a.puntoEntrega.substringBefore(" ·"), ""), "Mar 13:00")),
+            listOf(EntregaElegida(GrupoPedido(a.vendedor, listOf(producto)), PuntoEntrega(a.puntoEntrega.substringBefore(" ·"), ""), "Mar 13:00")),
             "pi_simulado", comprador
         )
     }

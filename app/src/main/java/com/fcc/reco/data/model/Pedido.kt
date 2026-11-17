@@ -54,15 +54,15 @@ data class Calificacion(
 
 data class Reputacion(val promedio: Double, val total: Int)
 
-/** Equipos del carrito de un mismo vendedor. */
-data class GrupoCarrito(val vendedor: VendedorResumen, val productos: List<Producto>) {
+/** Equipos de un mismo vendedor dentro de un pedido (en la v2, siempre uno solo). */
+data class GrupoPedido(val vendedor: VendedorResumen, val productos: List<Producto>) {
     val subtotal: Int get() = productos.sumOf { it.precio }
 }
 
 data class PuntoEntrega(val nombre: String, val descripcion: String)
 
-/** Lo que el comprador eligió para entregar un grupo del carrito. */
-data class EntregaElegida(val grupo: GrupoCarrito, val punto: PuntoEntrega, val horario: String)
+/** Lo que el comprador eligió para entregar el pedido. */
+data class EntregaElegida(val grupo: GrupoPedido, val punto: PuntoEntrega, val horario: String)
 
 /** Reseña tal como se muestra en un perfil (reales o simuladas). */
 data class Resena(

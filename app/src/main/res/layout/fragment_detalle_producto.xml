@@ -211,69 +211,50 @@
                     app:tint="@color/texto_secundario" />
             </LinearLayout>
 
+            <!-- Preguntas rápidas: la respuesta sale del perfil del vendedor, sin chat -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_tarjeta"
+                android:elevation="3dp"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    style="@style/Reco.Texto.Boton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/preguntas_rapidas"
+                    android:textSize="16sp" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/preguntas_rapidas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    app:chipSpacingHorizontal="8dp"
+                    app:chipSpacingVertical="8dp" />
+
+                <TextView
+                    android:id="@+id/respuesta_rapida"
+                    style="@style/Reco.Texto.CuerpoMedio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_respuesta"
+                    android:lineSpacingMultiplier="1.1"
+                    android:padding="14dp"
+                    android:textColor="@color/verde_azulado"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
             <!-- Especificaciones -->
             <LinearLayout
             android:id="@+id/lista_specs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"  android:orientation="vertical" />
-
-            <TextView
-                style="@style/Reco.Texto.Seccion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/descripcion" />
-
-            <TextView
-                android:id="@+id/descripcion"
-                style="@style/Reco.Texto.Secundario"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:lineSpacingMultiplier="1.15" />
-
-            <!-- IMEI -->
-            <LinearLayout
-                android:id="@+id/fila_imei"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/bg_tarjeta"
-                android:elevation="3dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="14dp">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ic_escudo_ok"
-                    app:tint="@color/verde_insignia" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/imei"
-                        style="@style/Reco.Texto.Boton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        style="@style/Reco.Texto.Secundario"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/imei_nota"
-                        android:textSize="12sp" />
-                </LinearLayout>
-            </LinearLayout>
 
             <!-- Entrega -->
             <LinearLayout
@@ -381,10 +362,10 @@
             </LinearLayout>
 
             <com.fcc.reco.ui.comun.BotonPildora
-                android:id="@+id/boton_agregar"
+                android:id="@+id/boton_comprar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/agregar_carrito"
+                android:text="@string/comprar"
                 app:botonIcono="@drawable/ic_carrito" />
         </LinearLayout>
     </com.fcc.reco.ui.comun.GlassView>

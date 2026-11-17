@@ -5,7 +5,6 @@
     <!-- Barra inferior · comprador -->
     <string name="tab_inicio">Inicio</string>
     <string name="tab_favoritos">Favoritos</string>
-    <string name="tab_carrito">Carrito</string>
     <string name="tab_compras">Compras</string>
     <string name="tab_cuenta">Cuenta</string>
     <string name="tab_vender">Vender</string>
@@ -123,13 +122,8 @@
     <string name="certificado">Certificado</string>
     <string name="detalle">Detalle</string>
     <string name="compartir">Compartir</string>
-    <string name="descripcion">Descripción</string>
     <string name="precio">Precio</string>
     <string name="pago_protegido">Pago protegido</string>
-    <string name="agregar_carrito">Agregar al carrito</string>
-    <string name="ir_al_carrito">Ir al carrito</string>
-    <string name="imei_nota">Solo mostramos los últimos 4 dígitos</string>
-    <string name="imei_valor">IMEI ···· %1$s</string>
     <string name="entrega_en">Entrega en</string>
     <string name="grado_etiqueta">Grado %1$s · %2$s</string>
     <string name="grado_corto">Grado %1$s</string>
@@ -138,10 +132,7 @@
     <string name="carrera_facultad">%1$s · %2$s</string>
     <string name="categoria_marca">%1$s · %2$s</string>
 
-    <!-- Carrito / Entrega y pago / Compra confirmada -->
-    <string name="carrito_titulo">Carrito</string>
-    <string name="carrito_vacio">Tu carrito está vacío</string>
-    <string name="carrito_vacio_desc">Agrega equipos de estudiantes de tu campus.</string>
+    <!-- Comprar -->
     <string name="explorar">Explorar</string>
     <string name="pedido_numero">Pedido %1$d · %2$s · %3$s</string>
     <string name="subtotal_productos">Subtotal · %1$d productos</string>
@@ -151,15 +142,24 @@
     <string name="total">Total</string>
     <string name="continuar">Continuar</string>
     <string name="quitar">Quitar</string>
-    <string name="entrega_y_pago">Entrega y pago</string>
-    <string name="pedido_vendedor">Pedido %1$d · %2$s</string>
     <string name="punto_de_entrega">Punto de entrega</string>
     <string name="dia_y_horario">Día y horario</string>
     <string name="tarjeta_terminacion">Tarjeta •••• %1$s</string>
-    <string name="tarjeta_modo_prueba">Pago simulado · modo de prueba</string>
+    <string name="tarjeta_modo_prueba">Tarjeta de prueba</string>
     <string name="cambiar">Cambiar</string>
     <string name="retencion_nota">El vendedor recibe el dinero hasta que confirmas que te entregó el equipo.</string>
-    <string name="pagar">Pagar</string>
+    <string name="pagar_monto">Pagar %1$s</string>
+    <string name="comprar">Comprar</string>
+    <string name="comprar_titulo">Comprar</string>
+    <string name="comprar_linea">%1$s · %2$s</string>
+    <string name="compra_lista">Listo: tu pago quedó retenido hasta que confirmes la entrega.</string>
+    <string name="preguntas_rapidas">Preguntas rápidas</string>
+    <string name="pregunta_donde">¿Dónde entregas?</string>
+    <string name="pregunta_horario">¿Qué horario?</string>
+    <string name="pregunta_tarjeta">¿Aceptas tarjeta?</string>
+    <string name="respuesta_donde">%1$s entrega en %2$s, de lunes a viernes de 10:00 a 18:00.</string>
+    <string name="respuesta_horario">%1$s entrega de lunes a viernes, de 10:00 a 18:00. El día y la hora los eliges al comprar.</string>
+    <string name="respuesta_tarjeta">Sí. Pagas con tarjeta dentro de Reco y el dinero se libera a %1$s hasta que confirmes la entrega.</string>
     <string name="pagando">Pagando…</string>
     <string name="tarjeta_titulo">Tarjeta de prueba</string>
     <string name="tarjeta_desc">No se cobra dinero real. Usa 4242 4242 4242 4242, cualquier fecha futura y 3 dígitos.</string>
@@ -170,8 +170,6 @@
     <string name="error_tarjeta_numero">Número de tarjeta no válido</string>
     <string name="error_tarjeta_vence">Fecha no válida</string>
     <string name="error_tarjeta_cvc">3 dígitos</string>
-    <string name="compra_confirmada">¡Compra confirmada!</string>
-    <string name="compra_confirmada_desc">Tu pago queda retenido y el vendedor lo recibe hasta que confirmes la entrega.</string>
     <string name="ver_mis_compras">Ver mis compras</string>
     <string name="seguir_explorando">Seguir explorando</string>
     <string name="pedido_resumen_entrega">%1$s · %2$s</string>

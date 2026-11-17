@@ -16,6 +16,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.fcc.reco.R
 import com.fcc.reco.data.model.Producto
 import com.fcc.reco.databinding.FragmentDetalleProductoBinding
+import com.fcc.reco.ui.comun.ChipFiltro
 import com.fcc.reco.ui.comun.ChipInsignia
 import com.fcc.reco.ui.comun.CuadriculaProductos
 import com.fcc.reco.ui.comun.ajustarPorBarrasDelSistema
@@ -46,7 +47,14 @@ class DetalleProductoFragment : Fragment(R.layout.fragment_detalle_producto) {
         b.tarjetaVendedor.setOnClickListener {
             findNavController().irA(R.id.perfilPublico, Bundle().apply { putString("vendedor", producto.vendedor.nombre) })
         }
+        // Compra directa de un solo artículo (sin carrito). Nadie puede comprar sus propios anuncios.
+        b.botonComprar.isEnabled = !producto.esPropio
+        b.botonComprar.setText(if (producto.esPropio) R.string.anuncio_propio else R.string.comprar)
+        b.botonComprar.setOnClickListener {
+            findNavController().irA(R.id.comprar, Bundle().apply { putInt("productoId", producto.id) })
+        }
         pintarProducto(b, producto)
+        armarPreguntasRapidas(b, producto)
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -55,17 +63,6 @@ class DetalleProductoFragment : Fragment(R.layout.fragment_detalle_producto) {
                         b.iconoFavorito.setImageResource(
                             if (producto.id in ids) R.drawable.ic_favorito_lleno else R.drawable.ic_favorito
                         )
-                    }
-                }
-                launch {
-                    viewModel.carrito.collect { ids ->
-                        val enCarrito = producto.id in ids
-                        // Nadie puede comprar sus propios anuncios.
-                        b.botonAgregar.isEnabled = !producto.esPropio
-                        b.botonAgregar.setText(if (producto.esPropio) R.string.anuncio_propio else if (enCarrito) R.string.ir_al_carrito else R.string.agregar_carrito)
-                        b.botonAgregar.setOnClickListener {
-                            if (enCarrito) findNavController().irA(R.id.carrito) else viewModel.agregarAlCarrito()
-                        }
                     }
                 }
             }
@@ -77,7 +74,6 @@ class DetalleProductoFragment : Fragment(R.layout.fragment_detalle_producto) {
         b.categoriaMarca.text = getString(R.string.categoria_marca, getString(p.categoria.nombre), p.marca)
         b.titulo.text = p.tituloDetalle
         b.precio.text = p.precio.comoPrecio()
-        b.descripcion.text = p.descripcion
         b.puntoEntrega.text = p.puntoEntrega
 
         if (p.certificado) {
@@ -111,13 +107,6 @@ class DetalleProductoFragment : Fragment(R.layout.fragment_detalle_producto) {
         // Especificaciones
         CuadriculaProductos.mostrarEspecificaciones(b.listaSpecs, p.especificaciones)
 
-        // IMEI (solo celulares y tablets): únicamente los últimos 4 dígitos.
-        if (p.imeiUltimos4 != null) {
-            b.imei.text = getString(R.string.imei_valor, p.imeiUltimos4)
-        } else {
-            b.filaImei.visibility = View.GONE
-        }
-
         // Galería simulada con indicador de puntos
         val fotos = if (p.fotos.isNotEmpty()) p.fotos.size else 4
         b.pager.adapter = FotoPagerAdapter(p.categoria.icono, fotos, p.fotos)
@@ -126,6 +115,33 @@ class DetalleProductoFragment : Fragment(R.layout.fragment_detalle_producto) {
         b.pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(posicion: Int) = marcarPunto(b, posicion)
         })
+    }
+
+    /** Chips con la respuesta del vendedor (sin chat): la primera pregunta arranca elegida. */
+    private fun armarPreguntasRapidas(b: FragmentDetalleProductoBinding, p: Producto) {
+        val ctx = requireContext()
+        val vendedor = p.vendedor.nombre.substringBefore(' ')
+        val preguntas = listOf(
+            R.string.pregunta_donde to getString(R.string.respuesta_donde, vendedor, p.puntoEntrega),
+            R.string.pregunta_horario to getString(R.string.respuesta_horario, vendedor),
+            R.string.pregunta_tarjeta to getString(R.string.respuesta_tarjeta, vendedor)
+        )
+        val chips = preguntas.map { (pregunta, _) ->
+            ChipFiltro(ctx).apply {
+                text = getString(pregunta)
+                cerrarAlActivar = false
+            }
+        }
+        fun elegir(indice: Int) {
+            chips.forEachIndexed { i, chip -> chip.activo = i == indice }
+            b.respuestaRapida.text = preguntas[indice].second
+        }
+        b.preguntasRapidas.removeAllViews()
+        chips.forEachIndexed { i, chip ->
+            chip.setOnClickListener { elegir(i) }
+            b.preguntasRapidas.addView(chip)
+        }
+        elegir(0)
     }
 
     private fun crearPuntos(b: FragmentDetalleProductoBinding, cantidad: Int) {

@@ -15,7 +15,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.fcc.reco.R
 import com.fcc.reco.data.DatosSimulados
-import com.fcc.reco.databinding.FragmentEntregaPagoBinding
+import com.fcc.reco.databinding.FragmentComprarBinding
 import com.fcc.reco.databinding.ItemPedidoEntregaBinding
 import com.fcc.reco.databinding.ItemPuntoEntregaBinding
 import com.fcc.reco.ui.comun.ChipFiltro
@@ -27,13 +27,17 @@ import com.fcc.reco.ui.comun.irA
 import com.fcc.reco.ui.comun.sumarMargenInferiorDeBarras
 import kotlinx.coroutines.launch
 
-/** Elegir punto y horario de entrega por vendedor, la tarjeta de prueba y pagar. */
-class EntregaPagoFragment : Fragment(R.layout.fragment_entrega_pago) {
+/** Comprar un artículo: punto y horario de entrega, la tarjeta de prueba y "Pagar $X". */
+class ComprarFragment : Fragment(R.layout.fragment_comprar) {
 
-    private val viewModel: EntregaPagoViewModel by viewModels()
+    private val viewModel: ComprarViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val b = FragmentEntregaPagoBinding.bind(view)
+        val b = FragmentComprarBinding.bind(view)
+        if (viewModel.producto == null) {
+            findNavController().popBackStack()
+            return
+        }
         b.scroll.ajustarPorBarrasDelSistema(arriba = true, abajo = false)
         b.barraTotal.sumarMargenInferiorDeBarras(16)
         b.barraTotal.vincularFondo(b.scroll)
@@ -53,11 +57,9 @@ class EntregaPagoFragment : Fragment(R.layout.fragment_entrega_pago) {
                 launch {
                     viewModel.eventos.collect { evento ->
                         if (evento is EventoPago.PagoExitoso) {
-                            nav.irA(
-                                R.id.compraConfirmada,
-                                Bundle().apply { putIntArray("pedidoIds", evento.pedidoIds) },
-                                popHasta = R.id.inicio
-                            )
+                            // Pedido creado con el pago retenido: se ve en Mis compras.
+                            Toast.makeText(requireContext(), R.string.compra_lista, Toast.LENGTH_LONG).show()
+                            nav.irA(R.id.compras, popHasta = R.id.inicio)
                         }
                     }
                 }
@@ -65,11 +67,11 @@ class EntregaPagoFragment : Fragment(R.layout.fragment_entrega_pago) {
         }
     }
 
-    private fun pintar(b: FragmentEntregaPagoBinding, estado: EstadoPago) {
+    private fun pintar(b: FragmentComprarBinding, estado: EstadoPago) {
         b.barraTotalValor.text = estado.total.comoPrecio()
         b.tarjetaTexto.text = getString(R.string.tarjeta_terminacion, estado.tarjetaUltimos4)
         b.botonPagar.isEnabled = !estado.cargando && estado.grupos.isNotEmpty()
-        b.botonPagar.setText(if (estado.cargando) R.string.pagando else R.string.pagar)
+        b.botonPagar.text = if (estado.cargando) getString(R.string.pagando) else getString(R.string.pagar_monto, estado.total.comoPrecio())
         estado.error?.let { Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() }
 
         val inflater = LayoutInflater.from(requireContext())
@@ -79,7 +81,7 @@ class EntregaPagoFragment : Fragment(R.layout.fragment_entrega_pago) {
             val seleccion = estado.selecciones[nombre] ?: Seleccion()
             val p = ItemPedidoEntregaBinding.inflate(inflater, b.contenedorPedidos, false)
             p.avatar.configurarVendedor(grupo.vendedor)
-            p.titulo.text = getString(R.string.pedido_vendedor, indice + 1, nombre)
+            p.titulo.text = getString(R.string.comprar_linea, grupo.productos.first().modelo, nombre)
             p.monto.text = grupo.subtotal.comoPrecio()
 
             DatosSimulados.puntosEntrega.forEachIndexed { i, punto ->

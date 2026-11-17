@@ -1,13 +1,15 @@
 package com.fcc.reco.ui.comprador
 
 import androidx.annotation.StringRes
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fcc.reco.R
 import com.fcc.reco.data.DatosSimulados
 import com.fcc.reco.data.Repositorios
 import com.fcc.reco.data.model.EntregaElegida
-import com.fcc.reco.data.model.GrupoCarrito
+import com.fcc.reco.data.model.GrupoPedido
+import com.fcc.reco.data.model.Producto
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +22,7 @@ import kotlinx.coroutines.launch
 data class Seleccion(val punto: Int = 0, val horario: Int = 0)
 
 data class EstadoPago(
-    val grupos: List<GrupoCarrito>,
+    val grupos: List<GrupoPedido>,
     val selecciones: Map<String, Seleccion>,
     val tarjetaUltimos4: String = "4242",
     val cargando: Boolean = false,
@@ -33,9 +35,12 @@ sealed interface EventoPago {
     data class PagoExitoso(val pedidoIds: IntArray) : EventoPago
 }
 
-class EntregaPagoViewModel : ViewModel() {
+/** Compra directa de un solo artículo: el id llega como argumento `productoId`. */
+class ComprarViewModel(handle: SavedStateHandle) : ViewModel() {
 
-    private val grupos = Repositorios.carrito.listarAgrupadoPorVendedor()
+    val producto: Producto? = Repositorios.productos.obtenerPorId(handle.get<Int>("productoId") ?: -1)
+
+    private val grupos = listOfNotNull(producto?.let { GrupoPedido(it.vendedor, listOf(it)) })
 
     private val _estado = MutableStateFlow(
         EstadoPago(grupos, grupos.associate { it.vendedor.nombre to Seleccion() })
@@ -57,7 +62,7 @@ class EntregaPagoViewModel : ViewModel() {
         }
     }
 
-    /** Cobra (simulado), crea un pedido por vendedor, vacía el carrito y avisa a la pantalla. */
+    /** Cobra (simulado), crea el pedido con el pago retenido y avisa a la pantalla. */
     fun pagar() {
         val actual = _estado.value
         if (actual.cargando || actual.grupos.isEmpty()) return
@@ -70,7 +75,6 @@ class EntregaPagoViewModel : ViewModel() {
                         EntregaElegida(g, DatosSimulados.puntosEntrega[s.punto], DatosSimulados.horariosEntrega[s.horario])
                     }
                     val pedidos = Repositorios.pedidos.crearPedidos(entregas, idPago)
-                    actual.grupos.flatMap { it.productos }.forEach { Repositorios.carrito.quitar(it.id) }
                     _eventos.send(EventoPago.PagoExitoso(pedidos.map { it.id }.toIntArray()))
                 },
                 onFailure = { _estado.update { e -> e.copy(cargando = false, error = R.string.error_pago) } }

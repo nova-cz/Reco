@@ -14,7 +14,7 @@ import java.util.Calendar
 /** Captura la tarjeta de prueba (validada, pero no se guarda más que los últimos 4 dígitos). */
 class TarjetaBottomSheet : BottomSheetDialogFragment() {
 
-    private val viewModel: EntregaPagoViewModel by viewModels(ownerProducer = { requireParentFragment() })
+    private val viewModel: ComprarViewModel by viewModels(ownerProducer = { requireParentFragment() })
 
     override fun onCreateView(inflater: LayoutInflater, contenedor: ViewGroup?, estado: Bundle?): View {
         val b = SheetTarjetaBinding.inflate(inflater, contenedor, false)
