@@ -39,6 +39,7 @@ class CalificacionRepositorySimulado(
         val pedido = pedidos.obtener(pedidoId) ?: return null
         if (pedido.estado != EstadoPedido.LIBERADO || estrellas !in 1..5) return null
         if (obtenerPorPedido(pedidoId) != null) return null
+        if (!Calificacion.comentarioValido(estrellas, comentario)) return null
         val nueva = Calificacion(
             id = (_calificaciones.value.maxOfOrNull { it.id } ?: 0) + 1,
             pedidoId = pedidoId,

@@ -230,7 +230,8 @@
     <string name="debug_marcar_entregado">Simular: el vendedor marcó la entrega</string>
     <string name="calificar_titulo">¿Cómo te fue con %s?</string>
     <string name="calificar_desc">Tu calificación ayuda a otros estudiantes a comprar con confianza.</string>
-    <string name="calificar_comentario">Escribe un comentario (opcional)</string>
+    <string name="calificar_comentario">Cuéntanos qué pasó (obligatorio con 3 estrellas o menos)</string>
+    <string name="error_comentario">Cuéntanos qué pasó: con 3 estrellas o menos el comentario es obligatorio.</string>
     <string name="calificar_enviar">Enviar calificación</string>
     <string name="calificar_gracias">¡Gracias por tu calificación!</string>
 

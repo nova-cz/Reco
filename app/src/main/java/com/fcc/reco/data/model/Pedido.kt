@@ -48,6 +48,12 @@ data class Calificacion(
 ) {
     companion object {
         const val PUNTUAL = "Puntual"
+
+        /** Con 3 estrellas o menos el comentario es obligatorio: una mala calificación sin contexto no sirve. */
+        fun comentarioObligatorio(estrellas: Int): Boolean = estrellas <= 3
+
+        fun comentarioValido(estrellas: Int, comentario: String): Boolean =
+            !comentarioObligatorio(estrellas) || comentario.isNotBlank()
         val ETIQUETAS = listOf(PUNTUAL, "Como se describió", "Amable", "Buen precio")
     }
 }

@@ -66,7 +66,13 @@ class CalificarBottomSheet : BottomSheetDialogFragment() {
         }
 
         b.botonEnviar.setOnClickListener {
-            val enviada = viewModel.calificar(estrellas, etiquetasElegidas.toList(), b.comentario.text.toString())
+            val comentario = b.comentario.text.toString()
+            if (!Calificacion.comentarioValido(estrellas, comentario)) {
+                b.comentario.error = getString(R.string.error_comentario)
+                b.comentario.requestFocus()
+                return@setOnClickListener
+            }
+            val enviada = viewModel.calificar(estrellas, etiquetasElegidas.toList(), comentario)
             if (enviada != null) {
                 Toast.makeText(requireContext(), R.string.calificar_gracias, Toast.LENGTH_SHORT).show()
             }
