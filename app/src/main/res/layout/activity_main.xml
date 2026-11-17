@@ -18,6 +18,8 @@
     <!-- Barra de 4 pestañas y, aparte, el botón "Vender" en pastilla con degradado. -->
     <LinearLayout
         android:id="@+id/barra_contenedor"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="@dimen/barra_alto"
         android:layout_gravity="bottom"
@@ -41,7 +43,7 @@
             android:background="@drawable/bg_button_primary"
             android:clickable="true"
             android:contentDescription="@string/tab_vender"
-            android:elevation="8dp"
+            android:elevation="0dp"
             android:focusable="true"
             android:gravity="center"
             android:orientation="horizontal"

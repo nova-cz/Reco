@@ -59,7 +59,7 @@ class BarraInferiorFlotante @JvmOverloads constructor(
     init {
         ponerRadio(dpF(32f))
         setPadding(dp(8), dp(8), dp(8), dp(8))
-        elevation = dpF(8f)
+        elevation = 0f
         fila.orientation = LinearLayout.HORIZONTAL
         fila.gravity = Gravity.CENTER_VERTICAL
         addView(fila, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
