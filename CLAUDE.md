@@ -52,10 +52,12 @@ Sin verificación no se puede comprar ni vender (`crear_pedido` y `activar_vende
 
 `data/Repositorios.kt` elige las implementaciones al iniciar la app:
 
-- **Supabase** (por defecto si hay llaves en `local.properties`): cuenta y perfil, verificación, catálogo con fotos, favoritos, pedidos y reseñas.
+- **Supabase** (por defecto si hay llaves en `local.properties`): cuenta y perfil, verificación, catálogo con fotos, favoritos, pedidos, reseñas y los anuncios del vendedor.
 - **Simulados** (JSON internos en `filesDir`): sin red ni llaves.
 - **Switch de debug**: en la Bienvenida, solo en builds debug, el texto "DEBUG · Datos: ..." alterna entre ambos y cierra la sesión.
-- **Anuncios del vendedor** (Mis ventas, Publicar): siguen **locales** con ambos modos. Falta conectarlos a la tabla `productos` y a Storage.
+- **Anuncios del vendedor** (Mis ventas, Publicar): con Supabase se leen y escriben en `productos` y `fotos`. Los **borradores** se quedan en el teléfono (JSON local, con rutas de archivo); al **enviar a revisión** se suben las fotos a Storage en `fotos/<vendedor_id>/<anuncio_id>/<n>.jpg` y se crea el anuncio (`AnuncioRepositorySupabase`). Corregir un rechazado actualiza el mismo anuncio y reemplaza sus fotos. Mis ventas muestra los estados En revisión, Publicado, Rechazado y Vendido. Con datos simulados todo sigue como antes (JSON local, botones de moderación en debug).
+- **Publicar 2 · Fotos**: de 2 a 8 fotos desde la galería (Photo Picker) o la cámara; ◀ ▶ reordenan, ★ marca la portada (la primera) y cada foto se reduce a máx. 1280 px en JPG antes de subirla. La cámara usa un `FileProvider` y no pide permisos.
+- **Preguntas rápidas** del Detalle: con Supabase usan las respuestas del vendedor (`donde_entregas`, `horario`, `acepta_tarjeta`, que se llenan al unirse como vendedor); sin esos datos, o con datos simulados, usan la plantilla.
 
 Las pantallas leen los repositorios de forma síncrona, así que en modo Supabase se **precargan** antes de abrir la app (`Repositorios.precargar()`, desde `AccesoViewModel`/`AccesoActivity`). Los ids son `Int` en la app y UUID en Supabase: `data/remote/IdMapa.kt` los traduce. Favoritos, confirmar entrega y calificar se actualizan en pantalla al instante y se guardan en segundo plano.
 
@@ -83,12 +85,15 @@ scripts/
 ## Backend (Supabase)
 
 - Se cambia con migraciones: `supabase migration new <nombre>` y `supabase db push --remote`. La CLI ya está enlazada (`supabase link`).
-- **Datos de prueba**: `python3 scripts/seed_dummyjson.py` (25 productos de DummyJSON, 91 fotos en el bucket público `fotos`, 4 vendedores ficticios de la BUAP con correos `@example.invalid` y bloqueados) y luego `supabase db push --include-seed --remote`. Se puede repetir sin duplicar.
+- **Datos de prueba**: `python3 scripts/seed_dummyjson.py` (25 productos de DummyJSON, 91 fotos en el bucket público `fotos`, 4 vendedores ficticios de la BUAP con correos `@example.invalid` y bloqueados) y luego `supabase db push --include-seed --remote`. Se puede repetir sin duplicar. **Fotos propias**: pon carpetas en `scripts/fotos_extra/<categoria>/<Marca Modelo>/` (ver su README); el script las comprime, las sube y las agrega como anuncios publicados.
+- **Ojo con la CLI**: `supabase migration new` se cuelga si se encadena con tuberías; córrelo solo, con `</dev/null`, y escribe el archivo aparte. `supabase db query` y `db push` se corren desde la carpeta del repo.
 - **Precios** de prueba: USD × 18 × 0.65, redondeado a centenas.
-- **Tablas**: universidades, puntos_entrega, modelos, imei_bloqueados, perfiles, productos, fotos, favoritos, reportes, pedidos (un pedido = un equipo), calificaciones. No hay carrito.
+- **Tablas**: universidades, dominios_permitidos, puntos_entrega, modelos, imei_bloqueados, perfiles, productos, fotos (con `es_portada`), favoritos, reportes, pedidos (un pedido = un equipo), calificaciones. No hay carrito. La vista `anuncio_fotos` (anuncio_id, url, orden, es_portada) es otro nombre para `fotos`, con las mismas reglas RLS.
 - **Perfiles de vendedor**: `apodo`, `acerca_de` y las respuestas rápidas `donde_entregas`, `horario`, `acepta_tarjeta`. Los demás ven solo la vista `perfiles_publicos` (sin teléfono ni CLABE).
 - **Funciones** (las llama la app con la sesión del usuario): `verificar_estudiante()`, `activar_vendedor(...)`, `crear_pedido(p_producto, p_punto, p_horario)`, `marcar_entregado(p_pedido)`, `confirmar_entrega(p_pedido)`, `obtener_mi_imei(p_producto)`. El monto y la comisión (13.6 % + $8) los calcula el servidor.
 - **IMEI**: la columna `imei` solo la lee su dueño (con `obtener_mi_imei`); los demás ven `imei_ultimos4`. Por eso las consultas a `productos` deben listar columnas, no usar `select=*`.
+- **Storage (bucket público `fotos`)**: lectura pública; solo el dueño de la carpeta `<uid>/` puede subir, reemplazar y borrar. Un upsert necesita también la política de lectura.
+- **IMEI bloqueado**: además de la app, lo rechaza un trigger del servidor (`imei_bloqueados`).
 - **Anónimo (anon key)**: puede leer solo anuncios publicados, sus fotos, modelos y puntos de entrega. Todo lo demás exige sesión.
 - **Reseñas**: la vista `resenas_publicas` expone quién calificó, a quién y qué equipo.
 - **Moderador**: sin pantallas. Aprueba o rechaza anuncios desde el panel de Supabase (`update productos set estado = 'publicado' where id = ...`).
@@ -129,8 +134,8 @@ Estados del anuncio: Borrador, En revisión, Publicado, Rechazado, Reservado, Ve
 
 ## Pendientes
 
-1. **Anuncios del vendedor en Supabase**: guardar borradores y enviar a revisión en `productos`, subir las fotos a `fotos/<uid>/...` y guardar la URL pública en `fotos.url`, y leer "Mis ventas" desde `pedidos`.
-2. **Preguntas rápidas** del Detalle con las respuestas reales del vendedor (`donde_entregas`, `horario`, `acepta_tarjeta`); hoy usan textos de plantilla.
+1. **Borradores en Supabase**: hoy solo viven en el teléfono (con rutas de archivo) hasta enviar a revisión.
+2. **Moderación**: sin pantallas; aprobar o rechazar se hace en el panel de Supabase. Al reenviar un rechazado, el `motivo_rechazo` se queda hasta que el moderador lo limpie.
 3. Activar el proveedor Azure en Supabase con el client ID y el secret, probar con una cuenta `@alumno.buap.mx` y cargar el `azure_tenant_id`. Si la BUAP exige aprobación del administrador, el plan B (código) pasa a principal y necesita SMTP propio.
 4. Google Sign-In real (Credential Manager), solo si sobra tiempo.
 5. Puntos de entrega reales de CU.

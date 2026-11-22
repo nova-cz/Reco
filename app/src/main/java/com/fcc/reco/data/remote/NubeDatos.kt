@@ -28,7 +28,10 @@ class NubeDatos {
             carrera = p?.carrera ?: "Estudiante BUAP",
             facultad = "BUAP",
             reputacion = p?.reputacion ?: 0.0,
-            ventas = p?.ventasCompletadas ?: 0
+            ventas = p?.ventasCompletadas ?: 0,
+            dondeEntregas = p?.dondeEntregas?.takeIf { it.isNotBlank() },
+            horario = p?.horario?.takeIf { it.isNotBlank() },
+            aceptaTarjeta = p?.takeIf { it.esVendedor }?.aceptaTarjeta
         )
     }
 

@@ -16,7 +16,7 @@ import org.json.JSONObject
 
 /** Motivos por los que un anuncio no se puede enviar a revisión. */
 enum class ErrorEnvio {
-    FALTAN_DATOS, LIMITE_ACTIVOS, FOTOS, PRECIO,
+    FALTAN_DATOS, LIMITE_ACTIVOS, FOTOS, PRECIO, RED,
     ID_VACIO, ID_FORMATO, ID_LUHN, ID_BLOQUEADO, ID_DUPLICADO
 }
 
@@ -29,12 +29,14 @@ interface AnuncioRepository {
     fun activos(correo: String): Int
     /** IMEI/series de anuncios que siguen vivos (para detectar duplicados). */
     fun identificadoresEnUso(excluirId: Int = 0): Set<String>
-    fun guardarBorrador(a: Anuncio): Anuncio
+    suspend fun guardarBorrador(a: Anuncio): Anuncio
     /** Valida todo y lo deja En revisión. Devuelve null si salió bien. */
-    fun enviarARevision(a: Anuncio): ErrorEnvio?
-    fun pausar(id: Int)
-    fun reanudar(id: Int)
-    fun eliminar(id: Int)
+    suspend fun enviarARevision(a: Anuncio): ErrorEnvio?
+    suspend fun pausar(id: Int)
+    suspend fun reanudar(id: Int)
+    suspend fun eliminar(id: Int)
+    /** Vuelve a leer los anuncios del servidor (solo Supabase). */
+    suspend fun refrescar() {}
     // Moderación (se simula con botones de debug; en Supabase, desde el panel).
     fun aprobar(id: Int)
     fun rechazar(id: Int, motivo: String)
@@ -62,13 +64,13 @@ class AnuncioRepositorySimulado(
         _anuncios.value.filter { it.id != excluirId && it.identificador.isNotEmpty() && (estadoEfectivo(it).esActivo || it.estado == EstadoAnuncio.PAUSADO || estadoEfectivo(it) == EstadoAnuncio.VENDIDO) }
             .map { it.identificador }.toSet()
 
-    override fun guardarBorrador(a: Anuncio): Anuncio {
+    override suspend fun guardarBorrador(a: Anuncio): Anuncio {
         val guardado = a.copy(estado = EstadoAnuncio.BORRADOR, id = if (a.id == 0) siguienteId() else a.id)
         reemplazar(guardado)
         return guardado
     }
 
-    override fun enviarARevision(a: Anuncio): ErrorEnvio? {
+    override suspend fun enviarARevision(a: Anuncio): ErrorEnvio? {
         val yaExiste = a.id != 0 && obtener(a.id)?.estado?.esActivo == true
         if (!yaExiste && !ValidadorPublicacion.puedePublicarMas(activos(a.vendedorCorreo))) return ErrorEnvio.LIMITE_ACTIVOS
         if (!ValidadorPublicacion.validarFotos(a.fotos.size)) return ErrorEnvio.FOTOS
@@ -88,10 +90,10 @@ class AnuncioRepositorySimulado(
         return null
     }
 
-    override fun pausar(id: Int) = cambiar(id, EstadoAnuncio.PUBLICADO) { it.copy(estado = EstadoAnuncio.PAUSADO) }
-    override fun reanudar(id: Int) = cambiar(id, EstadoAnuncio.PAUSADO) { it.copy(estado = EstadoAnuncio.PUBLICADO) }
+    override suspend fun pausar(id: Int) = cambiar(id, EstadoAnuncio.PUBLICADO) { it.copy(estado = EstadoAnuncio.PAUSADO) }
+    override suspend fun reanudar(id: Int) = cambiar(id, EstadoAnuncio.PAUSADO) { it.copy(estado = EstadoAnuncio.PUBLICADO) }
 
-    override fun eliminar(id: Int) {
+    override suspend fun eliminar(id: Int) {
         _anuncios.value = _anuncios.value.filter { it.id != id }
         guardar()
     }

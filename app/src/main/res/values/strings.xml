@@ -149,6 +149,9 @@
     <string name="pregunta_tarjeta">¿Aceptas tarjeta?</string>
     <string name="respuesta_donde">%1$s entrega en %2$s, de lunes a viernes de 10:00 a 18:00.</string>
     <string name="respuesta_horario">%1$s entrega de lunes a viernes, de 10:00 a 18:00. El día y la hora los eliges al comprar.</string>
+    <string name="respuesta_donde_real">%1$s entrega: %2$s.</string>
+    <string name="respuesta_horario_real">%1$s entrega en este horario: %2$s. El día y la hora los eliges al comprar.</string>
+    <string name="respuesta_tarjeta_no">Pagas con tarjeta dentro de Reco y el dinero queda retenido hasta que confirmes la entrega. %1$s no recibe pagos por fuera.</string>
     <string name="respuesta_tarjeta">Sí. Pagas con tarjeta dentro de Reco y el dinero se libera a %1$s hasta que confirmes la entrega.</string>
     <string name="pagando">Pagando…</string>
     <string name="tarjeta_titulo">Tarjeta de prueba</string>
@@ -328,6 +331,12 @@
     <string name="err_envio_limite">Ya tienes 3 anuncios activos. Pausa o elimina uno para publicar otro.</string>
     <string name="err_envio_fotos">Agrega de 2 a 8 fotos.</string>
     <string name="err_envio_precio">Escribe el precio de venta.</string>
+    <string name="err_envio_red">No se pudo enviar el anuncio. Revisa tu internet e intenta de nuevo.</string>
+    <string name="pub_enviando">Subiendo fotos y enviando a revisión…</string>
+    <string name="pub_camara">Cámara</string>
+    <string name="pub_galeria">Galería</string>
+    <string name="pub_hacer_portada">★</string>
+    <string name="pub_agregar_desde">Agregar foto</string>
     <string name="err_envio_datos">Faltan datos del equipo. Revisa los pasos anteriores.</string>
     <string name="cerrar">Cerrar</string>
     <string name="pub_modelo_sub">%1$s · %2$s</string>

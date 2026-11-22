@@ -22,6 +22,8 @@ import com.fcc.reco.ui.comun.dp
 import com.fcc.reco.ui.comun.dpF
 import com.fcc.reco.ui.comun.iconoInicio
 import com.google.android.material.chip.ChipGroup
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 /** Cabecera común de los tres pasos: cerrar, "Borrador" y la barra de progreso. */
 fun LayoutCabeceraPublicarBinding.configurar(fragment: Fragment, vm: PublicarViewModel, paso: Int, @StringRes nombre: Int) {
@@ -30,11 +32,13 @@ fun LayoutCabeceraPublicarBinding.configurar(fragment: Fragment, vm: PublicarVie
     barraPasos.configurar(3, paso)
     cerrar.setOnClickListener { fragment.salirDelAsistente() }
     borrador.setOnClickListener {
-        if (vm.guardarBorrador()) {
-            Toast.makeText(fragment.requireContext(), R.string.pub_borrador_guardado, Toast.LENGTH_SHORT).show()
-            fragment.salirDelAsistente()
-        } else {
-            Toast.makeText(fragment.requireContext(), R.string.pub_elige_modelo, Toast.LENGTH_SHORT).show()
+        fragment.viewLifecycleOwner.lifecycleScope.launch {
+            if (vm.guardarBorrador()) {
+                Toast.makeText(fragment.requireContext(), R.string.pub_borrador_guardado, Toast.LENGTH_SHORT).show()
+                fragment.salirDelAsistente()
+            } else {
+                Toast.makeText(fragment.requireContext(), R.string.pub_elige_modelo, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }
@@ -99,6 +103,7 @@ fun ErrorEnvio.mensaje(): Int = when (this) {
     ErrorEnvio.FOTOS -> R.string.err_envio_fotos
     ErrorEnvio.PRECIO -> R.string.err_envio_precio
     ErrorEnvio.FALTAN_DATOS -> R.string.err_envio_datos
+    ErrorEnvio.RED -> R.string.err_envio_red
     ErrorEnvio.ID_VACIO -> R.string.err_id_vacio
     ErrorEnvio.ID_FORMATO -> R.string.err_id_formato_serie
     ErrorEnvio.ID_LUHN -> R.string.err_id_luhn

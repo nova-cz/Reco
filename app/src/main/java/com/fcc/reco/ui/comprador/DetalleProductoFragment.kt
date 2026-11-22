@@ -122,9 +122,16 @@ class DetalleProductoFragment : Fragment(R.layout.fragment_detalle_producto) {
         val ctx = requireContext()
         val vendedor = p.vendedor.nombre.substringBefore(' ')
         val preguntas = listOf(
-            R.string.pregunta_donde to getString(R.string.respuesta_donde, vendedor, p.puntoEntrega),
-            R.string.pregunta_horario to getString(R.string.respuesta_horario, vendedor),
-            R.string.pregunta_tarjeta to getString(R.string.respuesta_tarjeta, vendedor)
+            // Con datos reales (Supabase) se usan las respuestas que escribió el vendedor; si faltan, la plantilla.
+            R.string.pregunta_donde to (p.vendedor.dondeEntregas?.let { getString(R.string.respuesta_donde_real, vendedor, it) }
+                ?: getString(R.string.respuesta_donde, vendedor, p.puntoEntrega)),
+            R.string.pregunta_horario to (p.vendedor.horario?.let { getString(R.string.respuesta_horario_real, vendedor, it) }
+                ?: getString(R.string.respuesta_horario, vendedor)),
+            R.string.pregunta_tarjeta to when (p.vendedor.aceptaTarjeta) {
+                true -> getString(R.string.respuesta_tarjeta, vendedor)
+                false -> getString(R.string.respuesta_tarjeta_no, vendedor)
+                null -> getString(R.string.respuesta_tarjeta, vendedor)
+            }
         )
         val chips = preguntas.map { (pregunta, _) ->
             ChipFiltro(ctx).apply {

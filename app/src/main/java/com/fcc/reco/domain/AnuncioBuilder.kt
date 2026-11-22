@@ -64,6 +64,22 @@ class AnuncioBuilder(inicial: BorradorAnuncio = BorradorAnuncio()) {
     }
     fun quitarFoto(ruta: String) = apply { borrador = borrador.copy(fotos = borrador.fotos - ruta) }
 
+    /** Mueve una foto una posición (-1 antes, +1 después). La primera es la portada. */
+    fun moverFoto(ruta: String, delta: Int) = apply {
+        val fotos = borrador.fotos.toMutableList()
+        val i = fotos.indexOf(ruta)
+        val j = i + delta
+        if (i >= 0 && j in fotos.indices) {
+            fotos[i] = fotos[j].also { fotos[j] = fotos[i] }
+            borrador = borrador.copy(fotos = fotos)
+        }
+    }
+
+    /** Marca una foto como portada (la pasa al primer lugar). */
+    fun hacerPortada(ruta: String) = apply {
+        if (ruta in borrador.fotos) borrador = borrador.copy(fotos = listOf(ruta) + (borrador.fotos - ruta))
+    }
+
     /** Paso 4 */
     fun precio(valor: Int) = apply { borrador = borrador.copy(precio = valor) }
     fun certificar(valor: Boolean) = apply { borrador = borrador.copy(certificar = valor) }

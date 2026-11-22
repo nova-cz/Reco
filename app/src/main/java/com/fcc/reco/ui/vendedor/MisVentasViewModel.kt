@@ -98,9 +98,9 @@ class MisVentasViewModel(aplicacion: Application) : AndroidViewModel(aplicacion)
     fun alternarVerTodo() { verTodo.value = !verTodo.value }
 
     // Acciones sobre un anuncio
-    fun pausar(id: Int) = Repositorios.anuncios.pausar(id)
-    fun reanudar(id: Int) = Repositorios.anuncios.reanudar(id)
-    fun eliminar(id: Int) = Repositorios.anuncios.eliminar(id)
+    fun pausar(id: Int) { viewModelScope.launch { runCatching { Repositorios.anuncios.pausar(id) } } }
+    fun reanudar(id: Int) { viewModelScope.launch { runCatching { Repositorios.anuncios.reanudar(id) } } }
+    fun eliminar(id: Int) { viewModelScope.launch { runCatching { Repositorios.anuncios.eliminar(id) } } }
 
     // Entregas
     fun marcarEntregado(id: Int) = Repositorios.pedidos.marcarEntregado(id)

@@ -30,6 +30,7 @@ import com.fcc.reco.ui.comun.dpF
 import com.fcc.reco.ui.comun.irA
 import com.fcc.reco.ui.comun.sumarMargenInferiorDeBarras
 import kotlinx.coroutines.launch
+import coil3.load
 import java.io.File
 
 /** Publicar 2 de 3 · Fotos: de 2 a 8 fotos; la primera es la portada (Figma 48:1778). */
@@ -40,6 +41,13 @@ class Publicar2Fragment : Fragment(R.layout.fragment_publicar_2) {
     private val selector = registerForActivityResult(
         ActivityResultContracts.PickMultipleVisualMedia(ValidadorPublicacion.MAX_FOTOS)
     ) { uris: List<Uri> -> if (uris.isNotEmpty()) vm.agregarFotos(uris) }
+
+    private var fotoCamara: Uri? = null
+    private val camara = registerForActivityResult(ActivityResultContracts.TakePicture()) { tomada ->
+        val uri = fotoCamara
+        if (tomada && uri != null) vm.agregarFotos(listOf(uri))
+        fotoCamara = null
+    }
 
     private val items = listOf(R.string.pub_chk1, R.string.pub_chk2, R.string.pub_chk3, R.string.pub_chk4, R.string.pub_chk5)
 
@@ -78,7 +86,7 @@ class Publicar2Fragment : Fragment(R.layout.fragment_publicar_2) {
             for (col in 0 until 3) {
                 val i = fila * 3 + col
                 val celda = when {
-                    i < fotos.size -> celdaFoto(fotos[i], i == 0)
+                    i < fotos.size -> celdaFoto(fotos[i], i, fotos.size)
                     i == fotos.size && fotos.size < ValidadorPublicacion.MAX_FOTOS -> celdaAgregar()
                     else -> FrameLayout(requireContext()).apply { setBackgroundResource(R.drawable.bg_foto_vacia) }
                 }
@@ -88,14 +96,16 @@ class Publicar2Fragment : Fragment(R.layout.fragment_publicar_2) {
         }
     }
 
-    private fun celdaFoto(ruta: String, portada: Boolean): View {
+    private fun celdaFoto(ruta: String, indice: Int, total: Int): View {
         val ctx = requireContext()
+        val portada = indice == 0
         return FrameLayout(ctx).apply {
             setBackgroundResource(R.drawable.bg_foto_placeholder)
             clipToOutline = true
             addView(ImageView(ctx).apply {
                 scaleType = ImageView.ScaleType.CENTER_CROP
-                setImageURI(Uri.fromFile(File(ruta)))
+                // Las fotos nuevas son archivos del teléfono; las de un anuncio ya enviado son URLs de Storage.
+                if (ruta.startsWith("http")) load(ruta) else setImageURI(Uri.fromFile(File(ruta)))
             }, FrameLayout.LayoutParams(-1, -1))
             addView(ImageView(ctx).apply {
                 setBackgroundResource(R.drawable.bg_circulo_tinta)
@@ -107,9 +117,48 @@ class Publicar2Fragment : Fragment(R.layout.fragment_publicar_2) {
             }, FrameLayout.LayoutParams(dp(26), dp(26), Gravity.TOP or Gravity.END).apply { setMargins(0, dp(6), dp(6), 0) })
             if (portada) {
                 addView(ChipInsignia(ctx).apply { configurar(ChipInsignia.Tipo.GRADO, getString(R.string.pub_portada)) },
-                    FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM or Gravity.START).apply { setMargins(dp(8), 0, 0, dp(8)) })
+                    FrameLayout.LayoutParams(-2, -2, Gravity.TOP or Gravity.START).apply { setMargins(dp(8), dp(8), 0, 0) })
             }
+            // Reordenar y elegir portada: ◀ (antes), "Portada" (solo si no lo es) y ▶ (después).
+            addView(LinearLayout(ctx).apply {
+                gravity = Gravity.CENTER
+                setBackgroundColor(Color.argb(110, 0, 0, 0))
+                if (indice > 0) addView(botonFoto("◀") { vm.moverFoto(ruta, -1) })
+                if (!portada) addView(botonFoto(getString(R.string.pub_hacer_portada), getString(R.string.pub_portada)) { vm.hacerPortada(ruta) })
+                if (indice < total - 1) addView(botonFoto("▶") { vm.moverFoto(ruta, 1) })
+            }, FrameLayout.LayoutParams(-1, dp(30), Gravity.BOTTOM))
         }
+    }
+
+    private fun botonFoto(texto: String, descripcion: String? = null, accion: () -> Unit) = TextView(requireContext()).apply {
+        text = texto
+        contentDescription = descripcion
+        textSize = 12f
+        setTextColor(Color.WHITE)
+        gravity = Gravity.CENTER
+        setPadding(dp(8), 0, dp(8), 0)
+        setOnClickListener { accion() }
+    }.let { it.apply { layoutParams = LinearLayout.LayoutParams(0, -1, 1f) } }
+
+    /** Galería (Photo Picker, sin permisos) o cámara. */
+    private fun elegirOrigen() {
+        val opciones = arrayOf(getString(R.string.pub_galeria), getString(R.string.pub_camara))
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle(R.string.pub_agregar_desde)
+            .setItems(opciones) { _, cual ->
+                if (cual == 0) selector.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                else tomarFoto()
+            }
+            .show()
+    }
+
+    private fun tomarFoto() {
+        val ctx = requireContext()
+        val carpeta = File(ctx.cacheDir, "camara").apply { mkdirs() }
+        val archivo = File(carpeta, "foto_${System.currentTimeMillis()}.jpg")
+        val uri = androidx.core.content.FileProvider.getUriForFile(ctx, "${ctx.packageName}.fileprovider", archivo)
+        fotoCamara = uri
+        camara.launch(uri)
     }
 
     private fun celdaAgregar(): View {
@@ -120,7 +169,7 @@ class Publicar2Fragment : Fragment(R.layout.fragment_publicar_2) {
             setBackgroundResource(R.drawable.bg_foto_agregar)
             isClickable = true
             isFocusable = true
-            setOnClickListener { selector.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
+            setOnClickListener { elegirOrigen() }
             addView(ImageView(ctx).apply {
                 setBackgroundResource(R.drawable.bg_circulo_naranja)
                 setImageResource(R.drawable.ic_mas)

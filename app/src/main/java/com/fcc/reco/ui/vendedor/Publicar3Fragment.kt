@@ -38,13 +38,19 @@ class Publicar3Fragment : Fragment(R.layout.fragment_publicar_3) {
         if (vm.borrador.precio > 0) b.campoPrecio.setText(vm.borrador.precio.toString())
         b.campoPrecio.addTextChangedListener { vm.precio(it?.toString()?.toIntOrNull() ?: 0) }
         b.botonSiguiente.setOnClickListener {
-            val error = vm.enviar()
-            if (error != null) {
-                Toast.makeText(requireContext(), error.mensaje(), Toast.LENGTH_LONG).show()
-            } else {
-                Toast.makeText(requireContext(), R.string.pub_enviado, Toast.LENGTH_LONG).show()
-                // El asistente siempre se abre desde Mis ventas: se vuelve ahí con el anuncio En revisión.
-                nav.popBackStack(R.id.misVentas, false)
+            // Con Supabase aquí se suben las fotos y se crea el anuncio, así que tarda: se bloquea el botón.
+            b.botonSiguiente.isEnabled = false
+            Toast.makeText(requireContext(), R.string.pub_enviando, Toast.LENGTH_SHORT).show()
+            viewLifecycleOwner.lifecycleScope.launch {
+                val error = vm.enviar()
+                if (error != null) {
+                    b.botonSiguiente.isEnabled = true
+                    Toast.makeText(requireContext(), error.mensaje(), Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(requireContext(), R.string.pub_enviado, Toast.LENGTH_LONG).show()
+                    // El asistente siempre se abre desde Mis ventas: se vuelve ahí con el anuncio En revisión.
+                    nav.popBackStack(R.id.misVentas, false)
+                }
             }
         }
 

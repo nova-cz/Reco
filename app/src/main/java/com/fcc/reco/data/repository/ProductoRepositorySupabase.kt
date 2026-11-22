@@ -71,7 +71,7 @@ class ProductoRepositorySupabase(private val datos: NubeDatos) : ProductoReposit
             imeiUltimos4 = d.imeiUltimos4?.takeIf { categoria == Categoria.CELULARES || categoria == Categoria.TABLETS },
             puntoEntrega = datos.textoPunto(datos.perfiles[d.vendedorId]?.puntoPreferidoId),
             diasPublicado = ((System.currentTimeMillis() - epochDe(d.creado)) / 86_400_000L).toInt().coerceAtLeast(0),
-            fotos = d.fotos.sortedBy { it.orden }.map { it.url },
+            fotos = d.fotos.sortedWith(compareByDescending<com.fcc.reco.data.remote.FotoDto> { it.esPortada }.thenBy { it.orden }).map { it.url },
             esPropio = d.vendedorId == datos.miUid
         )
     }
@@ -95,10 +95,10 @@ class ProductoRepositorySupabase(private val datos: NubeDatos) : ProductoReposit
 
     override fun estaVendido(id: Int): Boolean = id in vendidos
 
-    private companion object {
+    internal companion object {
         val COLUMNAS = Columns.raw(
             "id,vendedor_id,almacenamiento,ram,color,grado,salud_bateria,imei_ultimos4,accesorios,descripcion,precio,estado," +
-                "certificado,creado,modelos(marca,modelo,categoria,anio,precio_referencia,procesador,pantalla),fotos(url,orden)"
+                "certificado,creado,modelos(marca,modelo,categoria,anio,precio_referencia,procesador,pantalla),fotos(url,orden,es_portada)"
         )
 
         /** "accesorios" no existe en la app: se muestra junto a Audio. */

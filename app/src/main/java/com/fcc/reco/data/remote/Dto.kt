@@ -17,7 +17,11 @@ data class ModeloDto(
 )
 
 @Serializable
-data class FotoDto(val url: String, val orden: Int = 0)
+data class FotoDto(
+    val url: String,
+    val orden: Int = 0,
+    @SerialName("es_portada") val esPortada: Boolean = false
+)
 
 @Serializable
 data class ProductoDto(
@@ -34,6 +38,9 @@ data class ProductoDto(
     val precio: Int = 0,
     val estado: String = "publicado",
     val certificado: Boolean = false,
+    val certificar: Boolean = false,
+    @SerialName("motivo_rechazo") val motivoRechazo: String? = null,
+    @SerialName("revision_manual") val revisionManual: Boolean = false,
     val creado: String = "",
     val modelos: ModeloDto? = null,
     val fotos: List<FotoDto> = emptyList()

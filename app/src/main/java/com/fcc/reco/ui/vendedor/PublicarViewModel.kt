@@ -87,6 +87,8 @@ class PublicarViewModel(private val aplicacion: Application) : AndroidViewModel(
     }
 
     fun quitarFoto(ruta: String) = cambiar { quitarFoto(ruta) }
+    fun moverFoto(ruta: String, delta: Int) = cambiar { moverFoto(ruta, delta) }
+    fun hacerPortada(ruta: String) = cambiar { hacerPortada(ruta) }
 
     // Paso 4
     fun precio(v: Int) = cambiar { precio(v) }
@@ -102,7 +104,7 @@ class PublicarViewModel(private val aplicacion: Application) : AndroidViewModel(
     }
 
     /** Guarda lo avanzado como Borrador. Devuelve falso si todavía no hay modelo. */
-    fun guardarBorrador(): Boolean {
+    suspend fun guardarBorrador(): Boolean {
         val anuncio = construir(EstadoAnuncio.BORRADOR) ?: return false
         val guardado = Repositorios.anuncios.guardarBorrador(anuncio)
         cambiar { }
@@ -112,7 +114,7 @@ class PublicarViewModel(private val aplicacion: Application) : AndroidViewModel(
     }
 
     /** Valida todo y lo manda a revisión. Devuelve null si salió bien. */
-    fun enviar(): ErrorEnvio? {
+    suspend fun enviar(): ErrorEnvio? {
         val anuncio = construir(EstadoAnuncio.EN_REVISION) ?: return ErrorEnvio.FALTAN_DATOS
         val error = Repositorios.anuncios.enviarARevision(anuncio)
         if (error == null) nuevo()

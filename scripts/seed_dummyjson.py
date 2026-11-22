@@ -97,6 +97,52 @@ def precio_mxn(usd):
     return max(100, round(usd * USD_A_MXN * FACTOR_USADO / 100) * 100)
 
 
+FORMATOS = (".jpg", ".jpeg", ".png", ".webp")
+PRECIO_EXTRA = {"calculadoras": 600, "audio": 900}
+CATEGORIAS_RECO = ("laptops", "celulares", "tablets", "audio", "gaming", "calculadoras", "accesorios")
+
+
+def cargar_extras():
+    """Productos propios: scripts/fotos_extra/<categoria>/<Marca Modelo>/(fotos + datos.json opcional) o una foto suelta."""
+    raiz = RAIZ / "scripts" / "fotos_extra"
+    salida = []
+    for carpeta_cat in sorted(p for p in raiz.glob("*") if p.is_dir() and p.name in CATEGORIAS_RECO):
+        for entrada in sorted(carpeta_cat.iterdir()):
+            if entrada.is_dir():
+                fotos = sorted(f for f in entrada.iterdir() if f.suffix.lower() in FORMATOS)[:8]
+                nombre, datos_json = entrada.name, entrada / "datos.json"
+            elif entrada.suffix.lower() in FORMATOS:
+                fotos, nombre, datos_json = [entrada], entrada.stem, entrada.with_suffix(".json")
+            else:
+                continue
+            if not fotos:
+                continue
+            datos = json.loads(datos_json.read_text()) if datos_json.exists() else {}
+            salida.append((carpeta_cat.name, {
+                "id": "extra-" + nombre.lower().replace(" ", "-"), "title": nombre,
+                "brand": datos.get("marca") or nombre.split()[0],
+                "description": datos.get("descripcion") or f"{nombre} en buen estado, funciona perfecto.",
+                "images": [str(f) for f in fotos], "thumbnail": str(fotos[0]), "_local": True,
+                "_precio": int(datos.get("precio") or PRECIO_EXTRA.get(carpeta_cat.name, 1000)), "_grado": datos.get("grado"),
+            }))
+    return salida
+
+
+def foto_local(ruta):
+    """Lee una foto propia y la reduce a máx. 1280 px en JPG (si Pillow está disponible)."""
+    try:
+        from PIL import Image, ImageOps
+        import io
+        img = ImageOps.exif_transpose(Image.open(ruta)).convert("RGB")
+        img.thumbnail((1280, 1280))
+        buf = io.BytesIO()
+        img.save(buf, "JPEG", quality=85)
+        return buf.getvalue(), "image/jpeg", "jpg"
+    except ImportError:
+        ext = Path(ruta).suffix.lower().lstrip(".").replace("jpeg", "jpg")
+        return Path(ruta).read_bytes(), f"image/{ext}", ext
+
+
 def main():
     subir = "--sin-subir" not in sys.argv
     props = leer_propiedades()
@@ -112,6 +158,9 @@ def main():
         for p in json.loads(cuerpo)["products"][:n]:
             elegidos.append((cat_reco, p))
     print(f"{len(elegidos)} productos de DummyJSON")
+    extras = cargar_extras()
+    elegidos += extras
+    print(f"{len(extras)} productos propios de scripts/fotos_extra")
 
     # 2) Bucket público "fotos"
     if subir:
@@ -133,10 +182,14 @@ def main():
         mid = uuid.uuid5(ESPACIO, f"modelo-{p['id']}-{cat}")
         vend = vend_ids[i % len(vend_ids)]
         marca = p.get("brand") or p["title"].split()[0]
-        referencia = max(200, round(p["price"] * USD_A_MXN / 100) * 100)  # precio nuevo en MXN
-        precio = min(precio_mxn(p["price"]), referencia)
+        if p.get("_local"):
+            precio = p["_precio"]
+            referencia = max(precio, round(precio / 0.65 / 100) * 100)  # precio de referencia (nuevo) mayor al de usado
+        else:
+            referencia = max(200, round(p["price"] * USD_A_MXN / 100) * 100)  # precio nuevo en MXN
+            precio = min(precio_mxn(p["price"]), referencia)
         sku = ALMACENAMIENTOS.get(cat)
-        grado = "ABC"[i % 3]
+        grado = p.get("_grado") or "ABC"[i % 3]
         celular = cat in ("celulares", "tablets")
         filas_modelos.append((mid, cat, marca, p["title"], 2019 + i % 5, referencia, sku or [], RAMS.get(cat, [])))
         filas_prod.append(dict(
@@ -147,13 +200,18 @@ def main():
             accesorios=rnd.sample(ACCESORIOS, rnd.randint(1, 3)),
             desc=p["description"], precio=precio, certificar=(i % 4 == 0)))
         urls = []
-        for n, url in enumerate(list(dict.fromkeys((p.get("images") or []) + [p["thumbnail"]]))[:4]):
-            ext = url.rsplit(".", 1)[-1].split("?")[0].lower()
-            ext = ext if ext in ("png", "jpg", "jpeg", "webp") else "jpg"
+        fuentes = p["images"] if p.get("_local") else list(dict.fromkeys((p.get("images") or []) + [p["thumbnail"]]))[:4]
+        for n, url in enumerate(fuentes):
+            if p.get("_local"):
+                datos, tipo, ext = foto_local(url)
+            else:
+                ext = url.rsplit(".", 1)[-1].split("?")[0].lower()
+                ext = ext if ext in ("png", "jpg", "jpeg", "webp") else "jpg"
             ruta = f"{vend}/{pid}/{n}.{ext}"
             if subir:
-                _, tipo, datos = http(url)
-                tipo = tipo.split(";")[0] or f"image/{ext}"
+                if not p.get("_local"):
+                    _, tipo, datos = http(url)
+                    tipo = tipo.split(";")[0] or f"image/{ext}"
                 http(f"{base}/storage/v1/object/fotos/{ruta}", datos,
                      {**auth, "Content-Type": tipo, "x-upsert": "true"}, "POST")
                 fotos_subidas += 1
@@ -200,7 +258,7 @@ def main():
     out.append("alter table productos enable trigger productos_limite;")
     out.append("")
     for fid, pid, url, orden in filas_fotos:
-        out.append(f"insert into fotos (id, producto_id, url, orden) values ('{fid}', '{pid}', {sql(url)}, {orden}) on conflict (id) do nothing;")
+        out.append(f"insert into fotos (id, producto_id, url, orden, es_portada) values ('{fid}', '{pid}', {sql(url)}, {orden}, {sql(orden == 0)}) on conflict (id) do nothing;")
     (RAIZ / "supabase" / "seed.sql").write_text("\n".join(out) + "\n")
     print(f"supabase/seed.sql: {len(filas_prod)} productos, {len(filas_fotos)} fotos")
 

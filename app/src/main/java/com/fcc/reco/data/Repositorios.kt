@@ -8,6 +8,7 @@ import com.fcc.reco.data.remote.Nube
 import com.fcc.reco.data.remote.NubeDatos
 import com.fcc.reco.data.repository.AnuncioRepository
 import com.fcc.reco.data.repository.AnuncioRepositorySimulado
+import com.fcc.reco.data.repository.AnuncioRepositorySupabase
 import com.fcc.reco.data.repository.AuthRepository
 import com.fcc.reco.data.repository.AuthRepositorySimulado
 import com.fcc.reco.data.repository.AuthRepositorySupabase
@@ -37,8 +38,8 @@ import io.github.jan.supabase.auth.auth
 /**
  * Punto único de acceso a los repositorios (Singleton). Se inicia en RecoApp.
  * Según el switch de [Nube] usa las implementaciones simuladas (JSON local) o las de Supabase.
- * Los anuncios del vendedor siguen locales por ahora; el catálogo, la cuenta, los favoritos, los pedidos y las
- * reseñas ya son reales con Supabase.
+ * Con Supabase todo es real: cuenta, catálogo, favoritos, pedidos, reseñas y los anuncios del vendedor (los borradores
+ * se guardan en el teléfono hasta enviarlos a revisión).
  */
 object Repositorios {
     lateinit var auth: AuthRepository
@@ -74,6 +75,7 @@ object Repositorios {
     private var nubeFavoritos: FavoritoRepositorySupabase? = null
     private var nubeCalificaciones: CalificacionRepositorySupabase? = null
     private var nubeDatos: NubeDatos? = null
+    private var nubeAnuncios: AnuncioRepositorySupabase? = null
     private var sesionNube: SesionNube? = null
 
     fun iniciar(contexto: Context) {
@@ -113,7 +115,8 @@ object Repositorios {
         verificacion = VerificacionRepositorySupabase(sesion)
         perfil = PerfilRepositorySupabase(local, sesion, datos)
         productos = prod; pedidos = ped; favoritos = fav; calificaciones = cal
-        anuncios = AnuncioRepositorySimulado(anunciosJson) { ped.pedidos.value.flatMap { it.productoIds }.toSet() }
+        val anun = AnuncioRepositorySupabase(AnuncioRepositorySimulado(anunciosJson) { emptySet() }, datos, local)
+        nubeAnuncios = anun; anuncios = anun
     }
 
     /**
@@ -130,6 +133,7 @@ object Repositorios {
         prod.refrescar()
         nubePedidos!!.refrescar()
         nubeFavoritos!!.cargar()
+        runCatching { nubeAnuncios!!.refrescar() }
         runCatching { nubeCalificaciones!!.cargar() }
         listo = true
         return true

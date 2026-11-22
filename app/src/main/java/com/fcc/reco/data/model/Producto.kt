@@ -11,7 +11,11 @@ data class VendedorResumen(
     val carrera: String,
     val facultad: String,
     val reputacion: Double,
-    val ventas: Int
+    val ventas: Int,
+    /** Respuestas del vendedor a las preguntas rápidas del Detalle (null = respuesta de plantilla). */
+    val dondeEntregas: String? = null,
+    val horario: String? = null,
+    val aceptaTarjeta: Boolean? = null
 ) {
     val iniciales: String
         get() = nombre.split(" ").filter { it.isNotEmpty() }.take(2).joinToString("") { it.first().uppercase() }

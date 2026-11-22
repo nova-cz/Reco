@@ -47,6 +47,16 @@
                     android:scheme="reco" />
             </intent-filter>
         </activity>
+        <!-- Foto tomada con la cámara en Publicar 2 (archivo temporal que se reduce y se borra) -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
         <activity
             android:name=".ui.acceso.PortalSimuladoActivity"
             android:exported="false"
