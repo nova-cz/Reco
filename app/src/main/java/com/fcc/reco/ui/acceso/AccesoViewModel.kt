@@ -101,6 +101,43 @@ class AccesoViewModel(aplicacion: Application) : AndroidViewModel(aplicacion) {
         }
     }
 
+    /** Plan A: login de Microsoft en el navegador; regresa por `reco://auth` y sigue en [microsoftDeVuelta]. */
+    fun verificarConMicrosoft() {
+        viewModelScope.launch {
+            verificacion.iniciarMicrosoft().onFailure { _eventos.send(EventoAcceso.Mensaje(R.string.error_microsoft)) }
+        }
+    }
+
+    /** Volvió del login de Microsoft: el servidor comprueba la identidad y el dominio. */
+    fun microsoftDeVuelta() {
+        viewModelScope.launch { terminarVerificacion(verificacion.completarVerificacion()) }
+    }
+
+    /** El enlace de regreso trajo un error (por ejemplo, la cuenta de Microsoft ya está ligada a otra cuenta de Reco). */
+    fun errorDeRegreso() {
+        viewModelScope.launch { _eventos.send(EventoAcceso.Mensaje(R.string.error_microsoft)) }
+    }
+
+    /** Plan B, paso 1: manda el código al correo institucional. */
+    suspend fun enviarCodigo(correo: String): Result<Unit> {
+        if (!verificacion.dominioValido(correo)) return Result.failure(IllegalArgumentException("dominio"))
+        return verificacion.enviarCodigo(correo)
+    }
+
+    /** Plan B, paso 2: confirma el código y verifica en el servidor. */
+    suspend fun confirmarCodigo(correo: String, codigo: String): Result<Unit> {
+        val resultado = verificacion.confirmarCodigo(correo, codigo)
+        if (resultado.isSuccess) terminarVerificacion(resultado)
+        return resultado.map { }
+    }
+
+    private suspend fun terminarVerificacion(resultado: Result<Sesion>) {
+        resultado.fold(
+            onSuccess = { sesion -> if (sesion.completa) abrirApp() else _eventos.send(EventoAcceso.MostrarCarrera) },
+            onFailure = { _eventos.send(EventoAcceso.Mensaje(R.string.error_no_institucional)) }
+        )
+    }
+
     fun elegirCarrera(carrera: String) {
         viewModelScope.launch {
             runCatching { perfil.guardarCarrera(carrera) }

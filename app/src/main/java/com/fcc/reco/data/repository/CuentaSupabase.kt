@@ -11,7 +11,10 @@ import com.fcc.reco.data.remote.PerfilDto
 import com.fcc.reco.data.remote.epochDe
 import com.fcc.reco.domain.ValidadorAcceso
 import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.auth.OtpType
+import io.github.jan.supabase.auth.providers.Azure
 import io.github.jan.supabase.auth.providers.builtin.Email
+import io.github.jan.supabase.auth.providers.builtin.OTP
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
@@ -95,20 +98,37 @@ class AuthRepositorySupabase(private val local: SesionLocal, private val sesionN
     }
 }
 
-/** El portal institucional sigue simulado; al volver por deep link, el servidor valida el dominio del correo. */
+/**
+ * Verificación real: identidad Microsoft (Entra ID) o código OTP al correo institucional.
+ * Quien decide es el servidor (`verificar_estudiante()`); la app ya no manda ningún correo para verificar.
+ * El portal simulado no existe con Supabase (solo con datos simulados).
+ */
 class VerificacionRepositorySupabase(private val sesionNube: SesionNube) : VerificacionRepository {
 
     override fun dominioValido(correo: String): Boolean =
         ValidadorAcceso.esInstitucional(correo, DatosSimulados.universidades.map { it.dominio })
 
-    override suspend fun procesarDeepLink(uri: Uri): Result<Sesion> {
-        if (uri.scheme != "reco" || uri.host != "verificado") return Result.failure(IllegalArgumentException("enlace"))
-        val correo = uri.getQueryParameter("correo").orEmpty()
-        if (!dominioValido(correo)) return Result.failure(IllegalArgumentException("dominio"))
-        return runCatching {
-            Nube.cliente.postgrest.rpc("verificar_estudiante", buildJsonObject { put("p_correo", correo) })
-            sesionNube.refrescar() ?: error("Sin perfil")
-        }
+    override suspend fun procesarDeepLink(uri: Uri): Result<Sesion> = Result.failure(IllegalArgumentException("enlace"))
+
+    override suspend fun iniciarMicrosoft(): Result<Unit> = runCatching {
+        val auth = Nube.cliente.auth
+        if (auth.currentSessionOrNull() != null) auth.linkIdentity(Azure) { scopes.add("email") }
+        else auth.signInWith(Azure) { scopes.add("email") }
+    }
+
+    override suspend fun completarVerificacion(): Result<Sesion> = runCatching {
+        Nube.cliente.postgrest.rpc("verificar_estudiante")
+        sesionNube.refrescar() ?: error("Sin perfil")
+    }
+
+    override suspend fun enviarCodigo(correo: String): Result<Unit> = runCatching {
+        Nube.cliente.auth.signInWith(OTP) { email = correo.trim().lowercase(); createUser = true }
+    }
+
+    override suspend fun confirmarCodigo(correo: String, codigo: String): Result<Sesion> = runCatching {
+        Nube.cliente.auth.verifyEmailOtp(type = OtpType.Email.EMAIL, email = correo.trim().lowercase(), token = codigo.trim())
+        sesionNube.refrescar() ?: error("Sin perfil")
+        completarVerificacion().getOrThrow()
     }
 }
 

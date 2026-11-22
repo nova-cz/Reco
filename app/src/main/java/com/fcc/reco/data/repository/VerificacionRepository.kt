@@ -10,6 +10,15 @@ interface VerificacionRepository {
     fun dominioValido(correo: String): Boolean
     /** Procesa `reco://verificado?correo=...` al volver del login institucional. */
     suspend fun procesarDeepLink(uri: Uri): Result<Sesion>
+
+    /** Abre el login de Microsoft (liga la identidad a la cuenta si ya hay sesión). Regresa por `reco://auth`. */
+    suspend fun iniciarMicrosoft(): Result<Unit>
+    /** El servidor comprueba la identidad Microsoft o la sesión por código y marca al estudiante como verificado. */
+    suspend fun completarVerificacion(): Result<Sesion>
+    /** Plan B: envía un código al correo institucional. */
+    suspend fun enviarCodigo(correo: String): Result<Unit>
+    /** Plan B: confirma el código (abre la sesión de ese correo) y verifica en el servidor. */
+    suspend fun confirmarCodigo(correo: String, codigo: String): Result<Sesion>
 }
 
 /** Plan B: el portal institucional es simulado, pero el regreso por deep link es real. */
@@ -17,6 +26,13 @@ class VerificacionRepositorySimulado(private val local: SesionLocal) : Verificac
 
     override fun dominioValido(correo: String): Boolean =
         ValidadorAcceso.esInstitucional(correo, DatosSimulados.universidades.map { it.dominio })
+
+    // La verificación real (Microsoft y código) solo existe con Supabase.
+    override suspend fun iniciarMicrosoft(): Result<Unit> = Result.failure(UnsupportedOperationException())
+    override suspend fun completarVerificacion(): Result<Sesion> = Result.failure(UnsupportedOperationException())
+    override suspend fun enviarCodigo(correo: String): Result<Unit> = Result.failure(UnsupportedOperationException())
+    override suspend fun confirmarCodigo(correo: String, codigo: String): Result<Sesion> =
+        Result.failure(UnsupportedOperationException())
 
     override suspend fun procesarDeepLink(uri: Uri): Result<Sesion> {
         if (uri.scheme != "reco" || uri.host != "verificado") {

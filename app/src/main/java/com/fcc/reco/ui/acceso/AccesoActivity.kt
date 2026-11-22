@@ -10,7 +10,9 @@ import androidx.navigation.fragment.NavHostFragment
 import com.fcc.reco.R
 import com.fcc.reco.data.Repositorios
 import com.fcc.reco.data.model.Sesion
+import com.fcc.reco.data.remote.Nube
 import com.fcc.reco.ui.comun.edgeToEdgeClaro
+import io.github.jan.supabase.auth.handleDeeplinks
 import kotlinx.coroutines.launch
 
 /**
@@ -50,14 +52,26 @@ class AccesoActivity : AppCompatActivity() {
             val grafo = navController.navInflater.inflate(R.navigation.nav_acceso)
             grafo.setStartDestination(destinoInicial(sesion))
             navController.graph = grafo
-            intent.data?.let { viewModel.procesarDeepLink(it) }
+            manejarEnlace(intent)
         }
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        intent.data?.let { viewModel.procesarDeepLink(it) }
+        manejarEnlace(intent)
+    }
+
+    /** `reco://auth` = regreso de Microsoft (Supabase Auth); `reco://verificado` = portal simulado. */
+    private fun manejarEnlace(intent: Intent) {
+        val datos = intent.data ?: return
+        if (datos.scheme == "reco" && datos.host == "auth") {
+            val error = datos.getQueryParameter("error") ?: datos.fragment?.takeIf { "error=" in it }
+            if (error != null) viewModel.errorDeRegreso()
+            else Nube.cliente.handleDeeplinks(intent, onSessionSuccess = { viewModel.microsoftDeVuelta() }, onError = { viewModel.errorDeRegreso() })
+        } else {
+            viewModel.procesarDeepLink(datos)
+        }
     }
 
     private fun destinoInicial(sesion: Sesion?): Int = when {

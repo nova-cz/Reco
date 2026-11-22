@@ -247,6 +247,15 @@
             android:text="@string/iniciar_sesion_institucional"
             app:botonIcono="@drawable/ic_enlace_externo" />
 
+        <com.fcc.reco.ui.comun.BotonPildora
+            android:id="@+id/boton_codigo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/recibir_codigo"
+            android:visibility="gone"
+            app:botonEstilo="secundario" />
+
         <TextView
             android:id="@+id/enlace_no_aparece"
             style="@style/Reco.Texto.Secundario"

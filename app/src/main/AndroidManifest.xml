@@ -35,6 +35,17 @@
                     android:host="verificado"
                     android:scheme="reco" />
             </intent-filter>
+            <!-- Regreso del login con Microsoft (Supabase Auth): reco://auth -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="auth"
+                    android:scheme="reco" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.acceso.PortalSimuladoActivity"

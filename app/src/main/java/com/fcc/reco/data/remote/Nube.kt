@@ -21,7 +21,11 @@ object Nube {
 
     val cliente: SupabaseClient by lazy {
         createSupabaseClient(BuildConfig.SUPABASE_URL, BuildConfig.SUPABASE_ANON_KEY) {
-            install(Auth)
+            install(Auth) {
+                // Regreso del login con Microsoft: reco://auth (también está en el manifiesto y en Supabase).
+                scheme = "reco"
+                host = "auth"
+            }
             install(Postgrest)
             install(Storage)
         }

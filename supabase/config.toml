@@ -1,6 +1,29 @@
 # Solo se declara lo que la CLI debe empujar al proyecto (supabase config push); lo demás se queda como está.
+# Los secretos van en supabase/.env.local (ignorado por git) y se leen con env(...).
 project_id = "reco"
 
+[auth]
+# Permite ligar la identidad Microsoft a una cuenta que ya inició sesión (linkIdentity).
+enable_manual_linking = true
+# Regreso a la app (deep link) después del login con Microsoft.
+additional_redirect_urls = ["reco://auth"]
+
 [auth.email]
-# Proyecto escolar: sin confirmación por correo para que el registro de la demo entre directo.
+# Proyecto escolar: el registro con contraseña entra directo. La verificación de estudiante NO depende de esto:
+# exige una identidad Microsoft o una sesión abierta con un código OTP (ver verificar_estudiante).
 enable_confirmations = false
+
+# Para que el correo OTP lleve el CÓDIGO (y no solo el enlace) hace falta SMTP propio: en el plan gratis con el
+# SMTP por defecto Supabase no deja cambiar plantillas. Con SMTP propio, descomentar y empujar:
+# [auth.email.template.magic_link]
+# subject = "Tu código de Reco"
+# content_path = "./supabase/templates/codigo.html"
+# [auth.email.template.confirmation]
+# subject = "Tu código de Reco"
+# content_path = "./supabase/templates/codigo.html"
+
+# [auth.external.azure]  # se activa cuando estén el client ID y el secret (ver CLAUDE.md)
+# enabled = true
+# client_id = "env(AZURE_CLIENT_ID)"
+# secret = "env(AZURE_SECRET)"
+# url = "https://login.microsoftonline.com/organizations"

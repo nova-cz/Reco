@@ -40,9 +40,13 @@ Las 18 pantallas en 5 flujos: **Entrar** (Bienvenida, Iniciar sesión, Verificar
 
 ## Verificación de estudiante
 
-- Portal institucional **simulado dentro de la app** (`PortalSimuladoActivity`), que regresa por el deep link `reco://verificado?correo=...`.
-- Con Supabase, la app llama a `verificar_estudiante(p_correo)`, que **solo comprueba que el correo termine en `@alumno.buap.mx`** (tabla `universidades`). No hay Azure ni Google. Al ser simulada, el servidor confía en el correo que manda la app: sirve para el proyecto, no es seguridad real.
-- Sin verificación no se puede comprar ni vender (`crear_pedido` y `activar_vendedor` lo exigen).
+Sin verificación no se puede comprar ni vender (`crear_pedido` y `activar_vendedor` lo exigen). Quien decide es el servidor, con `verificar_estudiante()` (sin parámetros): **la app ya no manda ningún correo**.
+
+- **Plan A, Microsoft** (la BUAP usa Microsoft 365): botón "Verificar con mi correo BUAP". La app usa `auth.linkIdentity(Azure)` (o `signInWith(Azure)` si no hay sesión) con scope `email` y regresa por el deep link `reco://auth`. El servidor exige una identidad `azure` en `auth.identities` cuyo correo termine en un dominio de `dominios_permitidos` y, si la fila tiene `azure_tenant_id`, que el `iss` sea de ese tenant.
+- **Plan B, código por correo**: "Recibir un código en mi correo" (`signInWith(OTP)` y `verifyEmailOtp`). El servidor exige que la sesión se haya abierto con un código OTP (`amr` del JWT) y que el correo de la cuenta, ya confirmado, sea de un dominio permitido. Un registro con contraseña (que entra sin confirmar) **no** basta.
+- **Dominios**: tabla `dominios_permitidos` (hoy `alumno.buap.mx`). Para otra universidad se inserta una fila. Sin políticas RLS: solo la leen las funciones.
+- **Tenant de la BUAP**: la columna `azure_tenant_id` está vacía; en cuanto se conozca (viene en `identity_data ->> 'iss'` tras el primer login) hay que cargarla: `update dominios_permitidos set azure_tenant_id = '<tenant>' where dominio = 'alumno.buap.mx';`. Mientras esté vacía, basta con que el correo de Microsoft sea del dominio, y como el correo de Microsoft no está verificado por Microsoft, otra organización podría poner el mismo.
+- **Portal simulado** (`PortalSimuladoActivity`, `reco://verificado`): solo existe con **datos simulados** (switch de debug o sin llaves de Supabase). Con Supabase no hay forma de verificar sin Microsoft ni código.
 
 ## Datos: simulados o Supabase (switch)
 
@@ -83,12 +87,14 @@ scripts/
 - **Precios** de prueba: USD × 18 × 0.65, redondeado a centenas.
 - **Tablas**: universidades, puntos_entrega, modelos, imei_bloqueados, perfiles, productos, fotos, favoritos, reportes, pedidos (un pedido = un equipo), calificaciones. No hay carrito.
 - **Perfiles de vendedor**: `apodo`, `acerca_de` y las respuestas rápidas `donde_entregas`, `horario`, `acepta_tarjeta`. Los demás ven solo la vista `perfiles_publicos` (sin teléfono ni CLABE).
-- **Funciones** (las llama la app con la sesión del usuario): `verificar_estudiante(p_correo)`, `activar_vendedor(...)`, `crear_pedido(p_producto, p_punto, p_horario)`, `marcar_entregado(p_pedido)`, `confirmar_entrega(p_pedido)`, `obtener_mi_imei(p_producto)`. El monto y la comisión (13.6 % + $8) los calcula el servidor.
+- **Funciones** (las llama la app con la sesión del usuario): `verificar_estudiante()`, `activar_vendedor(...)`, `crear_pedido(p_producto, p_punto, p_horario)`, `marcar_entregado(p_pedido)`, `confirmar_entrega(p_pedido)`, `obtener_mi_imei(p_producto)`. El monto y la comisión (13.6 % + $8) los calcula el servidor.
 - **IMEI**: la columna `imei` solo la lee su dueño (con `obtener_mi_imei`); los demás ven `imei_ultimos4`. Por eso las consultas a `productos` deben listar columnas, no usar `select=*`.
 - **Anónimo (anon key)**: puede leer solo anuncios publicados, sus fotos, modelos y puntos de entrega. Todo lo demás exige sesión.
 - **Reseñas**: la vista `resenas_publicas` expone quién calificó, a quién y qué equipo.
 - **Moderador**: sin pantallas. Aprueba o rechaza anuncios desde el panel de Supabase (`update productos set estado = 'publicado' where id = ...`).
-- **Auth**: correo y contraseña, sin confirmación por correo (para la demo). Google Sign-In real no está hecho.
+- **Auth**: correo y contraseña (sin confirmación por correo, para la demo), Microsoft (Azure) y código OTP. `enable_manual_linking = true` y `reco://auth` están en `config.toml`. Google Sign-In no está hecho.
+- **Correo OTP**: para que el correo lleve el **código** (y no solo el enlace) hay que cambiar la plantilla (`supabase/templates/codigo.html`), y el plan gratis con el SMTP por defecto no lo permite; hace falta SMTP propio. Ese SMTP también quita el límite de correos por hora y que solo llegue a miembros de la organización.
+- **Secretos de Microsoft**: `AZURE_CLIENT_ID` y `AZURE_SECRET` van en `supabase/.env.local` (ignorado por git); `config.toml` los lee con `env(...)`.
 
 ## Reglas de publicación
 
@@ -125,8 +131,8 @@ Estados del anuncio: Borrador, En revisión, Publicado, Rechazado, Reservado, Ve
 
 1. **Anuncios del vendedor en Supabase**: guardar borradores y enviar a revisión en `productos`, subir las fotos a `fotos/<uid>/...` y guardar la URL pública en `fotos.url`, y leer "Mis ventas" desde `pedidos`.
 2. **Preguntas rápidas** del Detalle con las respuestas reales del vendedor (`donde_entregas`, `horario`, `acepta_tarjeta`); hoy usan textos de plantilla.
-3. Google Sign-In real (Credential Manager), solo si sobra tiempo.
-4. Login institucional real (Microsoft o Google de la BUAP) en lugar del portal simulado.
+3. Activar el proveedor Azure en Supabase con el client ID y el secret, probar con una cuenta `@alumno.buap.mx` y cargar el `azure_tenant_id`. Si la BUAP exige aprobación del administrador, el plan B (código) pasa a principal y necesita SMTP propio.
+4. Google Sign-In real (Credential Manager), solo si sobra tiempo.
 5. Puntos de entrega reales de CU.
 6. Menores: "Mis datos" y "Puntos de entrega" de Cuenta, foto de perfil, reportar un problema en un pedido.
 
