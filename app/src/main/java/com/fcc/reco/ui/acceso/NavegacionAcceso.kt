@@ -10,7 +10,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.fcc.reco.R
-import com.fcc.reco.data.local.SesionLocal
+import com.fcc.reco.data.Repositorios
 import com.fcc.reco.ui.MainActivity
 import com.fcc.reco.ui.comun.irA
 import kotlinx.coroutines.launch
@@ -47,7 +47,7 @@ fun Fragment.recolectarEventosAcceso(viewModel: AccesoViewModel) {
 
 /** Borra la sesión simulada y vuelve a la Bienvenida. */
 fun Activity.cerrarSesionYSalir() {
-    SesionLocal(this).borrar()
+    Repositorios.cerrarSesion()
     startActivity(Intent(this, AccesoActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
     finish()
 }

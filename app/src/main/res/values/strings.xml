@@ -64,6 +64,10 @@
     <string name="iniciar_sesion_institucional">Iniciar sesión institucional</string>
     <string name="universidad_no_aparece">Mi universidad no aparece</string>
     <string name="universidad_no_aparece_msg">Pronto agregaremos más universidades.</string>
+    <string name="error_sesion">No se pudo entrar. Revisa tu correo y contraseña, o tu conexión.</string>
+    <string name="error_google">Google aún no está disponible. Entra con tu correo.</string>
+    <string name="error_red">No se pudo conectar. Revisa tu internet e intenta de nuevo.</string>
+    <string name="error_pedido">No se pudo completar la compra. Puede que el equipo ya se haya vendido.</string>
     <string name="error_dominio">Usa tu correo institucional (@alumno.buap.mx)</string>
     <string name="error_enlace">El enlace de verificación no es válido</string>
 

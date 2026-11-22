@@ -1,11 +1,14 @@
 package com.fcc.reco.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import com.fcc.reco.R
+import com.fcc.reco.data.Repositorios
 import com.fcc.reco.data.local.SesionLocal
+import com.fcc.reco.ui.acceso.AccesoActivity
 import com.fcc.reco.databinding.ActivityMainBinding
 import com.fcc.reco.ui.comun.ItemBarra
 import com.fcc.reco.ui.comun.edgeToEdgeClaro
@@ -21,6 +24,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Si el proceso se reinició y los datos de Supabase no están cargados, se vuelve por el acceso (que los carga).
+        if (!Repositorios.listo) {
+            startActivity(Intent(this, AccesoActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
+            finish()
+            return
+        }
         edgeToEdgeClaro()
         val b = ActivityMainBinding.inflate(layoutInflater)
         setContentView(b.root)

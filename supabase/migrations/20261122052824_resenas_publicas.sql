@@ -1,0 +1,1 @@
+-- (Vacía: se aplicó antes de escribirse. La vista resenas_publicas está en la migración siguiente.)

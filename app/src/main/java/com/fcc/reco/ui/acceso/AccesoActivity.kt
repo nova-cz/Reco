@@ -5,10 +5,13 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.fcc.reco.R
+import com.fcc.reco.data.Repositorios
 import com.fcc.reco.data.model.Sesion
 import com.fcc.reco.ui.comun.edgeToEdgeClaro
+import kotlinx.coroutines.launch
 
 /**
  * Activity de acceso. Decide a dónde ir según la sesión guardada:
@@ -20,13 +23,24 @@ class AccesoActivity : AppCompatActivity() {
     private val viewModel: AccesoViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        val splash = installSplashScreen()
         super.onCreate(savedInstanceState)
         edgeToEdgeClaro()
 
         val sesion = viewModel.sesion()
         if (sesion?.completa == true && intent.data == null) {
-            abrirAppYTerminar()
+            // Sesión guardada: se cargan los datos mientras se ve la pantalla de arranque.
+            splash.setKeepOnScreenCondition { true }
+            lifecycleScope.launch {
+                if (viewModel.preparar()) {
+                    abrirAppYTerminar()
+                } else {
+                    // Sin sesión de Supabase o sin red: se vuelve a la Bienvenida.
+                    Repositorios.cerrarSesion()
+                    startActivity(Intent(this@AccesoActivity, AccesoActivity::class.java))
+                    finish()
+                }
+            }
             return
         }
 

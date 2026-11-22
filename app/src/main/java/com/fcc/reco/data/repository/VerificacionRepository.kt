@@ -9,7 +9,7 @@ import com.fcc.reco.domain.ValidadorAcceso
 interface VerificacionRepository {
     fun dominioValido(correo: String): Boolean
     /** Procesa `reco://verificado?correo=...` al volver del login institucional. */
-    fun procesarDeepLink(uri: Uri): Result<Sesion>
+    suspend fun procesarDeepLink(uri: Uri): Result<Sesion>
 }
 
 /** Plan B: el portal institucional es simulado, pero el regreso por deep link es real. */
@@ -18,7 +18,7 @@ class VerificacionRepositorySimulado(private val local: SesionLocal) : Verificac
     override fun dominioValido(correo: String): Boolean =
         ValidadorAcceso.esInstitucional(correo, DatosSimulados.universidades.map { it.dominio })
 
-    override fun procesarDeepLink(uri: Uri): Result<Sesion> {
+    override suspend fun procesarDeepLink(uri: Uri): Result<Sesion> {
         if (uri.scheme != "reco" || uri.host != "verificado") {
             return Result.failure(IllegalArgumentException("enlace"))
         }

@@ -39,23 +39,7 @@ class ProductoRepositorySimulado(
     private val catalogo: List<Producto>
         get() = idsVendidos().let { vendidos -> (DatosSimulados.productos + deAnuncios(soloPublicados = true)).filter { it.id !in vendidos } }
 
-    override fun obtenerPublicados(filtros: FiltrosProducto): List<Producto> {
-        val consulta = filtros.consulta.trim().lowercase()
-        val filtrados = catalogo.filter { p ->
-            (filtros.categoria == null || p.categoria == filtros.categoria) &&
-                (filtros.marca == null || p.marca == filtros.marca) &&
-                (consulta.isEmpty() || "${p.marca} ${p.modelo} ${p.categoria.name}".lowercase().contains(consulta)) &&
-                (!filtros.soloGradosAB || p.grado != Grado.C) &&
-                (filtros.precioMax == null || p.precio <= filtros.precioMax) &&
-                (!filtros.soloCertificados || p.certificado)
-        }
-        return when (filtros.orden) {
-            // Los certificados tienen prioridad en las búsquedas.
-            Orden.MAS_RECIENTES -> filtrados.sortedWith(compareBy({ !it.certificado }, { it.diasPublicado }))
-            Orden.PRECIO_MENOR -> filtrados.sortedBy { it.precio }
-            Orden.PRECIO_MAYOR -> filtrados.sortedByDescending { it.precio }
-        }
-    }
+    override fun obtenerPublicados(filtros: FiltrosProducto): List<Producto> = filtrarYOrdenar(catalogo, filtros)
 
     override fun obtenerPorId(id: Int): Producto? = todos.firstOrNull { it.id == id }
 
@@ -72,4 +56,23 @@ class ProductoRepositorySimulado(
     override fun obtenerPorVendedor(nombre: String): List<Producto> = catalogo.filter { it.vendedor.nombre == nombre }
 
     override fun destacado(): Producto? = catalogo.firstOrNull { it.certificado && it.categoria.name == "LAPTOPS" }
+}
+
+/** Filtros y orden del catálogo (los comparten la versión simulada y la de Supabase). */
+internal fun filtrarYOrdenar(catalogo: List<Producto>, filtros: FiltrosProducto): List<Producto> {
+    val consulta = filtros.consulta.trim().lowercase()
+    val filtrados = catalogo.filter { p ->
+        (filtros.categoria == null || p.categoria == filtros.categoria) &&
+            (filtros.marca == null || p.marca == filtros.marca) &&
+            (consulta.isEmpty() || "${p.marca} ${p.modelo} ${p.categoria.name}".lowercase().contains(consulta)) &&
+            (!filtros.soloGradosAB || p.grado != Grado.C) &&
+            (filtros.precioMax == null || p.precio <= filtros.precioMax) &&
+            (!filtros.soloCertificados || p.certificado)
+    }
+    return when (filtros.orden) {
+        // Los certificados tienen prioridad en las búsquedas.
+        Orden.MAS_RECIENTES -> filtrados.sortedWith(compareBy({ !it.certificado }, { it.diasPublicado }))
+        Orden.PRECIO_MENOR -> filtrados.sortedBy { it.precio }
+        Orden.PRECIO_MAYOR -> filtrados.sortedByDescending { it.precio }
+    }
 }

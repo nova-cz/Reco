@@ -14,7 +14,7 @@ import org.json.JSONObject
 
 interface PedidoRepository {
     val pedidos: StateFlow<List<Pedido>>
-    fun crearPedidos(entregas: List<EntregaElegida>, stripePaymentId: String, comprador: String = ""): List<Pedido>
+    suspend fun crearPedidos(entregas: List<EntregaElegida>, stripePaymentId: String, comprador: String = ""): List<Pedido>
     fun obtener(id: Int): Pedido?
     /** El vendedor marca que entregó el equipo (Pago retenido -> Listo para entregar). */
     fun marcarEntregado(id: Int): Boolean
@@ -29,7 +29,7 @@ class PedidoRepositorySimulado(private val almacen: AlmacenJson) : PedidoReposit
     private val _pedidos = MutableStateFlow(leer())
     override val pedidos: StateFlow<List<Pedido>> = _pedidos.asStateFlow()
 
-    override fun crearPedidos(entregas: List<EntregaElegida>, stripePaymentId: String, comprador: String): List<Pedido> {
+    override suspend fun crearPedidos(entregas: List<EntregaElegida>, stripePaymentId: String, comprador: String): List<Pedido> {
         var siguienteId = (_pedidos.value.maxOfOrNull { it.id } ?: 0) + 1
         val nuevos = entregas.map { e ->
             val monto = e.grupo.subtotal

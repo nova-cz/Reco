@@ -3,14 +3,15 @@ package com.fcc.reco.ui.vendedor
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.fcc.reco.R
-import com.fcc.reco.data.local.SesionLocal
+import androidx.lifecycle.viewModelScope
+import com.fcc.reco.data.Repositorios
 import com.fcc.reco.data.model.PerfilVendedor
-import com.fcc.reco.data.repository.PerfilRepositorySimulado
 import com.fcc.reco.domain.ValidadorVendedor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 data class EstadoRegistro(
     val punto: String? = null,
@@ -26,7 +27,7 @@ data class EstadoRegistro(
 
 class RegistroVendedorViewModel(aplicacion: Application) : AndroidViewModel(aplicacion) {
 
-    private val perfil = PerfilRepositorySimulado(SesionLocal(aplicacion))
+    private val perfil get() = Repositorios.perfil
 
     private val _estado = MutableStateFlow(EstadoRegistro())
     val estado: StateFlow<EstadoRegistro> = _estado.asStateFlow()
@@ -56,17 +57,19 @@ class RegistroVendedorViewModel(aplicacion: Application) : AndroidViewModel(apli
         _estado.update { it.copy(errorTelefono = errorTelefono, errorClabe = errorClabe, errorGeneral = errorGeneral) }
         if (errorTelefono != null || errorClabe != null || errorGeneral != null) return
 
-        perfil.activarVendedor(
-            PerfilVendedor(
-                telefono = ValidadorVendedor.soloDigitos(telefono),
-                puntoEntrega = e.punto!!,
-                dias = e.dias.toList(),
-                franjas = e.franjas.toList(),
-                clabe = ValidadorVendedor.soloDigitos(clabe),
-                apodo = apodo.trim(),
-                acerca = acerca.trim()
-            )
+        val datos = PerfilVendedor(
+            telefono = ValidadorVendedor.soloDigitos(telefono),
+            puntoEntrega = e.punto!!,
+            dias = e.dias.toList(),
+            franjas = e.franjas.toList(),
+            clabe = ValidadorVendedor.soloDigitos(clabe),
+            apodo = apodo.trim(),
+            acerca = acerca.trim()
         )
-        _estado.update { it.copy(registrado = true) }
+        viewModelScope.launch {
+            runCatching { perfil.activarVendedor(datos) }
+                .onSuccess { _estado.update { it.copy(registrado = true) } }
+                .onFailure { _estado.update { it.copy(errorGeneral = R.string.error_red) } }
+        }
     }
 }

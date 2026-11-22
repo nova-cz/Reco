@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.Locale
 
@@ -111,10 +112,14 @@ class MisVentasViewModel(aplicacion: Application) : AndroidViewModel(aplicacion)
     fun simularCompra(a: Anuncio) {
         val producto = a.comoProducto(esPropio = false)
         val comprador = COMPRADORES[Repositorios.pedidos.pedidos.value.size % COMPRADORES.size]
-        Repositorios.pedidos.crearPedidos(
-            listOf(EntregaElegida(GrupoPedido(a.vendedor, listOf(producto)), PuntoEntrega(a.puntoEntrega.substringBefore(" ·"), ""), "Mar 13:00")),
-            "pi_simulado", comprador
-        )
+        viewModelScope.launch {
+            runCatching {
+                Repositorios.pedidos.crearPedidos(
+                    listOf(EntregaElegida(GrupoPedido(a.vendedor, listOf(producto)), PuntoEntrega(a.puntoEntrega.substringBefore(" ·"), ""), "Mar 13:00")),
+                    "pi_simulado", comprador
+                )
+            }
+        }
     }
 
     /** El comprador es simulado, así que aquí se confirma por él (y deja una reseña de 5 estrellas). */

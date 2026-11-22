@@ -74,8 +74,11 @@ class ComprarViewModel(handle: SavedStateHandle) : ViewModel() {
                         val s = actual.selecciones[g.vendedor.nombre] ?: Seleccion()
                         EntregaElegida(g, DatosSimulados.puntosEntrega[s.punto], DatosSimulados.horariosEntrega[s.horario])
                     }
-                    val pedidos = Repositorios.pedidos.crearPedidos(entregas, idPago)
-                    _eventos.send(EventoPago.PagoExitoso(pedidos.map { it.id }.toIntArray()))
+                    runCatching { Repositorios.pedidos.crearPedidos(entregas, idPago) }.fold(
+                        onSuccess = { pedidos -> _eventos.send(EventoPago.PagoExitoso(pedidos.map { it.id }.toIntArray())) },
+                        // El servidor rechaza la compra si el equipo ya se vendió o la cuenta no está verificada.
+                        onFailure = { _estado.update { e -> e.copy(cargando = false, error = R.string.error_pedido) } }
+                    )
                 },
                 onFailure = { _estado.update { e -> e.copy(cargando = false, error = R.string.error_pago) } }
             )

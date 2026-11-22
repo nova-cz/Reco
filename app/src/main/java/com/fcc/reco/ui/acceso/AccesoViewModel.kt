@@ -5,14 +5,11 @@ import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.fcc.reco.R
-import com.fcc.reco.data.local.SesionLocal
+import com.fcc.reco.data.Repositorios
 import com.fcc.reco.data.model.Sesion
 import com.fcc.reco.data.repository.AuthRepository
-import com.fcc.reco.data.repository.AuthRepositorySimulado
 import com.fcc.reco.data.repository.PerfilRepository
-import com.fcc.reco.data.repository.PerfilRepositorySimulado
 import com.fcc.reco.data.repository.VerificacionRepository
-import com.fcc.reco.data.repository.VerificacionRepositorySimulado
 import com.fcc.reco.domain.ValidadorAcceso
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,10 +39,10 @@ sealed interface EventoAcceso {
 /** ViewModel compartido por todo el flujo de acceso. */
 class AccesoViewModel(aplicacion: Application) : AndroidViewModel(aplicacion) {
 
-    private val local = SesionLocal(aplicacion)
-    private val auth: AuthRepository = AuthRepositorySimulado(local)
-    private val verificacion: VerificacionRepository = VerificacionRepositorySimulado(local)
-    private val perfil: PerfilRepository = PerfilRepositorySimulado(local)
+    // Siempre se leen de Repositorios: el switch de debug puede cambiar la implementación.
+    private val auth: AuthRepository get() = Repositorios.auth
+    private val verificacion: VerificacionRepository get() = Repositorios.verificacion
+    private val perfil: PerfilRepository get() = Repositorios.perfil
 
     private val _estado = MutableStateFlow(EstadoAcceso())
     val estado: StateFlow<EstadoAcceso> = _estado.asStateFlow()
@@ -80,13 +77,13 @@ class AccesoViewModel(aplicacion: Application) : AndroidViewModel(aplicacion) {
             val resultado = accion()
             _estado.value = EstadoAcceso()
             resultado.onSuccess { sesion ->
-                _eventos.send(
-                    when {
-                        sesion.completa -> EventoAcceso.AbrirApp
-                        sesion.verificado -> EventoAcceso.MostrarCarrera
-                        else -> EventoAcceso.IrAVerificar
-                    }
-                )
+                when {
+                    sesion.completa -> abrirApp()
+                    sesion.verificado -> _eventos.send(EventoAcceso.MostrarCarrera)
+                    else -> _eventos.send(EventoAcceso.IrAVerificar)
+                }
+            }.onFailure {
+                _estado.value = EstadoAcceso(error = ErrorAcceso(null, if (it is UnsupportedOperationException) R.string.error_google else R.string.error_sesion))
             }
         }
     }
@@ -105,7 +102,21 @@ class AccesoViewModel(aplicacion: Application) : AndroidViewModel(aplicacion) {
     }
 
     fun elegirCarrera(carrera: String) {
-        perfil.guardarCarrera(carrera)
-        viewModelScope.launch { _eventos.send(EventoAcceso.AbrirApp) }
+        viewModelScope.launch {
+            runCatching { perfil.guardarCarrera(carrera) }
+                .onSuccess { abrirApp() }
+                .onFailure { _eventos.send(EventoAcceso.Mensaje(R.string.error_red)) }
+        }
     }
+
+    /** Carga los datos de Supabase (catálogo, pedidos, favoritos) antes de abrir la app. */
+    private suspend fun abrirApp() {
+        _estado.value = EstadoAcceso(cargando = true)
+        val listo = preparar()
+        _estado.value = EstadoAcceso()
+        _eventos.send(if (listo) EventoAcceso.AbrirApp else EventoAcceso.Mensaje(R.string.error_red))
+    }
+
+    /** Falso si no hay sesión o no se pudo cargar (sin red). */
+    suspend fun preparar(): Boolean = runCatching { Repositorios.precargar() }.getOrDefault(false)
 }
