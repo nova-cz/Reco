@@ -169,13 +169,13 @@ def main():
            "-- Productos de DummyJSON (precio = USD × 18 × 0.65 redondeado a centenas), 4 vendedores ficticios de la BUAP.",
            "-- Los vendedores se crean en auth.users solo para cumplir la llave foránea (nadie inicia sesión con ellos).", ""]
     for (nombre, apodo, carrera, sem, punto, acerca, donde, horario, tarjeta, rep, ventas), vid in zip(VENDEDORES, vend_ids):
-        correo = apodo.lower().replace(" ", ".").replace("_", ".") + "@alumno.buap.mx"
+        correo = apodo.lower().replace(" ", ".").replace("_", ".") + "@example.invalid"
         out.append(
             "insert into auth.users (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at, "
             "raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, recovery_token, "
-            "email_change, email_change_token_new)\n"
+            "email_change, email_change_token_new, banned_until)\n"
             f"values ('00000000-0000-0000-0000-000000000000', '{vid}', 'authenticated', 'authenticated', {sql(correo)}, '', now(), "
-            "'{\"provider\":\"email\",\"providers\":[\"email\"]}', '{}', now(), now(), '', '', '', '')\n"
+            "'{\"provider\":\"email\",\"providers\":[\"email\"]}', '{}', now(), now(), '', '', '', '', 'infinity')\n"
             "on conflict (id) do nothing;")
         out.append(
             "insert into perfiles (id, nombre, apodo, acerca_de, carrera, semestre, universidad_id, correo_institucional, verificado, "
