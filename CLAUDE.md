@@ -92,7 +92,8 @@ scripts/
 - **Perfiles de vendedor**: `apodo`, `acerca_de` y las respuestas rápidas `donde_entregas`, `horario`, `acepta_tarjeta`. Los demás ven solo la vista `perfiles_publicos` (sin teléfono ni CLABE).
 - **Funciones** (las llama la app con la sesión del usuario): `verificar_estudiante()`, `activar_vendedor(...)`, `crear_pedido(p_producto, p_punto, p_horario)`, `marcar_entregado(p_pedido)`, `confirmar_entrega(p_pedido)`, `obtener_mi_imei(p_producto)`. El monto y la comisión (13.6 % + $8) los calcula el servidor.
 - **IMEI**: la columna `imei` solo la lee su dueño (con `obtener_mi_imei`); los demás ven `imei_ultimos4`. Por eso las consultas a `productos` deben listar columnas, no usar `select=*`.
-- **Storage (bucket público `fotos`)**: lectura pública; solo el dueño de la carpeta `<uid>/` puede subir, reemplazar y borrar. Un upsert necesita también la política de lectura.
+- **Storage (bucket público `fotos`)**: las fotos se ven por URL pública, pero el bucket **no se puede listar**; solo el dueño de la carpeta `<uid>/` puede leer (lo que pide un upsert), subir, reemplazar y borrar.
+- **Fotos de un anuncio**: una foto solo puede apuntar a la carpeta de Storage de su vendedor, y cambiar las fotos de un anuncio publicado, pausado o reservado lo regresa a `en_revision` (triggers `fotos_validar_url` y `fotos_revision`, que miran el rol del JWT con `es_cliente_jwt()`).
 - **IMEI bloqueado**: además de la app, lo rechaza un trigger del servidor (`imei_bloqueados`).
 - **Anónimo (anon key)**: puede leer solo anuncios publicados, sus fotos, modelos y puntos de entrega. Todo lo demás exige sesión.
 - **Reseñas**: la vista `resenas_publicas` expone quién calificó, a quién y qué equipo.

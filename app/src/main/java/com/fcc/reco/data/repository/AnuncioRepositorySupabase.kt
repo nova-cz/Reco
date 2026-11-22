@@ -185,7 +185,8 @@ class AnuncioRepositorySupabase(
 
     /** Traduce el rechazo del servidor (triggers y restricciones de la base) al error que ya conoce la pantalla. */
     private fun errorDeServidor(e: Throwable): ErrorEnvio {
-        android.util.Log.w("RecoAnuncios", "Envío rechazado: ${e::class.simpleName}: ${e.message}", e)
+        // Solo en debug y solo el tipo de error: el mensaje de Supabase puede traer datos del anuncio.
+        if (com.fcc.reco.BuildConfig.DEBUG) android.util.Log.w("RecoAnuncios", "Envío rechazado: ${e::class.simpleName}")
         val texto = e.message.orEmpty()
         return when {
             "Máximo 3 anuncios" in texto -> ErrorEnvio.LIMITE_ACTIVOS
