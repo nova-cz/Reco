@@ -46,15 +46,16 @@ Sin verificación no se puede comprar ni vender (`crear_pedido` y `activar_vende
 - **Plan B, código por correo**: "Recibir un código en mi correo" (`signInWith(OTP)` y `verifyEmailOtp`). El servidor exige que la sesión se haya abierto con un código OTP (`amr` del JWT) y que el correo de la cuenta, ya confirmado, sea de un dominio permitido. Un registro con contraseña (que entra sin confirmar) **no** basta.
 - **Dominios**: tabla `dominios_permitidos` (hoy `alumno.buap.mx`). Para otra universidad se inserta una fila. Sin políticas RLS: solo la leen las funciones.
 - **Tenant de la BUAP**: la columna `azure_tenant_id` está vacía; en cuanto se conozca (viene en `identity_data ->> 'iss'` tras el primer login) hay que cargarla: `update dominios_permitidos set azure_tenant_id = '<tenant>' where dominio = 'alumno.buap.mx';`. Mientras esté vacía, basta con que el correo de Microsoft sea del dominio, y como el correo de Microsoft no está verificado por Microsoft, otra organización podría poner el mismo.
-- **Portal simulado** (`PortalSimuladoActivity`, `reco://verificado`): solo existe con **datos simulados** (switch de debug o sin llaves de Supabase). Con Supabase no hay forma de verificar sin Microsoft ni código.
+- **Portal simulado** (`PortalSimuladoActivity`, `reco://verificado`): es lo que se muestra con **datos simulados** (la demo). Valida el formato `^[a-z0-9]+(\.[a-z0-9]+)*@alumno\.buap\.mx$` (se compara en minúsculas) y, si no cumple, dice "Usa tu correo institucional, ej. nombre.apellido@alumno.buap.mx"; el error se quita al editar el correo.
+- **Botones de Microsoft y de código** (solo con Supabase): se muestran únicamente cuando `VERIFICACION_REAL=true` en `local.properties` (hazlo cuando Azure esté activo). Con Supabase y sin esa bandera, Verificar muestra solo "La verificación con tu correo de Microsoft estará disponible pronto", para que nada falle en una presentación. Con Supabase no hay otra forma de verificar sin Microsoft ni código.
 
 ## Datos: simulados o Supabase (switch)
 
 `data/Repositorios.kt` elige las implementaciones al iniciar la app:
 
-- **Supabase** (por defecto si hay llaves en `local.properties`): cuenta y perfil, verificación, catálogo con fotos, favoritos, pedidos, reseñas y los anuncios del vendedor.
-- **Simulados** (JSON internos en `filesDir`): sin red ni llaves.
-- **Switch de debug**: en la Bienvenida, solo en builds debug, el texto "DEBUG · Datos: ..." alterna entre ambos y cierra la sesión.
+- **Simulados** (JSON internos en `filesDir`): **es el modo por defecto** (la demo). No necesita red ni llaves.
+- **Supabase**: cuenta y perfil, verificación, catálogo con fotos, favoritos, pedidos, reseñas y los anuncios del vendedor. Se activa con el switch de debug y requiere las llaves en `local.properties`.
+- **Switch de debug**: en la Bienvenida, solo en builds debug, el texto "DEBUG · Datos: ..." alterna entre ambos y cierra la sesión. La elección se recuerda; una instalación limpia arranca en simulados.
 - **Anuncios del vendedor** (Mis ventas, Publicar): con Supabase se leen y escriben en `productos` y `fotos`. Los **borradores** se quedan en el teléfono (JSON local, con rutas de archivo); al **enviar a revisión** se suben las fotos a Storage en `fotos/<vendedor_id>/<anuncio_id>/<n>.jpg` y se crea el anuncio (`AnuncioRepositorySupabase`). Corregir un rechazado actualiza el mismo anuncio y reemplaza sus fotos. Mis ventas muestra los estados En revisión, Publicado, Rechazado y Vendido. Con datos simulados todo sigue como antes (JSON local, botones de moderación en debug).
 - **Publicar 2 · Fotos**: de 2 a 8 fotos desde la galería (Photo Picker) o la cámara; ◀ ▶ reordenan, ★ marca la portada (la primera) y cada foto se reduce a máx. 1280 px en JPG antes de subirla. La cámara usa un `FileProvider` y no pide permisos.
 - **Preguntas rápidas** del Detalle: con Supabase usan las respuestas del vendedor (`donde_entregas`, `horario`, `acepta_tarjeta`, que se llenan al unirse como vendedor); sin esos datos, o con datos simulados, usan la plantilla.

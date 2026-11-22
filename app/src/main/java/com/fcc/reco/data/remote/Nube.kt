@@ -19,6 +19,9 @@ import kotlinx.coroutines.SupervisorJob
 object Nube {
     val configurada: Boolean get() = BuildConfig.SUPABASE_URL.isNotBlank() && BuildConfig.SUPABASE_ANON_KEY.isNotBlank()
 
+    /** Verdadero cuando Azure está activo en Supabase (VERIFICACION_REAL=true en local.properties). */
+    val verificacionRealActiva: Boolean get() = BuildConfig.VERIFICACION_REAL
+
     val cliente: SupabaseClient by lazy {
         createSupabaseClient(BuildConfig.SUPABASE_URL, BuildConfig.SUPABASE_ANON_KEY) {
             install(Auth) {
@@ -38,10 +41,10 @@ object Nube {
     private const val PREFS = "reco_config"
     private const val USAR_NUBE = "usar_supabase"
 
-    /** Por defecto usa Supabase si hay llaves. */
+    /** Por defecto usa datos SIMULADOS (la demo); Supabase se activa con el switch de debug de la Bienvenida. */
     fun usarNube(contexto: Context): Boolean =
         configurada && contexto.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-            .getBoolean(USAR_NUBE, true)
+            .getBoolean(USAR_NUBE, false)
 
     fun fijarUsarNube(contexto: Context, usar: Boolean) =
         contexto.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit { putBoolean(USAR_NUBE, usar) }

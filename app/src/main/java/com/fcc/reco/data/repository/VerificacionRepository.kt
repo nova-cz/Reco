@@ -24,8 +24,7 @@ interface VerificacionRepository {
 /** Plan B: el portal institucional es simulado, pero el regreso por deep link es real. */
 class VerificacionRepositorySimulado(private val local: SesionLocal) : VerificacionRepository {
 
-    override fun dominioValido(correo: String): Boolean =
-        ValidadorAcceso.esInstitucional(correo, DatosSimulados.universidades.map { it.dominio })
+    override fun dominioValido(correo: String): Boolean = ValidadorAcceso.correoInstitucionalValido(correo)
 
     // La verificación real (Microsoft y código) solo existe con Supabase.
     override suspend fun iniciarMicrosoft(): Result<Unit> = Result.failure(UnsupportedOperationException())

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import com.fcc.reco.R
 import com.fcc.reco.data.DatosSimulados
 import com.fcc.reco.databinding.ActivityPortalSimuladoBinding
@@ -26,15 +27,16 @@ class PortalSimuladoActivity : AppCompatActivity() {
         b.raiz.ajustarPorBarrasDelSistema()
 
         b.botonCerrar.setOnClickListener { finish() }
+        // El mensaje de error se quita en cuanto el estudiante corrige el correo.
+        b.campoCorreo.editText.addTextChangedListener { b.campoCorreo.ponerError(null) }
         b.botonEntrar.setOnClickListener {
             val correo = b.campoCorreo.texto.trim()
-            val dominios = DatosSimulados.universidades.map { it.dominio }
-            if (!ValidadorAcceso.esInstitucional(correo, dominios)) {
+            if (!ValidadorAcceso.correoInstitucionalValido(correo)) {
                 b.campoCorreo.ponerError(getString(R.string.error_dominio))
                 return@setOnClickListener
             }
             val enlace = Uri.Builder().scheme("reco").authority("verificado")
-                .appendQueryParameter("correo", correo).build()
+                .appendQueryParameter("correo", correo.lowercase()).build()
             startActivity(
                 Intent(Intent.ACTION_VIEW, enlace)
                     .setPackage(packageName)

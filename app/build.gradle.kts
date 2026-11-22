@@ -24,6 +24,9 @@ android {
         versionName = "1.0"
 
         buildConfigField("String", "SUPABASE_URL", "\"${localProps.getProperty("SUPABASE_URL", "")}\"")
+        // Pon VERIFICACION_REAL=true en local.properties cuando Azure (Microsoft) esté activo en Supabase: hasta entonces
+        // la pantalla Verificar estudiante no muestra los botones de Microsoft ni de código por correo.
+        buildConfigField("boolean", "VERIFICACION_REAL", localProps.getProperty("VERIFICACION_REAL", "false").trim())
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"${localProps.getProperty("SUPABASE_ANON_KEY", "")}\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

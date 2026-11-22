@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.fcc.reco.R
 import com.fcc.reco.data.Repositorios
+import com.fcc.reco.data.remote.Nube
 import com.fcc.reco.databinding.FragmentVerificarEstudianteBinding
 import com.fcc.reco.ui.comun.ajustarPorBarrasDelSistema
 import kotlinx.coroutines.launch
@@ -29,7 +30,13 @@ class VerificarEstudianteFragment : Fragment(R.layout.fragment_verificar_estudia
         b.botonAtras.setOnClickListener {
             if (!findNavController().popBackStack()) requireActivity().finish()
         }
-        if (Repositorios.usaNube) {
+        if (Repositorios.usaNube && !Nube.verificacionRealActiva) {
+            // Supabase sin Azure configurado: no hay con qué verificar todavía, así que no se muestran botones que fallen.
+            b.botonInstitucional.visibility = View.GONE
+            b.botonCodigo.visibility = View.GONE
+            b.enlaceNoAparece.setText(R.string.verificacion_pronto)
+            b.enlaceNoAparece.setOnClickListener(null)
+        } else if (Repositorios.usaNube) {
             // Verificación real: Microsoft (la BUAP usa Microsoft 365) y, como plan B, un código al correo.
             b.botonInstitucional.text = getString(R.string.verificar_con_buap)
             b.botonInstitucional.setOnClickListener { viewModel.verificarConMicrosoft() }
@@ -41,8 +48,10 @@ class VerificarEstudianteFragment : Fragment(R.layout.fragment_verificar_estudia
                 startActivity(Intent(requireContext(), PortalSimuladoActivity::class.java))
             }
         }
-        b.enlaceNoAparece.setOnClickListener {
-            Toast.makeText(requireContext(), R.string.universidad_no_aparece_msg, Toast.LENGTH_SHORT).show()
+        if (!Repositorios.usaNube || Nube.verificacionRealActiva) {
+            b.enlaceNoAparece.setOnClickListener {
+                Toast.makeText(requireContext(), R.string.universidad_no_aparece_msg, Toast.LENGTH_SHORT).show()
+            }
         }
         recolectarEventosAcceso(viewModel)
     }

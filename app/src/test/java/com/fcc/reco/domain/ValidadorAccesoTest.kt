@@ -36,4 +36,18 @@ class ValidadorAccesoTest {
         assertEquals("Miguel Cruz", ValidadorAcceso.nombreDesdeCorreo("miguel.cruz@alumno.buap.mx"))
         assertEquals("Estudiante", ValidadorAcceso.nombreDesdeCorreo("@x.com"))
     }
+
+    @Test
+    fun correoInstitucionalConFormatoBuap() {
+        assertTrue(ValidadorAcceso.correoInstitucionalValido("miguel.cruzre@alumno.buap.mx"))
+        assertTrue(ValidadorAcceso.correoInstitucionalValido("202012345@alumno.buap.mx"))
+        assertTrue(ValidadorAcceso.correoInstitucionalValido("  Miguel.Cruzre@Alumno.BUAP.mx "))
+        assertFalse(ValidadorAcceso.correoInstitucionalValido("miguel..cruzre@alumno.buap.mx"))
+        assertFalse(ValidadorAcceso.correoInstitucionalValido(".miguel@alumno.buap.mx"))
+        assertFalse(ValidadorAcceso.correoInstitucionalValido("miguel.@alumno.buap.mx"))
+        assertFalse(ValidadorAcceso.correoInstitucionalValido("miguel_cruz@alumno.buap.mx"))
+        assertFalse(ValidadorAcceso.correoInstitucionalValido("miguel@gmail.com"))
+        assertFalse(ValidadorAcceso.correoInstitucionalValido("miguel@alumno.buap.mx.falso.com"))
+        assertFalse(ValidadorAcceso.correoInstitucionalValido("@alumno.buap.mx"))
+    }
 }

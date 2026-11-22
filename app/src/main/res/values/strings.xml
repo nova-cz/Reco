@@ -79,7 +79,8 @@
     <string name="error_no_institucional">No pudimos comprobar que tu cuenta sea de la BUAP. Usa tu correo @alumno.buap.mx.</string>
     <string name="error_codigo">El código no es válido o ya venció.</string>
     <string name="error_codigo_envio">No se pudo enviar el código. Revisa el correo e intenta en unos minutos.</string>
-    <string name="error_dominio">Usa tu correo institucional (@alumno.buap.mx)</string>
+    <string name="error_dominio">Usa tu correo institucional, ej. nombre.apellido@alumno.buap.mx</string>
+    <string name="verificacion_pronto">La verificación con tu correo de Microsoft estará disponible pronto.</string>
     <string name="error_enlace">El enlace de verificación no es válido</string>
 
     <!-- Portal simulado -->

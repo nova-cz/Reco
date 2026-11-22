@@ -7,6 +7,12 @@ object ValidadorAcceso {
 
     fun correoValido(correo: String): Boolean = regexCorreo.matches(correo.trim())
 
+    /** Formato del correo institucional de la BUAP: nombre.apellido@alumno.buap.mx (o la matrícula), en minúsculas. */
+    private val regexInstitucional = Regex("^[a-z0-9]+(\\.[a-z0-9]+)*@alumno\\.buap\\.mx$")
+
+    /** Se compara en minúsculas y sin espacios alrededor (en el teléfono es fácil que la primera letra salga en mayúscula). */
+    fun correoInstitucionalValido(correo: String): Boolean = regexInstitucional.matches(correo.trim().lowercase())
+
     fun claveValida(clave: String): Boolean = clave.length >= LARGO_MINIMO_CLAVE
 
     fun dominioDe(correo: String): String = correo.trim().substringAfterLast('@').lowercase()
